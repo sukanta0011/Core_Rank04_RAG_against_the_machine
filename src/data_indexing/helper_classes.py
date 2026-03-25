@@ -1,7 +1,8 @@
 from enum import Enum
 from pathlib import Path
 from typing import List, Dict
-from pydantic import TypeAdapter
+from typing_extensions import Annotated
+from pydantic import TypeAdapter, BeforeValidator, AfterValidator
 from langchain_text_splitters import Language
 
 
@@ -13,6 +14,46 @@ FULL_CODE_SYNTAX = {
 class FileFormats(Enum):
     CODING_LANGUAGES = {item.value for item in Language}
     TXT_LANGUAGES = {'txt', 'md', 'json'}
+
+
+def check_path_exists(v: str) -> str:
+    if not Path(v).exists():
+        raise FileNotFoundError(f"{v} does not exist")
+    return v
+
+
+def prepare_storage(v: str) -> str:
+    path = Path(v)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if not path.exists():
+            path.touch()
+        return v
+    except PermissionError:
+        raise PermissionError(
+            f"Cannot create output file at '{path}': permission denied"
+        )
+    except OSError as e:
+        raise OSError(f"Cannot create output path: {e}")
+
+
+def prepare_storage_folder(v: str) -> str:
+    path = Path(v)
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+        return v
+    except PermissionError:
+        raise PermissionError(
+            f"Cannot create output file at '{path}': permission denied"
+        )
+    except OSError as e:
+        raise OSError(f"Cannot create output path: {e}")
+
+
+# Define your reusable types
+ExistingPath = Annotated[str, BeforeValidator(check_path_exists)]
+ValidatedStoragePath = Annotated[str, AfterValidator(prepare_storage)]
+PrepareStorageFolder = Annotated[str, AfterValidator(prepare_storage_folder)]
 
 
 class DataManager:
