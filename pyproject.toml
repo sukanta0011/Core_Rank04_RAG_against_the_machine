@@ -3,9 +3,12 @@ name = "rag-against-machines"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
+    "accelerate>=1.13.0",
     "bm25s>=0.3.2.post1",
     "langchain-text-splitters>=1.1.1",
     "pydantic>=2.12.5",
+    "torch>=2.11.0",
+    "transformers>=5.4.0",
 ]

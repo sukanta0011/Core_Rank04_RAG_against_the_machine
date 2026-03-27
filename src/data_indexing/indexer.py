@@ -1,10 +1,9 @@
-from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from typing_extensions import Annotated
 import bm25s
 from bm25s import BM25
 from pydantic import (
-    BaseModel, field_validator,
+    BaseModel,
     PrivateAttr, Field, validate_call)
 from .helper_classes import PrepareStorageFolder
 
@@ -15,11 +14,17 @@ class BM25Indexer(BaseModel):
     # Private class
     _retriever: BM25 = PrivateAttr()
 
+    @validate_call
     def create_corpus_index(self, data=str | List[str]):
-        corpus_tokens = bm25s.tokenize(data, stopwords='en')
-        self._retriever = BM25(corpus=data)
-        self._retriever.index(corpus_tokens, show_progress=True)
-        self._retriever.save(self.storage_path)
+        # corpus_tokens: List[List[str]]
+        if isinstance(data, str) or isinstance(data, list):
+            corpus_tokens = bm25s.tokenize(data, stopwords='en')
+            self._retriever = BM25(corpus=data)
+            self._retriever.index(corpus_tokens)
+            self._retriever.save(self.storage_path)
+        else:
+            raise TypeError(f"Unsupported data types: {type(data)},"
+                            "Valid types are (str, List[str]).")
 
     def load_corpus_index(self):
         self._retriever = BM25.load(self.storage_path, load_corpus=True)
