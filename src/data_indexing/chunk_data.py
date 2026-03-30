@@ -9,13 +9,7 @@ from langchain_core.documents import Document
 from .helper_classes import (
     DataManager,
     FileFormats, ValidatedStoragePath)
-
-
-class MinimalSource(BaseModel):
-    """The MinimalSource model represents a minimal source of information"""
-    file_path: str
-    first_character_index: int
-    last_character_index: int
+from src.base_patterns import MinimalSource
 
 
 class DataChunk(ABC, BaseModel):

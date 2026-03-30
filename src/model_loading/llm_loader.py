@@ -7,7 +7,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 ALLOWED_DEVICE_TYPES = ('cuda', 'cpu', None)
 
 
-class PreparePrompt:
+class InitialPromptGenerator:
     @staticmethod
     def get_type1_prompt(question: str, context: str | List[str]) -> List[Dict]:
         messages = [
@@ -52,7 +52,7 @@ class SmallLLM(BaseModel):
             device_map = "auto" if self.device_type == "cuda" else None,
         )
 
-    def generate_answer(self, messages: List[str],
+    def generate_answer(self, messages: List[Dict],
                         tokens_limit: int = Field(gt=0, default=500)
                         ) -> str:
         prompt = self._tokenizer.apply_chat_template(
@@ -120,9 +120,4 @@ def hugging_face_example():
 
 
 if __name__ == "__main__":
-    # hugging_face_example()
-    llm = SmallLLM(device_type='cpu')
-    question = "Tell me about your self."
-    answer = llm.generate_answer(question, "")
-    print(answer)
-
+    hugging_face_example()
