@@ -2,7 +2,8 @@ import time
 from src.data_indexing.helper_classes import FilesInDir, prepare_storage_folder
 from src.data_indexing.chunk_data import SplitDataByChunks
 from src.data_indexing.indexer import BM25Indexer
-from src.model_loading.llm_loader import SmallLLM, InitialPromptGenerator
+from src.answer_generation.models.quen3__0_6B import SmallLLM
+from src.answer_generation.pre_prompt import InitialPromptGenerator
 
 
 def main():
