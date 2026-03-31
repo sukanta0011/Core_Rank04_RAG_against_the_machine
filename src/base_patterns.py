@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Sequence
 
 
 class MinimalSource(BaseModel):
@@ -21,7 +21,7 @@ class AnsweredQuestion(UnansweredQuestion):
 
 class RagDataset(BaseModel):
     """The RagDataset model represents a dataset of RAG questions"""
-    rag_questions: List[AnsweredQuestion | UnansweredQuestion]
+    rag_questions: Sequence[AnsweredQuestion | UnansweredQuestion]
 
 
 class MinimalSearchResults(BaseModel):

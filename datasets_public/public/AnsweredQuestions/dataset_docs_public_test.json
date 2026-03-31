@@ -1,0 +1,87 @@
+{
+  "rag_questions": [
+    {
+      "question_id": "17526382-7764-4120-b5e8-2d3726b8a4da",
+      "question": "What HTTP endpoint is used to dynamically load a LoRA adapter in vLLM?",
+      "answer": "The `/v1/load_lora_adapter` endpoint is used to dynamically load a LoRA adapter in vLLM. You send a POST request to this endpoint with the adapter's name and path in the JSON payload.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/features/lora.md",
+          "first_character_index": 4695,
+          "last_character_index": 6098
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "cc83c230-099f-4c11-aeab-8c09715c5942",
+      "question": "What command can be used to evaluate the accuracy of a quantized model using lm_eval with vLLM?",
+      "answer": "You can use `lm_eval --model vllm --model_args pretrained=\"./path-to-quantized-model\",add_bos_token=true --tasks gsm8k --num_fewshot 5 --limit 250 --batch_size 'auto'` to evaluate quantized models in vLLM, making sure to include the `add_bos_token=True` argument as quantized models can be sensitive to the presence of the BOS token.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/features/quantization/int8.md",
+          "first_character_index": 2439,
+          "last_character_index": 4084
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "5ea5c01a-c953-4477-ae3a-978e20bd73b8",
+      "question": "What method does vLLM's LLM class provide for generating embedding vectors from prompts?",
+      "answer": "The `LLM.embed` method, which outputs an embedding vector for each prompt and is primarily designed for embedding models in vLLM's pooling models functionality.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/models/pooling_models.md",
+          "first_character_index": 3619,
+          "last_character_index": 4765
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "7c43f334-9999-42b3-935f-11320dc75270",
+      "question": "What hardware platforms does vLLM support?",
+      "answer": "vLLM supports NVIDIA GPUs (full support), AMD GPUs, Intel GPUs, TPUs, and CPUs (x86_64/aarch64 with full support, MacOS with limited support). Additional hardware platforms are available through plugins like vllm-ascend, vllm-spyre, vllm-gaudi, and vllm-openvino.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/usage/v1_guide.md",
+          "first_character_index": 3311,
+          "last_character_index": 4170
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "81e37f26-1203-40ad-a848-764d187d083f",
+      "question": "What are the differences between mm_kwargs and tok_kwargs when using the _call_hf_processor method in vLLM multimodal processing?",
+      "answer": "In vLLM's multimodal processing, mm_kwargs is used to both initialize and call the HuggingFace processor, while tok_kwargs is only used to call the HuggingFace processor. This distinction allows for different parameter handling during processor initialization versus execution phases.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/contributing/model/multimodal.md",
+          "first_character_index": 24856,
+          "last_character_index": 25721
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "716dd176-b2d7-4613-825a-4ac84b01aab7",
+      "question": "Where can I find information about using generative models in vLLM?",
+      "answer": "Information about using generative models in vLLM can be found on the generative models page, as referenced in the supported models documentation.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/docs/models/supported_models.md",
+          "first_character_index": 12252,
+          "last_character_index": 12366
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    }]
+}

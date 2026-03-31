@@ -1,0 +1,73 @@
+{
+  "rag_questions": [
+    {
+      "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
+      "question": "What activation formats does the fused batched MoE layer return in vLLM?",
+      "answer": "The fused batched MoE layer returns a tuple of two `mk.FusedMoEActivationFormat.BatchedExperts` values from its `activation_formats` property.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/fused_moe/fused_batched_moe.py",
+          "first_character_index": 28416,
+          "last_character_index": 28975
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "02789461-05fd-435d-9673-91606102d6c9",
+      "question": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?",
+      "answer": "FP8_MIN defaults to float8_info.min and FP8_MAX defaults to float8_info.max in the triton_flash_attention module.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/vllm/attention/ops/triton_flash_attention.py",
+          "first_character_index": 13507,
+          "last_character_index": 13600
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "e852801e-b909-4360-82ea-cedb2a1be919",
+      "question": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?",
+      "answer": "The `skip_sampler_cpu_output` flag in `sampling_metadata` determines this behavior. When `skip_sampler_cpu_output` is False, the sampler returns Pythonized sample results and sampled token IDs. When True, it returns deferred Pythonization arguments and sampled token IDs instead.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+          "first_character_index": 27480,
+          "last_character_index": 28492
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "0d29b0e8-686c-41b7-9a48-50f8e4bc63de",
+      "question": "What's the default value of trust_remote_code in vLLM's LLM class constructor?",
+      "answer": "The default value of trust_remote_code in the LLM class constructor is False.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/vllm/entrypoints/llm.py",
+          "first_character_index": 64076,
+          "last_character_index": 64088
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    },
+    {
+      "question_id": "4235480a-cd9e-42a5-a852-b562386a83a3",
+      "question": "What determines the values in cudagraph_inputs_embeds when capturing CUDA graph shapes in vLLM's ModelRunner?",
+      "answer": "The cudagraph_inputs_embeds values are determined by `self.model_config.enable_prompt_embeds`: if True, it uses `(True, False)` to test both embedding modes; if False, it uses `(False,)` to only test without embeddings.",
+      "sources": [
+        {
+          "file_path": "data/raw/vllm-0.10.1/vllm/worker/model_runner.py",
+          "first_character_index": 64028,
+          "last_character_index": 64925
+        }
+      ],
+      "difficulty": "synthetic",
+      "is_valid": true
+    }]
+}
