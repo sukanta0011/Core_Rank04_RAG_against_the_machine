@@ -1,7 +1,7 @@
 from typing import List, Dict
 import json
 from pydantic import BaseModel, Field, PrivateAttr
-from src.data_indexing.helper_classes import ExistingPath
+from src.data_retrieval.helper_classes import ExistingPath
 from src.base_patterns import(
     UnansweredQuestion,
     AnsweredQuestion, RagDataset

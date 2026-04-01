@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Sequence
+import uuid
 
 
 class MinimalSource(BaseModel):
@@ -29,6 +30,8 @@ class MinimalSearchResults(BaseModel):
        results and an answer"""
     question_id: str
     question: str
+    retrieved_sources_indexes: List[int]
+    retrieved_sources_scores: List[float]
     retrieved_sources: List[MinimalSource]
 
 
