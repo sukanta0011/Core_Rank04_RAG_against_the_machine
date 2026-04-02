@@ -64,11 +64,8 @@ class SplitDataByChunks(BaseModel):
     _all_chunks: List[MinimalSource] = PrivateAttr(default=list())
     _all_chunk_txt: List[str] = PrivateAttr(default=list())
 
-    def get_all_minimal_sources(self) -> List[MinimalSource]:
-        return self._all_chunks
-
-    def get_all_data_chunks(self) -> List[str]:
-        return self._all_chunk_txt
+    def get_all_data(self) -> Tuple[List[MinimalSource], List[str]]:
+        return (self._all_chunks, self._all_chunk_txt)
 
     @validate_call
     def save_chunked_data(self, storage_folder: PrepareStorageFolder) -> None:

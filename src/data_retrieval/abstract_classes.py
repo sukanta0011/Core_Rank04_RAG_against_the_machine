@@ -6,7 +6,7 @@ from .helper_classes import PrepareStorageFolder
 from src.base_patterns import MinimalSearchResults, MinimalSource
 
 
-class Retrieve(BaseModel, ABC):
+class Retriever(BaseModel, ABC):
     storage_path: PrepareStorageFolder
     data: List[str]
     all_minimal_resource: List[MinimalSource]

@@ -1,22 +1,22 @@
-from typing import List
+from typing import List, Dict
 import uuid
 from typing_extensions import Annotated
 import bm25s
 from bm25s import BM25
-from pydantic import PrivateAttr, Field, validate_call
+from pydantic import PrivateAttr, Field, validate_call, BaseModel, ConfigDict
 from .helper_classes import PrepareStorageFolder
-from src.data_retrieval.abstract_classes import Retrieve
-from src.base_patterns import MinimalSearchResults
+from src.data_retrieval.abstract_classes import Retriever
+from src.base_patterns import MinimalSearchResults, StudentSearchResults
 
-class BM25Retrieve(Retrieve):
+class BM25Retriever(Retriever):
     # Private class
     _retriever: BM25 = PrivateAttr()
 
-    def create_corpus_index(self):
+    def create_corpus_index(self) -> None:
         # corpus_tokens: List[List[str]]
         if isinstance(self.data, list):
             corpus_tokens = bm25s.tokenize(self.data, stopwords='en')
-            self._retriever = BM25(corpus=self.data)
+            self._retriever = BM25()
             self._retriever.index(corpus_tokens)
             self._retriever.save(self.storage_path)
         else:
@@ -24,7 +24,7 @@ class BM25Retrieve(Retrieve):
                             "Valid types are List[str].")
 
     def load_corpus_index(self):
-        self._retriever = BM25.load(self.storage_path, load_corpus=True)
+        self._retriever = BM25.load(self.storage_path)
 
     @validate_call
     def get_matching_chunk(
@@ -43,18 +43,44 @@ class BM25Retrieve(Retrieve):
             question_id = str(uuid.uuid4())
 
         query_tokens = bm25s.tokenize(question)
-        index, scores = self._retriever.retrieve(
+        indexes, scores = self._retriever.retrieve(
             query_tokens, k=k, return_as="tuple")
-        
-        ids = [item['id'] for item in index[0]]
         
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
-            retrieved_sources_indexes=ids,
+            retrieved_sources_indexes=indexes[0],
             retrieved_sources_scores=scores[0],
-            retrieved_sources=[self.all_minimal_resource[i] for i in ids]
+            retrieved_sources=[self.all_minimal_resource[i] for i in indexes[0]]
         )
+
+
+class BatchSourceRetriever(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    retriever: Retriever
+    k: int = Field(gt=0, default=1)
+
+    def process_batch(
+        self, questions: List[Dict],
+            ) -> StudentSearchResults:
+        all_sources = []
+        for item in questions:
+            question = item.get('question')
+            if question is None or len(question.strip()) == 0:
+                print("Empty question received, skipping...")
+                continue
+
+            all_sources.append(self.retriever.get_matching_chunk(
+                question=question,
+                k=k,
+                question_id=item.get('question_id')
+            ))
+        return StudentSearchResults(
+            search_results=all_sources,
+            k=self.k
+        )
+
 
 
 def bm25s_test():

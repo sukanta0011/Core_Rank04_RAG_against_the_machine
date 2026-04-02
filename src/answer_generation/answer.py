@@ -1,6 +1,10 @@
 from typing import Callable, List
 from pydantic import BaseModel, validate_call, Field, ConfigDict
-from src.base_patterns import MinimalSearchResults, MinimalAnswer
+from src.base_patterns import (
+    MinimalSearchResults,
+    MinimalAnswer,
+    StudentSearchResults,
+    StudentSearchResultsAndAnswer)
 from src.answer_generation.models.abstract_model import Model
 # from src.answer_generation import pre_prompt
 
@@ -35,18 +39,25 @@ class AnswerGenerator(BaseModel):
         )
 
 
-class BatchAnswerGenerator(AnswerGenerator):
+class BatchAnswerGenerator(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
+    generator: AnswerGenerator
+    tokens_limit: int = Field(gt=0, default=500)
+
     @validate_call
-    def generate_answers(
+    def process_batch(
             self,
-            search_results: List[MinimalSearchResults],
-            tokens_limit: int = Field(gt=50, default=500)
-            ) -> List[MinimalAnswer]:
+            search_results: StudentSearchResults,
+            ) -> StudentSearchResultsAndAnswer:
 
         all_answers = []
-        for single_search_result in search_results:
-            all_answers.append(self.generate_answer(
+        for single_search_result in search_results.search_results:
+            all_answers.append(self.generator.generate_answer(
                 search_result=single_search_result,
-                tokens_limit=tokens_limit,
+                tokens_limit=self.tokens_limit,
             ))
-        return all_answers
+        return StudentSearchResultsAndAnswer(
+            search_results=all_answers,
+            k=search_results.k
+        )

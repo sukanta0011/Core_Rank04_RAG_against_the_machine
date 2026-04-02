@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Self, Dict, Type
-from pydantic import BaseModel, Field, model_validator, ValidationError
+from pydantic import BaseModel, Field, model_validator, ValidationError, ConfigDict
 from src.base_patterns import(
     AnsweredQuestion, MinimalSearchResults, MinimalSource
 )
@@ -108,12 +108,16 @@ class SingleAnswerValidator(BaseModel):
         return recall_instance.validate_retrieved_source()
 
 
-class BatchAnswerValidator(SingleAnswerValidator):
-    def validate_answers(self, answers: List[MinimalSearchResults]) -> List[bool]:
+class BatchAnswerValidator(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    validator: SingleAnswerValidator
+
+    def process_batch(self, answers: List[MinimalSearchResults]) -> List[bool]:
         results: List[bool] = []
         for answer in answers:
             try:
-                results.append(self.validate_answer(answer))
+                results.append(self.validator.validate_answer(answer))
             except Exception as e:
-                raise Exception(f"Error: {e}")
+                print(f"Error: {e}")
         return results
