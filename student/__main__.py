@@ -50,7 +50,7 @@ class CLI:
         if self._answer_generator is None:
             print("Initiating answer generator")    
             # 1. Load llm
-            llm = SmallLLM(device_type='cuda')
+            llm = SmallLLM(device_type='cpu')
 
             # 2. Initialize Answer Generator
             self._answer_generator = AnswerGenerator(
@@ -109,7 +109,7 @@ class CLI:
             self,
             dataset_path: str,
             k: int = 10,
-            save_directory: str = "data/output"
+            save_directory: str = "data/output/sources.json"
             ) -> None:
         start_time = time.time()
 
@@ -157,7 +157,7 @@ class CLI:
         answer_generator = self._get_answer_generator()
         
         generated_answer = answer_generator.generate_answer(
-            search_result=search_result
+            search_result=search_result, tokens_limit=100
             )
 
         print(f"Question: {question}")
@@ -313,7 +313,7 @@ def main():
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     # Using model to get the answer
-    llm = SmallLLM(device_type='cuda')
+    llm = SmallLLM(device_type='cpu')
     answer_generator = AnswerGenerator(
         model=llm,
         prompt_generator=InitialPromptGenerator.get_type1_prompt,
@@ -338,4 +338,7 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    fire.Fire(CLI)
+    try:
+        fire.Fire(CLI)
+    except Exception as e:
+        print(e)

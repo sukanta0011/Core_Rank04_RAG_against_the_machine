@@ -85,19 +85,23 @@ class SmallLLM(BaseModel, Model):
             device_map = "auto" if self.device_type == "cuda" else None,
         )
 
-    def generate_answer(self, resources: List[Dict],
-                        tokens_limit: int = Field(gt=0, default=500)
-                        ) -> str:
+    def generate_answer(
+            self, resources: List[Dict],
+            tokens_limit: int = Field(gt=0, default=500)
+            ) -> str:
         prompt = self._tokenizer.apply_chat_template(
             resources, tokenize=False,
             add_generation_prompt=True,
             enable_thinking=False
         )
-        model_inputs = self._tokenizer([prompt], return_tensors="pt").to(self.device_type)
+        model_inputs = self._tokenizer(
+            [prompt], return_tensors="pt").to(self.device_type)
+
         outputs = self._model.generate(
             **model_inputs,
-            max_new_tokens=tokens_limit,
+            max_new_tokens=tokens_limit
         )
+
         output_ids = outputs[0][len(model_inputs.input_ids[0]):].tolist()
         content = self._tokenizer.decode(
             output_ids, skip_special_tokens=True).strip("\n")

@@ -120,7 +120,7 @@ class SplitDataByChunks(BaseModel):
                     for path in paths:
                         data = DataManager.load_data(str(path))
                         data_chunks = text_chunk.process(
-                            document=data,
+                            document=str(data),
                             chunk_overlap=self.txt_overlap)
                         self.store_data_chunks(
                             self._all_chunks, data_chunks,
