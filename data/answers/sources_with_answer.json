@@ -1,0 +1,465 @@
+{
+    "search_results": [
+        {
+            "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
+            "question": "What activation formats does the fused batched MoE layer return in vLLM?",
+            "retrieved_sources_indexes": [
+                10558,
+                9768,
+                3239,
+                287,
+                10572
+            ],
+            "retrieved_sources_scores": [
+                9.67776870727539,
+                9.058880805969238,
+                8.866393089294434,
+                8.02794075012207,
+                7.9588470458984375
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/compressed_tensors/compressed_tensors_moe.py",
+                    "first_character_index": 15480,
+                    "last_character_index": 17405
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/gguf.py",
+                    "first_character_index": 20015,
+                    "last_character_index": 21195
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/lora/models.py",
+                    "first_character_index": 1888,
+                    "last_character_index": 2337
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/design/fused_moe_modular_kernel.md",
+                    "first_character_index": 0,
+                    "last_character_index": 1799
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/compressed_tensors/compressed_tensors_moe.py",
+                    "first_character_index": 36826,
+                    "last_character_index": 38350
+                }
+            ],
+            "answer": "The fused batched MoE layer in vLLM returns the activations in the following format:\n\n- A tensor of shape `(num_experts, max_tokens, K)`, where `num_experts` is the number of experts, `max_tokens` is the maximum number of tokens, and `K` is the number of features per token.\n\nThis format is used in the batched MoE implementation, where the activations are grouped by experts and the tokens that subscribe to the same expert are batched together."
+        },
+        {
+            "question_id": "02789461-05fd-435d-9673-91606102d6c9",
+            "question": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?",
+            "retrieved_sources_indexes": [
+                10428,
+                13951,
+                10424,
+                1657,
+                13879
+            ],
+            "retrieved_sources_scores": [
+                9.97612190246582,
+                9.024226188659668,
+                8.979839324951172,
+                8.857500076293945,
+                8.792570114135742
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/utils/fp8_utils.py",
+                    "first_character_index": 13918,
+                    "last_character_index": 15675
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/kernels/quantization/test_block_fp8.py",
+                    "first_character_index": 2416,
+                    "last_character_index": 3880
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/utils/fp8_utils.py",
+                    "first_character_index": 8680,
+                    "last_character_index": 10232
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/benchmarks/kernels/benchmark_w8a8_block_fp8.py",
+                    "first_character_index": 5503,
+                    "last_character_index": 7303
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/kernels/moe/test_triton_moe_ptpc_fp8.py",
+                    "first_character_index": 4100,
+                    "last_character_index": 5785
+                }
+            ],
+            "answer": "The default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module are `0.0` and `1.0`, respectively."
+        },
+        {
+            "question_id": "e852801e-b909-4360-82ea-cedb2a1be919",
+            "question": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?",
+            "retrieved_sources_indexes": [
+                9514,
+                9511,
+                9505,
+                9500,
+                9503
+            ],
+            "retrieved_sources_scores": [
+                23.129364013671875,
+                19.59532928466797,
+                13.429447174072266,
+                10.864171028137207,
+                9.968530654907227
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+                    "first_character_index": 27237,
+                    "last_character_index": 28489
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+                    "first_character_index": 21626,
+                    "last_character_index": 23307
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+                    "first_character_index": 11868,
+                    "last_character_index": 13735
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+                    "first_character_index": 2857,
+                    "last_character_index": 4841
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/sampler.py",
+                    "first_character_index": 8065,
+                    "last_character_index": 9944
+                }
+            ],
+            "answer": "The determination of whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments depends on the `sampling_metadata.skip_sampler_cpu_output` flag. If this flag is `True`, the Pythonization is immediately executed, and the results are returned. If the flag is `False`, the Pythonization is deferred until after multiple GPU-side steps have been completed."
+        },
+        {
+            "question_id": "0d29b0e8-686c-41b7-9a48-50f8e4bc63de",
+            "question": "What's the default value of trust_remote_code in vLLM's LLM class constructor?",
+            "retrieved_sources_indexes": [
+                721,
+                569,
+                12777,
+                4559,
+                12773
+            ],
+            "retrieved_sources_scores": [
+                8.605910301208496,
+                7.561624526977539,
+                7.3639960289001465,
+                7.23372745513916,
+                7.210248947143555
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/conftest.py",
+                    "first_character_index": 25327,
+                    "last_character_index": 27276
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/serving/integrations/langchain.md",
+                    "first_character_index": 0,
+                    "last_character_index": 787
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/v1/logits_processors/test_custom_offline.py",
+                    "first_character_index": 7359,
+                    "last_character_index": 9290
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/entrypoints/openai/protocol.py",
+                    "first_character_index": 41898,
+                    "last_character_index": 43010
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/v1/logits_processors/test_custom_offline.py",
+                    "first_character_index": 1654,
+                    "last_character_index": 2929
+                }
+            ],
+            "answer": "The default value of `trust_remote_code` in vLLM's LLM class constructor is `True`."
+        },
+        {
+            "question_id": "4235480a-cd9e-42a5-a852-b562386a83a3",
+            "question": "What determines the values in cudagraph_inputs_embeds when capturing CUDA graph shapes in vLLM's ModelRunner?",
+            "retrieved_sources_indexes": [
+                3452,
+                3681,
+                4095,
+                2796,
+                538
+            ],
+            "retrieved_sources_scores": [
+                14.904465675354004,
+                8.560864448547363,
+                8.259380340576172,
+                8.157776832580566,
+                8.111059188842773
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/worker/model_runner.py",
+                    "first_character_index": 63480,
+                    "last_character_index": 65414
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/compilation/cuda_graph.py",
+                    "first_character_index": 5065,
+                    "last_character_index": 6922
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/attention/backends/abstract.py",
+                    "first_character_index": 5365,
+                    "last_character_index": 6892
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/parallel_state.py",
+                    "first_character_index": 36132,
+                    "last_character_index": 37807
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/getting_started/installation/intel_gaudi.md",
+                    "first_character_index": 18476,
+                    "last_character_index": 19290
+                }
+            ],
+            "answer": "The values in `cudagraph_inputs_embeds` are determined by whether the model is enabled to use prompt embeddings (`model_config.enable_prompt_embeds`) and whether the model is in an encoder-decoder mode (`is_encoder_decoder_model`). If `model_config.enable_prompt_embeds` is `True`, then `cudagraph_inputs_embeds` will include `True` for the input embeddings, and `False` for the output embeddings. If `model_config.enable_prompt_embeds` is `False`, then `cudagraph_inputs_embeds` will include `False` for the input embeddings and `True` for the output embeddings."
+        },
+        {
+            "question_id": "6ffdf5f6-fcd3-4d11-8227-8bedd9b33296",
+            "question": "What conditions must be met for vLLM's ModelRunner to use CUDA graphs instead of the regular model?",
+            "retrieved_sources_indexes": [
+                6649,
+                2381,
+                12162,
+                1404,
+                5539
+            ],
+            "retrieved_sources_scores": [
+                8.320284843444824,
+                8.045578002929688,
+                7.876922607421875,
+                7.6786208152771,
+                6.754329681396484
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/phi.py",
+                    "first_character_index": 108,
+                    "last_character_index": 2094
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/third_party/pynvml.py",
+                    "first_character_index": 0,
+                    "last_character_index": 1949
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/compile/piecewise/test_toy_llama.py",
+                    "first_character_index": 16761,
+                    "last_character_index": 18451
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/examples/offline_inference/neuron_eagle.py",
+                    "first_character_index": 0,
+                    "last_character_index": 613
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/worker/gpu_model_runner.py",
+                    "first_character_index": 73970,
+                    "last_character_index": 74920
+                }
+            ],
+            "answer": "For vLLM's ModelRunner to use CUDA graphs instead of the regular model, the following conditions must be met:\n\n1. **Use of CUDA Graphs**: The model must be compatible with CUDA graphs. This typically involves using a model that supports GPU execution with a CUDA graph implementation.\n\n2. **CUDAGraph Configuration**: The model must be configured to use a CUDA graph, which is done by setting appropriate parameters such as `cudagraph_runtime_mode`, `num_tokens`, and `batch_descriptor`.\n\n3. **Eager Mode**: If the model is to be used in an eager mode, the configuration must include the `eager_mode` parameter, which may involve using `eager_time` and `full_cudagraph_time`.\n\n4. **Piecewise Cudagraph Handling**: If the model uses a piecewise cudagraph configuration, the runtime must be set up to handle this specific format.\n\nThese conditions ensure that the ModelRunner can efficiently use the CUDA graph implementation for inference."
+        },
+        {
+            "question_id": "c854f979-7900-4772-86c6-f95715529e2d",
+            "question": "What is the default timeout value for vLLM RPC operations?",
+            "retrieved_sources_indexes": [
+                2988,
+                599,
+                2772,
+                1055,
+                13075
+            ],
+            "retrieved_sources_scores": [
+                8.336071014404297,
+                7.379384994506836,
+                6.757512092590332,
+                6.5728864669799805,
+                5.526980400085449
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/engine/async_llm_engine.py",
+                    "first_character_index": 44833,
+                    "last_character_index": 45504
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/quantization/inc.md",
+                    "first_character_index": 1725,
+                    "last_character_index": 3442
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/utils.py",
+                    "first_character_index": 19004,
+                    "last_character_index": 20543
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/envs.py",
+                    "first_character_index": 44557,
+                    "last_character_index": 46489
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/v1/kv_connector/unit/test_nixl_connector.py",
+                    "first_character_index": 20415,
+                    "last_character_index": 22130
+                }
+            ],
+            "answer": "The default timeout value for vLLM RPC operations is set in the environment variable `VLLM_RPC_TIMEOUT` (in microseconds). If you want to set a custom timeout, you can specify it in the environment variable or in the code using the `timeout` parameter. The default value is typically 600 microseconds (10 minutes)."
+        },
+        {
+            "question_id": "48891f49-3fe1-42f9-8bce-4fc4c8027428",
+            "question": "What does the Gemma3ForCausalLM constructor assert about the tie_word_embeddings configuration?",
+            "retrieved_sources_indexes": [
+                216,
+                11850,
+                4786,
+                3601,
+                4350
+            ],
+            "retrieved_sources_scores": [
+                7.696825981140137,
+                6.7965545654296875,
+                6.749152183532715,
+                6.448901176452637,
+                6.282308578491211
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/design/arch_overview.md",
+                    "first_character_index": 5083,
+                    "last_character_index": 7024
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/entrypoints/test_chat_utils.py",
+                    "first_character_index": 14156,
+                    "last_character_index": 15274
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/entrypoints/openai/tool_parsers/abstract_tool_parser.py",
+                    "first_character_index": 2173,
+                    "last_character_index": 3029
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/reasoning/abs_reasoning_parsers.py",
+                    "first_character_index": 2804,
+                    "last_character_index": 3767
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/transformers_utils/configs/arctic.py",
+                    "first_character_index": 5184,
+                    "last_character_index": 7143
+                }
+            ],
+            "answer": "The Gemma3ForCausalLM constructor asserts that `tie_word_embeddings` should be `False`. This is because Gemma's architecture and design principles typically prevent word embeddings from being tied to individual tokens, ensuring that the model's behavior remains consistent across tokens and that the embeddings are treated as a shared resource."
+        },
+        {
+            "question_id": "0d9b0dbb-a25d-47eb-b35b-ce02e23fda2b",
+            "question": "What value is passed for ngroups when has_groups is False in the _bmm_chunk_fwd_kernel call?",
+            "retrieved_sources_indexes": [
+                10722,
+                10723,
+                10720,
+                10772,
+                1582
+            ],
+            "retrieved_sources_scores": [
+                14.064512252807617,
+                10.717723846435547,
+                6.922760486602783,
+                6.472227096557617,
+                6.285377502441406
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/mamba/ops/ssd_bmm.py",
+                    "first_character_index": 5855,
+                    "last_character_index": 7853
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/mamba/ops/ssd_bmm.py",
+                    "first_character_index": 7866,
+                    "last_character_index": 8639
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/mamba/ops/ssd_bmm.py",
+                    "first_character_index": 2347,
+                    "last_character_index": 4196
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/mamba/ops/mamba_ssm.py",
+                    "first_character_index": 11070,
+                    "last_character_index": 13066
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/examples/online_serving/structured_outputs/structured_outputs.py",
+                    "first_character_index": 3948,
+                    "last_character_index": 5489
+                }
+            ],
+            "answer": "<{function=selective_scan_fn}>{\"query_start_loc\": null, \"cache_indices\": null, \"has_initial_state\": null, \"pad_slot_id\": 0, \"A\": null, \"B\": null, \"C\": null, \"z\": null, \"delta\": null, \"delta_bias\": null, \"delta_softplus\": false, \"query_start_loc\": null, \"cache_indices\": null, \"has_initial_state\": null, \"pad_slot_id\": 0} </function>"
+        },
+        {
+            "question_id": "442c5e35-6424-4acf-8e79-f6da53e478b0",
+            "question": "What is the default cudagraph_support value for TritonAttentionMetadataBuilder?",
+            "retrieved_sources_indexes": [
+                5794,
+                5574,
+                5796,
+                5750,
+                638
+            ],
+            "retrieved_sources_scores": [
+                6.102803707122803,
+                5.895458221435547,
+                4.5547990798950195,
+                4.510128021240234,
+                4.356740474700928
+            ],
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/attention/backends/triton_attn.py",
+                    "first_character_index": 2171,
+                    "last_character_index": 4013
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/worker/gpu_model_runner.py",
+                    "first_character_index": 131482,
+                    "last_character_index": 133131
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/attention/backends/triton_attn.py",
+                    "first_character_index": 5443,
+                    "last_character_index": 7226
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/attention/backends/flash_attn.py",
+                    "first_character_index": 5740,
+                    "last_character_index": 7709
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/.buildkite/nightly-benchmarks/README.md",
+                    "first_character_index": 1672,
+                    "last_character_index": 3249
+                }
+            ],
+            "answer": "The default cudagraph_support value for `TritonAttentionMetadataBuilder` is `AttentionCGSupport.ALWAYS`."
+        }
+    ],
+    "k": 5
+}
