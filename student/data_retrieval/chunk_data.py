@@ -5,7 +5,8 @@ from pydantic import (
     BaseModel, Field,
     PrivateAttr, validate_call)
 from typing import List, Dict, Tuple
-from langchain_text_splitters import RecursiveCharacterTextSplitter, Language
+from langchain_text_splitters import (
+    RecursiveCharacterTextSplitter, Language)
 from langchain_core.documents import Document
 from .helper_classes import (
     DataManager, ExistingPath,

@@ -1,5 +1,6 @@
 import time
 import fire
+from typing import List
 from student.data_retrieval.helper_classes import (
     FilesInDir,
     DataManager)
@@ -17,6 +18,9 @@ from student.validator.resource_validator import (
 from student.parsing.parse_rag_dataset import RagDatasetParser
 from student.validator.resource_validator import Validator
 from student.base_patterns import StudentSearchResults
+from student.data_retrieval.resource_refiner import ResourceRefiner
+from student.data_retrieval.chunk_data import (
+    TextChunk, CodeChunk)
 
 
 class CLI:
@@ -35,28 +39,28 @@ class CLI:
 
             # 2. Initialize Retriever
             self._retriever = BM25Retriever(
-                storage_path="data/processed/",
                 data=all_chunks,
                 all_minimal_resource=all_sources
             )
             # 3. Load Index
-            self._retriever.load_corpus_index()
+            self._retriever.load_corpus_index(storage_path="data/processed/")
 
         return self._retriever
     
-    def _get_answer_generator(self) -> AnswerGenerator:
-        if self._all_chunks is None:
-            self._get_retriever()
+    def _get_answer_generator(
+            self,
+            all_chunks: List[str]
+            ) -> AnswerGenerator:
         if self._answer_generator is None:
             print("Initiating answer generator")    
             # 1. Load llm
-            llm = SmallLLM(device_type='cpu')
+            llm = SmallLLM(device_type='cuda')
 
             # 2. Initialize Answer Generator
             self._answer_generator = AnswerGenerator(
                 model=llm,
                 prompt_generator=InitialPromptGenerator.get_type1_prompt,
-                chunked_texts=self._all_chunks
+                chunked_texts=all_chunks
                 )
         return self._answer_generator
 
@@ -72,7 +76,8 @@ class CLI:
         splitter = SplitDataByChunks(
             all_paths=all_valid_paths,
             chunk_size=max_chunk_size,
-            txt_overlap=overlap)
+            txt_overlap=overlap,
+            code_overlap=overlap)
         splitter.chunk_all_files()
         splitter.save_chunked_data("data/chunks")
 
@@ -83,11 +88,11 @@ class CLI:
         all_minimal_sources, all_data_chunks = splitter.get_all_data()
 
         retriever = BM25Retriever(
-            storage_path="data/processed/",
             data=all_data_chunks,
             all_minimal_resource=all_minimal_sources)
 
         retriever.create_corpus_index()
+        retriever.save_corpus_index(storage_path="data/processed/")
         print("Ingestion complete! Indices saved under data/processed")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
@@ -154,11 +159,23 @@ class CLI:
         search_result = retriever.get_matching_chunk(
             question=question, k=k)
         
-        answer_generator = self._get_answer_generator()
+        answer_generator = self._get_answer_generator(self._all_chunks)
         
         generated_answer = answer_generator.generate_answer(
             search_result=search_result, tokens_limit=100
             )
+
+        retrieved_text = [self._all_chunks[idx] for idx in search_result.retrieved_sources_indexes]
+        refiner = ResourceRefiner(
+            data = retrieved_text,
+            minimal_resource=search_result.retrieved_sources,
+            chunk_size=200,
+            chunk_overlap=50,
+            text_chunk=TextChunk,
+            code_chunk=CodeChunk,
+            retriever=Retriever
+        )
+        print(len(refiner.create_new_data_chunks()))
 
         print(f"Question: {question}")
         print(f"Answer:\n\033[92m{generated_answer.answer}\033[0m")
@@ -174,7 +191,9 @@ class CLI:
         data = DataManager.load_data(student_search_results_path)
         student_search_results = StudentSearchResults(**data)
 
-        answer_generator = self._get_answer_generator()
+        if self._all_chunks is None:
+            self._get_retriever()
+        answer_generator = self._get_answer_generator(self._all_chunks)
 
         batch_answer_generator = BatchAnswerGenerator(
             generator=answer_generator,
@@ -236,7 +255,8 @@ def main():
         path='data/raw/vllm-0.10.1')
     splitter = SplitDataByChunks(
         all_paths=all_valid_paths,
-        chunk_size=2000, txt_overlap=50)
+        chunk_size=2000, txt_overlap=50,
+        code_overlap=50)
     splitter.chunk_all_files()
     # splitter.save_chunked_data("data/chunks")
 

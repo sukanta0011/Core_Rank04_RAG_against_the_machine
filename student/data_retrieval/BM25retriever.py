@@ -3,9 +3,13 @@ import uuid
 from typing_extensions import Annotated
 import bm25s
 from bm25s import BM25
-from pydantic import PrivateAttr, Field, validate_call, BaseModel, ConfigDict
+from pydantic import (
+    PrivateAttr, Field, validate_call,
+    BaseModel, ConfigDict)
 from student.data_retrieval.abstract_classes import Retriever
-from student.base_patterns import MinimalSearchResults, StudentSearchResults
+from student.base_patterns import (
+    MinimalSearchResults, StudentSearchResults)
+from student.data_retrieval.helper_classes import PrepareStorageFolder, ValidatedStoragePath
 
 
 class BM25Retriever(Retriever):
@@ -15,16 +19,25 @@ class BM25Retriever(Retriever):
     def create_corpus_index(self) -> None:
         # corpus_tokens: List[List[str]]
         if isinstance(self.data, list):
-            corpus_tokens = bm25s.tokenize(self.data, stopwords='en')
+            corpus_tokens = bm25s.tokenize(
+                self.data, stopwords='en')
             self._retriever = BM25()
             self._retriever.index(corpus_tokens)
-            self._retriever.save(self.storage_path)
         else:
             raise TypeError(f"Unsupported data types: {type(self.data)},"
                             "Valid types are List[str].")
 
-    def load_corpus_index(self):
-        self._retriever = BM25.load(self.storage_path)
+    def save_corpus_index(self, storage_path: PrepareStorageFolder) -> None:
+        try:
+            self._retriever.save(storage_path)
+        except Exception as e:
+            raise Exception(f"Indexed corpus saving failed. Error: {e}")
+
+    def load_corpus_index(self, storage_path: ValidatedStoragePath) -> None:
+        try:
+            self._retriever = BM25.load(storage_path)
+        except Exception as e:
+            raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
     @validate_call
     def get_matching_chunk(
