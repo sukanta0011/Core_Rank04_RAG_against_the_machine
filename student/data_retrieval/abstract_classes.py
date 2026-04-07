@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
 from typing import List, Annotated
 from student.base_patterns import MinimalSearchResults, MinimalSource
+from student.data_retrieval.helper_classes import PrepareStorageFolder, ValidatedStoragePath
 
 
 class Retriever(BaseModel, ABC):
@@ -13,11 +14,11 @@ class Retriever(BaseModel, ABC):
         pass
 
     @abstractmethod
-    def save_corpus_index(self) -> None:
+    def save_corpus_index(self, storage_path: PrepareStorageFolder) -> None:
         pass
     
     @abstractmethod
-    def load_corpus_index(self) -> None:
+    def load_corpus_index(self, storage_path: ValidatedStoragePath) -> None:
         pass
 
     @abstractmethod

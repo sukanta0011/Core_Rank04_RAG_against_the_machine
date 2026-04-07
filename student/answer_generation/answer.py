@@ -8,6 +8,7 @@ from student.base_patterns import (
     StudentSearchResults,
     StudentSearchResultsAndAnswer)
 from student.answer_generation.models.abstract_model import Model
+from student.data_retrieval.resource_refiner import ResourceRefiner
 
 
 class AnswerGenerator(BaseModel):
@@ -21,13 +22,29 @@ class AnswerGenerator(BaseModel):
     def generate_answer(
             self,
             search_result: MinimalSearchResults,
-            tokens_limit: int = Field(gt=50, default=500)
+            tokens_limit: int = Field(gt=0, default=500),
+            refiner: ResourceRefiner | None = None
             ) -> MinimalAnswer:
 
-        pre_prompt = self.prompt_generator(
-            question=search_result.question,
-            context=[self.chunked_texts[idx]\
-                     for idx in search_result.retrieved_sources_indexes])
+        if refiner:
+            # print("token refiner is running")
+            new_search_result, new_chunks = refiner.get_refined_sources(
+                question=search_result.question,
+                data=[self.chunked_texts[idx]\
+                     for idx in search_result.retrieved_sources_indexes],
+                minimal_resource=search_result.retrieved_sources
+            )
+            pre_prompt = self.prompt_generator(
+                question=search_result.question,
+                context=[new_chunks[idx]\
+                        for idx in new_search_result.retrieved_sources_indexes])
+            # print(new_chunks)
+        else:
+            pre_prompt = self.prompt_generator(
+                question=search_result.question,
+                context=[self.chunked_texts[idx]\
+                        for idx in search_result.retrieved_sources_indexes])
+        # print(pre_prompt)
 
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
         return MinimalAnswer(
@@ -45,6 +62,7 @@ class BatchAnswerGenerator(BaseModel):
 
     generator: AnswerGenerator
     tokens_limit: int = Field(gt=0, default=500)
+    refiner: ResourceRefiner | None = None
 
     @validate_call
     def process_batch(
@@ -59,14 +77,11 @@ class BatchAnswerGenerator(BaseModel):
                 total=total_questions,
                 desc="Generating Answers"):
 
-            # print(f"Question: {i}, ", end="")
-            start = time.time()
             all_answers.append(self.generator.generate_answer(
                 search_result=single_search_result,
                 tokens_limit=self.tokens_limit,
+                refiner = self.refiner
             ))
-            # time_taken = round((time.time() - start), 3)
-            # print(f"Time: \033[92m{time_taken}\033[0ms")
         return StudentSearchResultsAndAnswer(
             search_results=all_answers,
             k=search_results.k

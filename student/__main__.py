@@ -54,7 +54,7 @@ class CLI:
         if self._answer_generator is None:
             print("Initiating answer generator")    
             # 1. Load llm
-            llm = SmallLLM(device_type='cuda')
+            llm = SmallLLM(device_type='cpu')
 
             # 2. Initialize Answer Generator
             self._answer_generator = AnswerGenerator(
@@ -63,6 +63,16 @@ class CLI:
                 chunked_texts=all_chunks
                 )
         return self._answer_generator
+    
+    def _get_refiner(self, chunk_size:int, overlap: int, k:int=5) -> ResourceRefiner:
+        return ResourceRefiner(
+            chunk_size=chunk_size,
+            chunk_overlap=overlap,
+            k=k,
+            text_chunk=TextChunk,
+            code_chunk=CodeChunk,
+            retriever=BM25Retriever
+        )
 
     def index(self, max_chunk_size: int = 2000) -> None:
         start_time = time.time()
@@ -158,24 +168,26 @@ class CLI:
 
         search_result = retriever.get_matching_chunk(
             question=question, k=k)
-        
+
+        # Refining the retrieved source
+
+        refiner = self._get_refiner(200, 50, 5)
+        # retrieved_text = [
+        #     self._all_chunks[idx] for idx in search_result.retrieved_sources_indexes]
+        # new_result, new_chunks = refiner.get_refined_sources(
+        #     data = retrieved_text,
+        #     minimal_resource=search_result.retrieved_sources,
+        #     question=question
+        # )
+        # print(new_chunks)
+
+        # Generate Answer
         answer_generator = self._get_answer_generator(self._all_chunks)
         
         generated_answer = answer_generator.generate_answer(
-            search_result=search_result, tokens_limit=100
+            search_result=search_result, tokens_limit=100,
+            refiner=refiner
             )
-
-        retrieved_text = [self._all_chunks[idx] for idx in search_result.retrieved_sources_indexes]
-        refiner = ResourceRefiner(
-            data = retrieved_text,
-            minimal_resource=search_result.retrieved_sources,
-            chunk_size=200,
-            chunk_overlap=50,
-            text_chunk=TextChunk,
-            code_chunk=CodeChunk,
-            retriever=Retriever
-        )
-        print(len(refiner.create_new_data_chunks()))
 
         print(f"Question: {question}")
         print(f"Answer:\n\033[92m{generated_answer.answer}\033[0m")
@@ -193,11 +205,15 @@ class CLI:
 
         if self._all_chunks is None:
             self._get_retriever()
+
+        refiner = self._get_refiner(200, 50, 5)
+
         answer_generator = self._get_answer_generator(self._all_chunks)
 
         batch_answer_generator = BatchAnswerGenerator(
             generator=answer_generator,
-            tokens_limit=500
+            tokens_limit=500,
+            refiner=refiner
         )
         answers = batch_answer_generator.process_batch(
             search_results=student_search_results
