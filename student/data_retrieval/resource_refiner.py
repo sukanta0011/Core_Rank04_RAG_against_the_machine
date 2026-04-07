@@ -38,8 +38,8 @@ class ResourceRefiner(BaseModel, ABC):
             k=self.k,
             question_id=question_id,
         )
-        print(len(new_chunks))
-        print(new_search_result.retrieved_sources_scores)
+        # print(len(new_chunks))
+        # print(new_search_result.retrieved_sources_scores)
         return new_search_result, new_chunks
 
     def create_new_data_chunks(

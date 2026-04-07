@@ -54,7 +54,7 @@ class CLI:
         if self._answer_generator is None:
             print("Initiating answer generator")    
             # 1. Load llm
-            llm = SmallLLM(device_type='cpu')
+            llm = SmallLLM(device_type='cuda')
 
             # 2. Initialize Answer Generator
             self._answer_generator = AnswerGenerator(
@@ -206,7 +206,7 @@ class CLI:
         if self._all_chunks is None:
             self._get_retriever()
 
-        refiner = self._get_refiner(200, 50, 5)
+        refiner = self._get_refiner(500, 50, 4)
 
         answer_generator = self._get_answer_generator(self._all_chunks)
 
