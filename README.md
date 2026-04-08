@@ -82,3 +82,32 @@ uv run python3 -m student answer_dataset --student_search_results_path "data/out
 uv run python3 -m  student evaluate --student_answer_path "data/output/sources.json" --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10
 
 ```
+
+# Docker-Setup:
+Run these commands one by one:
+
+Update your package list:
+sudo apt-get update
+
+Install the official Docker script:
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+Add your user to the "docker" group:
+By default, Docker needs sudo. Adding yourself to the group lets you run commands like a pro without typing your password every time.
+sudo usermod -aG docker $USER
+
+
+Run these to set up the NVIDIA repository:
+
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+Install the toolkit:
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+
+Restart the Docker service to apply changes:
+sudo systemctl restart docker
+
+Run this command to verify the connection:
+docker run --rm --runtime=nvidia --gpus all nvidia/cuda:12.0.1-base-ubuntu22.04 nvidia-smi
