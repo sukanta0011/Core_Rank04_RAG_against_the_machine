@@ -21,7 +21,7 @@ class RAGService:
     def initialize_resources(self):
         self.retriever = self._get_retriever()
         self.answer_generator = self._get_answer_generator(self.all_chunks)
-        self.refiner = self._get_refiner(chunk_size=200, overlap=50)
+        self.refiner = self._get_refiner(chunk_size=2000, overlap=50)
 
     def _get_retriever(self) -> BM25Retriever:
         """Helper to initialize resources once."""

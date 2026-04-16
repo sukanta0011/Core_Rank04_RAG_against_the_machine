@@ -64,22 +64,22 @@ StudentSearchResults, StudentSearchResultsAndAnswer
 ## CLI commands:
 ```bash
 # Indexing
-uv run python3 -m student index --max_chunk_size 1000
+uv run python3 -m src index --max_chunk_size 1000
 
 # Search
-uv run python3 -m student search --query "what is vLLM" --k 10
+uv run python3 -m src search --query "what is vLLM" --k 10
 
 # Search Dataset
-uv run python3 -m student search_dataset --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/sources.json"
+uv run python3 -m src search_dataset --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/sources.json"
 
 # Answer
-uv run python3 -m student answer --question "what is vLLM?" --k 10
+uv run python3 -m src answer --question "what is vLLM?" --k 10
 
 # Answer dataset
-uv run python3 -m student answer_dataset --student_search_results_path "data/output/sources.json" --save_directory "data/output/source_answers.json"
+uv run python3 -m src answer_dataset --student_search_results_path "data/output/sources.json" --save_directory "data/output/source_answers.json"
 
 # evaluate
-uv run python3 -m  student evaluate --student_answer_path "data/output/sources.json" --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10
+uv run python3 -m  src evaluate --student_answer_path "data/output/sources.json" --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10
 
 ```
 
