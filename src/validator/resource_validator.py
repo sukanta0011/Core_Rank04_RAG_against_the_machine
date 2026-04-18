@@ -103,7 +103,7 @@ class AnswerValidator(BaseModel):
             return False
 
         ValidatorGuards.question_comparison(
-            ground_truth.question, answer.question)
+            ground_truth.question, answer.question_str)
 
         recall_instance = self.recall(
             n=self.n,

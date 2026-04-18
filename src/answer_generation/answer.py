@@ -49,7 +49,7 @@ class AnswerGenerator(BaseModel):
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
         return MinimalAnswer(
             question_id=search_result.question_id,
-            question=search_result.question_str,
+            question_str=search_result.question_str,
             retrieved_sources_indexes=search_result.retrieved_sources_indexes,
             retrieved_sources_scores=search_result.retrieved_sources_scores,
             retrieved_sources=search_result.retrieved_sources,

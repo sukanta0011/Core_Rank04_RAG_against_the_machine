@@ -96,7 +96,7 @@ class ResourceRefiner(BaseModel, ABC):
             data=new_chunks,
             all_minimal_resource=new_minimal_sources,
         )
-        new_retriever.create_corpus_index()
+        new_retriever.create_and_save_corpus_index("data/temp/")
         new_result = new_retriever.get_matching_chunk(
             question=question,
             k=k,

@@ -1,6 +1,6 @@
 from typing import List
 from src.data_retrieval.chunk_data import SplitDataByChunks
-from src.data_retrieval.BM25retriever import (
+from src.data_retrieval.lexical_retriever import (
     BM25Retriever)
 from src.answer_generation.models.qwen3__0_6B import SmallLLM
 from src.answer_generation.pre_prompt import InitialPromptGenerator

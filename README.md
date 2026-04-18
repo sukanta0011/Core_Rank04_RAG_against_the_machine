@@ -81,7 +81,76 @@ uv run python3 -m src answer_dataset --student_search_results_path "data/output/
 # evaluate
 uv run python3 -m  src evaluate --student_answer_path "data/output/sources.json" --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" --k 10
 
+# Moulinette evaluation
+uv run moulinette evaluate_student_search_results data/output/sources.json datasets_public/public/AnsweredQuestions/dataset_docs_public.json  --k 10 --max_context_length 2000 --threshold 0.80
+
 ```
+
+# Results:
+
+Model Name,Size (MB),Strengths,Why for you?
+
+all-MiniLM-L6-v2,~80,General English,"Your current ""baseline."""
+
+multi-qa-mpnet-base-dot-v1,~420,Q&A specifically,Trained on StackOverflow/Reddit Q&A.
+
+bge-small-en-v1.5,~130,Massive Retrieval Data,High accuracy in technical docs.
+
+
+nomic-embed-text-v1,~270,Long Context (8k),Perfect for your 2000-character chunks.
+
+chunk size 2000, overlap 50
+docs: 100 Questions
+BM25-lexical (~0.25s)
+📈 Recall@1: 0.600 (60.0%)
+📈 Recall@3: 0.790 (79.0%)
+📈 Recall@5: 0.840 (84.0%)
+📈 Recall@10: 0.930 (93.0%)
+
+MiniLM_L6_v2-Semantic (~1.2s)
+📈 Recall@1: 0.290 (29.0%)
+📈 Recall@3: 0.420 (42.0%)
+📈 Recall@5: 0.490 (49.0%)
+📈 Recall@10: 0.550 (55.0%)
+
+Hybrid-rrf (~1.35s)
+📈 Recall@1: 0.430 (43.0%)
+📈 Recall@3: 0.670 (67.0%)
+📈 Recall@5: 0.770 (77.0%)
+📈 Recall@10: 0.860 (86.0%)
+
+Hybrid-cross_validation (~10s)
+📈 Recall@1: 0.610 (61.0%)
+📈 Recall@3: 0.750 (75.0%)
+📈 Recall@5: 0.780 (78.0%)
+📈 Recall@10: 0.870 (87.0%)
+
+
+chunk size 2000, overlap 50
+code: 100 Questions
+BM25-lexical (~0.25s)
+📈 Recall@1: 0.290 (29.0%)
+📈 Recall@3: 0.480 (48.0%)
+📈 Recall@5: 0.540 (54.0%)
+📈 Recall@10: 0.570 (57.0%)
+
+MiniLM_L6_v2-Semantic (~1.2s)
+📈 Recall@1: 0.190 (19.0%)
+📈 Recall@3: 0.280 (28.0%)
+📈 Recall@5: 0.370 (37.0%)
+📈 Recall@10: 0.480 (48.0%)
+
+Hybrid-rrf (~1.3s)
+📈 Recall@1: 0.270 (27.0%)
+📈 Recall@3: 0.440 (44.0%)
+📈 Recall@5: 0.530 (53.0%)
+📈 Recall@10: 0.670 (67.0%)
+
+Hybrid-cross_validation (~10s)
+📈 Recall@1: 0.380 (38.0%)
+📈 Recall@3: 0.570 (57.0%)
+📈 Recall@5: 0.610 (61.0%)
+📈 Recall@10: 0.670 (67.0%)
 
 # Docker-Setup:
 Run these commands one by one:

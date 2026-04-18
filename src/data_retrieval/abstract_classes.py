@@ -10,11 +10,7 @@ class Retriever(BaseModel, ABC):
     all_minimal_resource: List[MinimalSource]
 
     @abstractmethod
-    def create_corpus_index(self) -> None:
-        pass
-
-    @abstractmethod
-    def save_corpus_index(self, storage_path: PrepareStorageFolder) -> None:
+    def create_and_save_corpus_index(self, storage_path: PrepareStorageFolder) -> None:
         pass
     
     @abstractmethod

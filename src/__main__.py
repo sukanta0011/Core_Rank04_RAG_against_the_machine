@@ -6,7 +6,7 @@ from src.data_retrieval.helper_classes import (
     DataManager)
 from src.data_retrieval.chunk_data import SplitDataByChunks
 from src.data_retrieval.abstract_classes import Retriever
-from src.data_retrieval.BM25retriever import (
+from src.data_retrieval.lexical_retriever import (
     BM25Retriever, BatchSourceRetriever)
 from src.answer_generation.models.qwen3__0_6B import SmallLLM
 from src.answer_generation.pre_prompt import InitialPromptGenerator
@@ -21,6 +21,11 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
+from .data_retrieval.semantic_retriever import MiniLML6Retriever
+from .data_retrieval.hybrid_retriever import HybridRetriever
+
+
+RETRIEVER = HybridRetriever
 
 
 class CLI:
@@ -29,7 +34,7 @@ class CLI:
         self._all_chunks = None
         self._answer_generator = None
 
-    def _get_retriever(self) -> BM25Retriever:
+    def _get_retriever(self) -> Retriever:
         """Helper to initialize resources once."""
         if self._retriever is None:
             # 1. Load Chunks
@@ -38,7 +43,7 @@ class CLI:
             self._all_chunks = all_chunks
 
             # 2. Initialize Retriever
-            self._retriever = BM25Retriever(
+            self._retriever = RETRIEVER(
                 data=all_chunks,
                 all_minimal_resource=all_sources
             )
@@ -71,7 +76,7 @@ class CLI:
             k=k,
             text_chunk=TextChunk,
             code_chunk=CodeChunk,
-            retriever=BM25Retriever
+            retriever=RETRIEVER
         )
 
     def index(self, max_chunk_size: int = 2000) -> None:
@@ -97,12 +102,12 @@ class CLI:
 
         all_minimal_sources, all_data_chunks = splitter.get_all_data()
 
-        retriever = BM25Retriever(
+        retriever = RETRIEVER(
             data=all_data_chunks,
             all_minimal_resource=all_minimal_sources)
 
-        retriever.create_corpus_index()
-        retriever.save_corpus_index(storage_path="data/processed/")
+        retriever.create_and_save_corpus_index(storage_path="data/processed/")
+
         print("Ingestion complete! Indices saved under data/processed")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
@@ -172,14 +177,6 @@ class CLI:
         # Refining the retrieved source
 
         refiner = self._get_refiner(200, 50, 5)
-        # retrieved_text = [
-        #     self._all_chunks[idx] for idx in search_result.retrieved_sources_indexes]
-        # new_result, new_chunks = refiner.get_refined_sources(
-        #     data = retrieved_text,
-        #     minimal_resource=search_result.retrieved_sources,
-        #     question=question
-        # )
-        # print(new_chunks)
 
         # Generate Answer
         answer_generator = self._get_answer_generator(self._all_chunks)
@@ -289,7 +286,7 @@ def main():
         data=all_data_chunks,
         all_minimal_resource=all_minimal_sources)
 
-    bm25_retriever.create_corpus_index()
+    bm25_retriever.create_and_save_corpus_index(storage_path="data/processed/")
     # bm25_retriever.load_corpus_index()
 
     answered_path = [
@@ -374,7 +371,9 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    try:
-        fire.Fire(CLI)
-    except Exception as e:
-        print(e)
+    fire.Fire(CLI)
+
+    # try:
+    #     fire.Fire(CLI)
+    # except Exception as e:
+    #     print(e)
