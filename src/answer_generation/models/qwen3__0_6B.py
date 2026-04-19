@@ -2,6 +2,7 @@ from typing import Any, List, Dict
 import torch
 from pydantic import BaseModel, PrivateAttr, field_validator, ValidationError, Field
 from transformers import AutoModelForCausalLM, AutoTokenizer
+# from vllm import LLM, SamplingParams
 from src.answer_generation.models.abstract_model import Model
 
 
@@ -54,6 +55,26 @@ def hugging_face_example():
 
 ALLOWED_DEVICE_TYPES = ('cuda', 'cpu', None)
 
+# class SmallvLLM(BaseModel, Model):
+#     _llm: LLM = PrivateAttr()
+
+#     def model_post_init(self, __context: Any) -> None:
+#         self._llm = LLM(
+#             model="Qwen/Qwen3-0.6B",
+#             gpu_memory_utilization=0.7,
+#             trust_remote_code=True,
+#             max_model_len=2048
+#         )
+
+#     def generate_answer(
+#             self, resources: List[Dict],
+#             tokens_limit: int = Field(gt=0, default=500)
+#             ) -> str:
+#         sampling_params = SamplingParams(temperature=0.3, max_tokens=256)
+#         answers = self._llm.generate([resources], sampling_params)
+#         return answers[0].outputs[0].text
+    
+
 
 class SmallLLM(BaseModel, Model):
     model_name: str = "Qwen/Qwen3-0.6B"
@@ -83,6 +104,7 @@ class SmallLLM(BaseModel, Model):
             self.model_name,
             torch_dtype = "auto",
             device_map = "auto" if self.device_type == "cuda" else None,
+            trust_remote_code=True
         )
 
     def generate_answer(
@@ -107,6 +129,11 @@ class SmallLLM(BaseModel, Model):
             output_ids, skip_special_tokens=True).strip("\n")
         return content
 
+
+
+# def test_small_vllm() -> None:
+#     llm = SmallvLLM()
+#     prompt = "This a test prompt"
 
 if __name__ == "__main__":
     hugging_face_example()

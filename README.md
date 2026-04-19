@@ -99,6 +99,8 @@ bge-small-en-v1.5,~130,Massive Retrieval Data,High accuracy in technical docs.
 
 nomic-embed-text-v1,~270,Long Context (8k),Perfect for your 2000-character chunks.
 
+Qwen/Qwen3-Embedding-0.6B
+
 chunk size 2000, overlap 50
 docs: 100 Questions
 BM25-lexical (~0.25s)

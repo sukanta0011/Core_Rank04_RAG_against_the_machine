@@ -1,5 +1,7 @@
 import time
 import fire
+import torch
+from enum import Enum
 from typing import List
 from src.data_retrieval.helper_classes import (
     FilesInDir,
@@ -25,7 +27,9 @@ from .data_retrieval.semantic_retriever import MiniLML6Retriever
 from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = HybridRetriever
+RETRIEVER = BM25Retriever
+LLM = SmallLLM
+DEVICE_TYPE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class CLI:
@@ -59,7 +63,8 @@ class CLI:
         if self._answer_generator is None:
             print("Initiating answer generator")    
             # 1. Load llm
-            llm = SmallLLM(device_type='cuda')
+            llm = LLM(
+                device_type=DEVICE_TYPE)
 
             # 2. Initialize Answer Generator
             self._answer_generator = AnswerGenerator(

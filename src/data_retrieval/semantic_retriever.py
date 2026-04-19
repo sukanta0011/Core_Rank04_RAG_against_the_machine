@@ -5,6 +5,7 @@ from tqdm import tqdm
 from chromadb.utils import embedding_functions
 from pydantic import PrivateAttr, Field
 from typing import Annotated
+from sentence_transformers import SentenceTransformer
 from ..data_retrieval.abstract_classes import Retriever
 from ..base_patterns import MinimalSearchResults
 
@@ -15,7 +16,8 @@ CHROMADB_BATCH_SIZE = 128
 class MiniLML6Retriever(Retriever):
     _embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
         model_name="all-MiniLM-L6-v2",
-        device="cuda" if torch.cuda.is_available() else "cpu")
+        device="cuda" if torch.cuda.is_available() else "cpu"
+        )
     _client = PrivateAttr()
     _collection = PrivateAttr()
 

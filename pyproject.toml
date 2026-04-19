@@ -20,6 +20,7 @@ dependencies = [
     "streamlit>=1.56.0",
     "chromadb>=1.5.8",
     "sentence-transformers>=5.4.1",
+    "einops>=0.8.2",
 ]
 
 [[tool.uv.index]]
