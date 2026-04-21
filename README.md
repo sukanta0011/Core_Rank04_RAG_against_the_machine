@@ -204,19 +204,18 @@ LLM generation time scales with context length. Planned fix: after retrieval, re
 - [Microsoft Azure — Design and Develop a RAG Solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide) — Comprehensive guide to RAG pipeline design, chunking strategies, and evaluation methodology
 - [Applied AI — Enterprise RAG Architecture: A Practitioner's Guide](https://www.applied-ai.com/briefings/enterprise-rag-architecture/) — In-depth coverage of hybrid search, RRF, cross-encoder re-ranking, and production RAG patterns
 - [Medium — Building Production-Ready RAG Systems](https://medium.com/@meeran03/building-production-ready-rag-systems-best-practices-and-latest-tools-581cae9518e7) — Best practices for RAG systems using LangChain, LlamaIndex, vector databases, and evaluation strategies (2024–2025)
-- [Lewis et al. (2020) — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401) — Original RAG paper from Facebook AI Research
 
 ---
 
 ## Future Plans
  
-**Query Expansion**
+**Query Expansion**: 
 Currently, the system searches using the user's question exactly as typed. The planned improvement is to generate 2–3 reformulated variants of the question — either by injecting synonyms or by prompting an LLM to rephrase it — before running retrieval. Each variant is searched independently and the results are merged. This directly targets BM25's weakness: if the user's wording differs from the document's wording, lexical search misses the match. Query expansion increases the surface area of the search without changing the underlying retrieval infrastructure.
  
-**Question Caching**
+**Question Caching**:
 Repeated or semantically similar questions should not trigger a full retrieval and LLM generation cycle every time. The plan is to store previously answered questions in the vector database alongside their answers and a unique ID. When a new question arrives, it is first compared against cached questions using semantic similarity. If a sufficiently close match is found, the cached answer is returned directly — bypassing both retrieval and LLM inference. This solves two problems simultaneously: it eliminates redundant LLM calls (reducing cost and latency), and it ensures that similar questions always receive consistent answers rather than slightly different generations.
  
-**vLLM Inference Backend**
+**vLLM Inference Backend**:
 vLLM's PagedAttention mechanism optimises GPU memory management for inference, enabling higher throughput and lower latency when serving multiple concurrent requests. This would make the system fully self-contained and significantly faster for batch answer generation.
  
 ---
