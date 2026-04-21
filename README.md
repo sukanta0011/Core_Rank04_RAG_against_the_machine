@@ -10,6 +10,8 @@ Retrieval-Augmented Generation (RAG) is an advanced information retrieval techni
 
 This project targets the [vLLM](https://github.com/vllm-project/vllm) GitHub repository. Given a natural language question, the system retrieves the most relevant chunks from vLLM's documentation and source code, and generates a grounded answer based on those sources. Performance is evaluated against 100 ground-truth question-answer pairs across both documentation and code datasets.
 
+![](screenshots/ScreencastFrom2026-04-2101-59-06-ezgif.com-speed.gif)
+
 ---
 
 ## Installation & Usage
