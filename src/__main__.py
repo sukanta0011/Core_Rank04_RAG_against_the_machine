@@ -27,7 +27,7 @@ from .data_retrieval.semantic_retriever import MiniLML6Retriever
 from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = BM25Retriever
+RETRIEVER = MiniLML6Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cuda" if torch.cuda.is_available() else "cpu"
 

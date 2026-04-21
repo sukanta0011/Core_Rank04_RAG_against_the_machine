@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import time
 
 # 1. Page Configuration
 st.set_page_config(page_title="vLLM RAG Assistant", page_icon="🤖")
@@ -16,6 +17,7 @@ if st.button("Ask AI"):
     if question:
         with st.spinner("Searching and generating answer..."):
             try:
+                start = time.time()
                 # We talk to our FastAPI container
                 response = requests.post(
                     "http://127.0.0.1:8000/ask",
@@ -25,7 +27,8 @@ if st.button("Ask AI"):
                 data = response.json()
 
                 # Display Results
-                st.subheader("Answer")
+
+                st.subheader(f"Answer ({(time.time() - start):.03f}s)")
                 st.write(data["answer"])
 
                 with st.expander("View Retrieved Sources"):

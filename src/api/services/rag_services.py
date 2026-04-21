@@ -9,6 +9,7 @@ from src.answer_generation.answer import (
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
+from src.data_retrieval.hybrid_retriever import HybridRetriever
 
 
 class RAGService:
@@ -32,7 +33,7 @@ class RAGService:
             self.all_chunks = all_chunks
 
             # 2. Initialize Retriever
-            self.retriever = BM25Retriever(
+            self.retriever = HybridRetriever(
                 data=all_chunks,
                 all_minimal_resource=all_sources
             )
