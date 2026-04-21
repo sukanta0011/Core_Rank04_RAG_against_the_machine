@@ -26,7 +26,7 @@ from src.data_retrieval.chunk_data import (
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = MiniLML6Retriever
+RETRIEVER = BM25Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 
