@@ -22,16 +22,16 @@ class HybridRetriever(Retriever):
     @model_validator(mode='after')
     def initialize_sub_retrievers(self) -> 'HybridRetriever':
         self._special_retriever = MiniLML6Retriever(
-            data=self.data, 
+            data=self.data,
             all_minimal_resource=self.all_minimal_resource
         )
         self._lexical_retriever = BM25Retriever(
-            data=self.data, 
+            data=self.data,
             all_minimal_resource=self.all_minimal_resource
         )
         return self
 
-    def create_and_save_corpus_index(self, storage_path):        
+    def create_and_save_corpus_index(self, storage_path):
         print("Spacial indexing under process")
         self._special_retriever.create_and_save_corpus_index(storage_path)
         print("Lexical indexing under process")
@@ -43,14 +43,14 @@ class HybridRetriever(Retriever):
             self._lexical_retriever.load_corpus_index(storage_path)
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
-    
+
     def get_matching_chunk(
         self,
         question: Annotated[str, Field(min_length=3)],
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
             ) -> MinimalSearchResults:
-        
+
         spatial_results = self._special_retriever.get_matching_chunk(
             question=question,
             question_id=question_id,
@@ -74,7 +74,7 @@ class HybridRetriever(Retriever):
         # indexes = []
         # indexes.extend(spatial_results.retrieved_sources_indexes)
         # indexes.extend(lexical_results.retrieved_sources_indexes)
-        
+
         indexes, scores = re_rank_results(
             query=question,
             chunks=[self.data[i] for i in indexes[:k]],
@@ -88,8 +88,7 @@ class HybridRetriever(Retriever):
             retrieved_sources_scores=scores[:k],
             retrieved_sources=[self.all_minimal_resource[i]
                                for i in indexes[:k]]
-        )     
-
+        )
 
 
 def get_rrf_index(
@@ -110,6 +109,7 @@ def get_rrf_index(
         [item[1] for item in sorted_dict]
         )
 
+
 def re_rank_results(
         query: str, chunks: List[str],
         indexes: List[int]) -> Tuple[List[int], List[float]]:
@@ -117,7 +117,8 @@ def re_rank_results(
     pairs = [[query, chunk] for chunk in chunks]
     scores = re_ranker.predict(pairs)
 
-    scored_index =sorted(zip(indexes, scores), key=lambda x: x[1], reverse=True)
+    scored_index = sorted(
+        zip(indexes, scores), key=lambda x: x[1], reverse=True)
     return (
         [item[0] for item in scored_index],
         [item[1] for item in scored_index]

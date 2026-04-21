@@ -1,11 +1,12 @@
 from typing import List, Dict
 import json
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, PrivateAttr
 from src.data_retrieval.helper_classes import ExistingPath
-from src.base_patterns import(
+from src.base_patterns import (
     UnansweredQuestion,
     AnsweredQuestion, RagDataset
 )
+
 
 class ParsingError(Exception):
     pass
@@ -15,8 +16,9 @@ class RagDatasetParser(BaseModel):
     answered_question_paths: List[ExistingPath]
     unanswered_question_paths: List[ExistingPath]
 
-    _answered_data_set: RagDataset = PrivateAttr() 
-    _ground_truth_map: Dict[str, AnsweredQuestion] = PrivateAttr(default_factory=dict)
+    _answered_data_set: RagDataset = PrivateAttr()
+    _ground_truth_map: Dict[str, AnsweredQuestion] =\
+        PrivateAttr(default_factory=dict)
     _unanswered_data_set: RagDataset = PrivateAttr()
 
     @staticmethod
@@ -40,7 +42,8 @@ class RagDatasetParser(BaseModel):
             if len(data) > 0:
                 for answer in data:
                     answered_questions = AnsweredQuestion(**answer)
-                    self._ground_truth_map[answered_questions.question_id] = answered_questions
+                    self._ground_truth_map[
+                        answered_questions.question_id] = answered_questions
                     all_answered.append(answered_questions)
         self._answered_data_set = RagDataset(rag_questions=all_answered)
 
@@ -56,7 +59,7 @@ class RagDatasetParser(BaseModel):
 
     def get_answered_data(self) -> RagDataset:
         return self._answered_data_set
-    
+
     def get_unanswered_data(self) -> RagDataset:
         return self._unanswered_data_set
 
@@ -65,8 +68,10 @@ class RagDatasetParser(BaseModel):
 
 
 def test_rag_data_parser() -> None:
-    answered_path = "datasets_public/public/AnsweredQuestions/dataset_docs_public_test.json"
-    unanswered_path = "datasets_public/public/UnansweredQuestions/dataset_docs_public.json"
+    answered_path = ("datasets_public/public/AnsweredQuestions"
+                     "/dataset_docs_public_test.json")
+    unanswered_path = ("datasets_public/public/UnansweredQuestions"
+                       "/dataset_docs_public.json")
 
     rag_parser = RagDatasetParser(
         answered_question_paths=[answered_path],

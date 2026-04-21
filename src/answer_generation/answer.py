@@ -1,5 +1,5 @@
 from typing import Callable, List
-import time
+# import time
 from tqdm import tqdm
 from pydantic import BaseModel, validate_call, Field, ConfigDict
 from src.base_patterns import (
@@ -30,20 +30,21 @@ class AnswerGenerator(BaseModel):
             # print("token refiner is running")
             new_search_result, new_chunks = refiner.get_refined_sources(
                 question=search_result.question_str,
-                data=[self.chunked_texts[idx]\
-                     for idx in search_result.retrieved_sources_indexes],
+                data=[self.chunked_texts[idx]
+                      for idx in search_result.retrieved_sources_indexes],
                 minimal_resource=search_result.retrieved_sources
             )
             pre_prompt = self.prompt_generator(
                 question=search_result.question_str,
-                context=[new_chunks[idx]\
-                        for idx in new_search_result.retrieved_sources_indexes])
+                context=[new_chunks[idx]
+                         for idx in
+                         new_search_result.retrieved_sources_indexes])
             # print(new_chunks)
         else:
             pre_prompt = self.prompt_generator(
                 question=search_result.question_str,
-                context=[self.chunked_texts[idx]\
-                        for idx in search_result.retrieved_sources_indexes])
+                context=[self.chunked_texts[idx]
+                         for idx in search_result.retrieved_sources_indexes])
         # print(pre_prompt)
 
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
@@ -80,7 +81,7 @@ class BatchAnswerGenerator(BaseModel):
             all_answers.append(self.generator.generate_answer(
                 search_result=single_search_result,
                 tokens_limit=self.tokens_limit,
-                refiner = self.refiner
+                refiner=self.refiner
             ))
         return StudentSearchResultsAndAnswer(
             search_results=all_answers,

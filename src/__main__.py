@@ -1,7 +1,6 @@
 import time
 import fire
-import torch
-from enum import Enum
+# import torch
 from typing import List
 from src.data_retrieval.helper_classes import (
     FilesInDir,
@@ -23,13 +22,13 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
-from .data_retrieval.semantic_retriever import MiniLML6Retriever
-from .data_retrieval.hybrid_retriever import HybridRetriever
+# from .data_retrieval.semantic_retriever import MiniLML6Retriever
+# from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
 RETRIEVER = MiniLML6Retriever
 LLM = SmallLLM
-DEVICE_TYPE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE_TYPE = "cpu"
 
 
 class CLI:
@@ -55,13 +54,13 @@ class CLI:
             self._retriever.load_corpus_index(storage_path="data/processed/")
 
         return self._retriever
-    
+
     def _get_answer_generator(
             self,
             all_chunks: List[str]
             ) -> AnswerGenerator:
         if self._answer_generator is None:
-            print("Initiating answer generator")    
+            print("Initiating answer generator")
             # 1. Load llm
             llm = LLM(
                 device_type=DEVICE_TYPE)
@@ -73,8 +72,10 @@ class CLI:
                 chunked_texts=all_chunks
                 )
         return self._answer_generator
-    
-    def _get_refiner(self, chunk_size:int, overlap: int, k:int=5) -> ResourceRefiner:
+
+    def _get_refiner(
+        self, chunk_size: int, overlap: int, k: int = 5
+            ) -> ResourceRefiner:
         return ResourceRefiner(
             chunk_size=chunk_size,
             chunk_overlap=overlap,
@@ -92,7 +93,7 @@ class CLI:
             path='data/raw/vllm-0.10.1')
 
         # Split the data into chunks
-        overlap = 50 if max_chunk_size > 200 else 0
+        overlap = 50 if max_chunk_size >= 500 else 0
         splitter = SplitDataByChunks(
             all_paths=all_valid_paths,
             chunk_size=max_chunk_size,
@@ -125,7 +126,7 @@ class CLI:
             question=query, k=k)
 
         print(f"Question: {query}")
-        print(f"Matching Resources")
+        print("Matching Resources")
         for source in search_result.retrieved_sources:
             print(f"{source.file_path}")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
@@ -168,7 +169,8 @@ class CLI:
         )
 
         print(f"\033[92m{len(all_questions)}\033[0m questions are retrieved")
-        print(f"Saved student_search_results to \033[92m{save_directory}\033[0m")
+        print("Saved student_search_results to "
+              f"\033[92m{save_directory}\033[0m")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     def answer(self, question: str, k: int = 10) -> None:
@@ -185,7 +187,7 @@ class CLI:
 
         # Generate Answer
         answer_generator = self._get_answer_generator(self._all_chunks)
-        
+
         generated_answer = answer_generator.generate_answer(
             search_result=search_result, tokens_limit=100,
             refiner=refiner
@@ -238,14 +240,14 @@ class CLI:
             validation_type: Validator = RecallN) -> None:
 
         start_time = time.time()
-        
+
         rag_parser = RagDatasetParser(
             answered_question_paths=[dataset_path],
             unanswered_question_paths=[]
         )
         rag_parser.extract_data_from_paths()
         ground_truth = rag_parser.get_ground_truth()
-        
+
         answer_validator_recall = AnswerValidator(
             ground_truth_map=ground_truth,
             recall=validation_type,

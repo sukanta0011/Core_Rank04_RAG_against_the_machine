@@ -28,12 +28,11 @@ class BM25Retriever(Retriever):
         else:
             raise TypeError(f"Unsupported data types: {type(self.data)},"
                             "Valid types are List[str].")
-        
+
         try:
             self._retriever.save(storage_path)
         except Exception as e:
             raise Exception(f"Indexed corpus saving failed. Error: {e}")
-
 
     def load_corpus_index(self, storage_path: ValidatedStoragePath) -> None:
         try:
@@ -46,7 +45,7 @@ class BM25Retriever(Retriever):
         self,
         question: Annotated[str, Field(min_length=3)],
         k: Annotated[int, Field(gt=0)],
-        question_id: str| None = None
+        question_id: str | None = None
             ) -> MinimalSearchResults:
 
         if not hasattr(self, '_retriever'):

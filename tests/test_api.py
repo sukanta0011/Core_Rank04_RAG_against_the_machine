@@ -34,7 +34,7 @@ def test_ask_question_invalid_k(client):
     # 1. Arrange: Send k=0 (which violates Field(gt=0))
     payload = {
         "question": "How to config vLLM?",
-        "k": 0 
+        "k": 0
     }
 
     # 2. Act
@@ -43,7 +43,7 @@ def test_ask_question_invalid_k(client):
     # 3. Assert
     # 422 is the standard FastAPI code for validation errors
     assert response.status_code == 422
-    
+
     data = response.json()
     # Check that the error message specifically mentions 'k'
     assert data["detail"][0]["loc"] == ["body", "k"]

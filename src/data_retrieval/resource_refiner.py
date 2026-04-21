@@ -83,14 +83,14 @@ class ResourceRefiner(BaseModel, ABC):
                     MinimalSource(
                         file_path=resource.file_path,
                         first_character_index=start,
-                        last_character_index=\
-                            start + len(doc.page_content)
+                        last_character_index=start + len(doc.page_content)
                     )
                 )
         return new_minimal_source, new_data
-    
+
     def retrieved_from_new_data_chunks(
-            self, new_minimal_sources, new_chunks, question, k, question_id=None,
+            self, new_minimal_sources, new_chunks, question,
+            k, question_id=None,
             ) -> MinimalSearchResults:
         new_retriever = self.retriever(
             data=new_chunks,

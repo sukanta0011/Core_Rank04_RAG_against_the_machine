@@ -41,13 +41,13 @@ class RAGService:
             self.retriever.load_corpus_index(storage_path="data/processed/")
 
         return self.retriever
-    
+
     def _get_answer_generator(
             self,
             all_chunks: List[str]
             ) -> AnswerGenerator:
         if self.answer_generator is None:
-            print("Initiating answer generator")    
+            print("Initiating answer generator")
             # 1. Load llm
             llm = SmallLLM(device_type='cuda')
 
@@ -58,8 +58,10 @@ class RAGService:
                 chunked_texts=all_chunks
                 )
         return self.answer_generator
-    
-    def _get_refiner(self, chunk_size:int, overlap: int, k:int=5) -> ResourceRefiner:
+
+    def _get_refiner(
+        self, chunk_size: int, overlap: int, k: int = 5
+            ) -> ResourceRefiner:
         return ResourceRefiner(
             chunk_size=chunk_size,
             chunk_overlap=overlap,

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from chromadb.utils import embedding_functions
 from pydantic import PrivateAttr, Field
 from typing import Annotated
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 from ..data_retrieval.abstract_classes import Retriever
 from ..base_patterns import MinimalSearchResults
 
@@ -24,7 +24,7 @@ class MiniLML6Retriever(Retriever):
     def create_and_save_corpus_index(self, storage_path):
         if isinstance(self.data, list):
             self._client = chromadb.PersistentClient(path=storage_path)
-            
+
             self._collection = self._client.get_or_create_collection(
                 name="vLLM",
                 embedding_function=self._embed_fn
@@ -33,11 +33,13 @@ class MiniLML6Retriever(Retriever):
             if self._collection.count() == len(self.data):
                 return
 
+            for i in tqdm(
+                range(0, len(self.data), CHROMADB_BATCH_SIZE),
+                    desc="Indexing Documents"):
 
-            for i in tqdm(range(0, len(self.data), CHROMADB_BATCH_SIZE), desc="Indexing Documents"):
-                batch_data = self.data[i : i + CHROMADB_BATCH_SIZE]
+                batch_data = self.data[i: i + CHROMADB_BATCH_SIZE]
                 batch_ids = [str(j) for j in range(i, i + len(batch_data))]
-                
+
                 self._collection.upsert(
                     ids=batch_ids,
                     documents=batch_data
@@ -52,14 +54,14 @@ class MiniLML6Retriever(Retriever):
             )
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
-    
+
     def get_matching_chunk(
         self,
         question: Annotated[str, Field(min_length=3)],
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
             ) -> MinimalSearchResults:
-        
+
         results = self._collection.query(
             query_texts=[question],
             n_results=k
@@ -77,8 +79,7 @@ class MiniLML6Retriever(Retriever):
             retrieved_sources_scores=results['distances'][0],
             retrieved_sources=[self.all_minimal_resource[i]
                                for i in indexes]
-        )     
-
+        )
 
 
 def chromadb_test():

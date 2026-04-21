@@ -1,6 +1,8 @@
 from typing import Any, List, Dict
 import torch
-from pydantic import BaseModel, PrivateAttr, field_validator, ValidationError, Field
+from pydantic import (
+    BaseModel, PrivateAttr,
+    field_validator, ValidationError, Field)
 from transformers import AutoModelForCausalLM, AutoTokenizer
 # from vllm import LLM, SamplingParams
 from src.answer_generation.models.abstract_model import Model
@@ -26,7 +28,8 @@ def hugging_face_example():
         messages,
         tokenize=False,
         add_generation_prompt=True,
-        enable_thinking=True  # Switches between thinking and non-thinking modes. Default is True.
+        # Switches between thinking and non-thinking modes.
+        enable_thinking=True
     )
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
 
@@ -35,7 +38,7 @@ def hugging_face_example():
         **model_inputs,
         max_new_tokens=32768
     )
-    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
+    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
 
     # # parsing thinking content
     # try:
@@ -73,7 +76,6 @@ ALLOWED_DEVICE_TYPES = ('cuda', 'cpu', None)
 #         sampling_params = SamplingParams(temperature=0.3, max_tokens=256)
 #         answers = self._llm.generate([resources], sampling_params)
 #         return answers[0].outputs[0].text
-    
 
 
 class SmallLLM(BaseModel, Model):
@@ -102,8 +104,8 @@ class SmallLLM(BaseModel, Model):
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype = "auto",
-            device_map = "auto" if self.device_type == "cuda" else None,
+            torch_dtype=torch.float16,
+            device_map="auto" if self.device_type == "cuda" else None,
             trust_remote_code=True
         )
 
@@ -128,7 +130,6 @@ class SmallLLM(BaseModel, Model):
         content = self._tokenizer.decode(
             output_ids, skip_special_tokens=True).strip("\n")
         return content
-
 
 
 # def test_small_vllm() -> None:

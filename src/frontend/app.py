@@ -9,8 +9,10 @@ st.title("🤖 vLLM RAG Assistant")
 st.markdown("Ask questions about the vLLM documentation.")
 
 # 2. User Input
-question = st.text_input("Enter your question:", placeholder="How do I setup vLLM?")
-k_value = st.slider("Number of sources to retrieve", min_value=1, max_value=10, value=3)
+question = st.text_input(
+    "Enter your question:", placeholder="How do I setup vLLM?")
+k_value = st.slider(
+    "Number of sources to retrieve", min_value=1, max_value=10, value=3)
 
 # 3. The Logic
 if st.button("Ask AI"):
@@ -33,8 +35,9 @@ if st.button("Ask AI"):
 
                 with st.expander("View Retrieved Sources"):
                     for idx, source in enumerate(data["resource_locations"]):
-                        st.write(f"**Source {idx+1}:** `{source['file_path']}`")
-            
+                        st.write(
+                            f"**Source {idx+1}:** `{source['file_path']}`")
+
             except Exception as e:
                 st.error(f"Error connecting to backend: {e}")
     else:
