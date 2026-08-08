@@ -22,11 +22,11 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
-# from .data_retrieval.semantic_retriever import MiniLML6Retriever
+from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = BM25Retriever
+RETRIEVER = MiniLML6Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 

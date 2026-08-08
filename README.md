@@ -31,7 +31,7 @@ uv sync
 
 ```bash
 # Index the document corpus
-uv run python3 -m src index --max_chunk_size 1000
+uv run python3 -m src index --max_chunk_size 2000
 
 # Run a single search query
 uv run python3 -m src search --query "what is vLLM" --k 10
@@ -55,7 +55,13 @@ uv run python3 -m src evaluate \
   --student_answer_path "data/output/sources.json" \
   --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" \
   --k 10
+
+# Evaluate using moulinette
+./moulinette evaluate_student_search_results data/output/sources_docs.json datasets_public/public/AnsweredQuestions/dataset_docs_public.json --k 10 --max_context_length 2000
+
+./moulinette evaluate_student_search_results data/output/sources_code.json datasets_public/public/AnsweredQuestions/dataset_code_public.json --k 10 --max_context_length 2000
 ```
+
 
 ### Interactive Mode
 
@@ -224,7 +230,7 @@ vLLM's PagedAttention mechanism optimises GPU memory management for inference, e
 
 In accordance with 42 Prague guidelines, AI assistance was used for the following:
 - Understanding RAG concepts and retrieval design patterns
-- Generating docstrings for Python modules
+- Generating doc strings for Python modules
 - Polishing this README file
 - Generating the Streamlit frontend interface
 
