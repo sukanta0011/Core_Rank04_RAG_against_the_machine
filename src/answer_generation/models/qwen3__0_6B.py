@@ -104,7 +104,7 @@ class SmallLLM(BaseModel, Model):
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype=torch.float16,
+            dtype=torch.float32,
             device_map="auto" if self.device_type == "cuda" else None,
             trust_remote_code=True
         )

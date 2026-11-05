@@ -22,11 +22,12 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
-from .data_retrieval.semantic_retriever import MiniLML6Retriever
+from .data_retrieval.lexical_retriever import BM25Retriever
+# from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = MiniLML6Retriever
+RETRIEVER = BM25Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 
@@ -128,7 +129,7 @@ class CLI:
         print(f"Question: {query}")
         print("Matching Resources")
         for source in search_result.retrieved_sources:
-            print(f"{source.file_path}")
+            print(f"{source.file_path}[{source.first_character_index}:{source.last_character_index}]")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     def search_dataset(
@@ -176,17 +177,24 @@ class CLI:
     def answer(self, question: str, k: int = 10) -> None:
         start_time = time.time()
 
+        print(f"answer generation started: {(time.time() - start_time):.3f}")
         retriever = self._get_retriever()
 
+        print(f"retrieved the resources: {(time.time() - start_time):.3f}")
         search_result = retriever.get_matching_chunk(
             question=question, k=k)
+        print(f"search results: {(time.time() - start_time):.3f}")
 
         # Refining the retrieved source
 
         refiner = self._get_refiner(200, 50, 5)
+        
+        print(f"refined results: {(time.time() - start_time):.3f}")
 
         # Generate Answer
         answer_generator = self._get_answer_generator(self._all_chunks)
+        print(f"answer generator: {(time.time() - start_time):.3f}")
+
 
         generated_answer = answer_generator.generate_answer(
             search_result=search_result, tokens_limit=100,
@@ -210,7 +218,7 @@ class CLI:
         if self._all_chunks is None:
             self._get_retriever()
 
-        refiner = self._get_refiner(500, 50, 4)
+        refiner = self._get_refiner(200, 50, 5)
 
         answer_generator = self._get_answer_generator(self._all_chunks)
 

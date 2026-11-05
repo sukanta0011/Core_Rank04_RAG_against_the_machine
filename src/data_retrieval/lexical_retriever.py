@@ -61,7 +61,7 @@ class BM25Retriever(Retriever):
             query_tokens, k=k, return_as="tuple")
 
         return MinimalSearchResults(
-            question_str=question,
+            question=question,
             question_id=question_id,
             retrieved_sources_indexes=indexes[0],
             retrieved_sources_scores=scores[0],
@@ -110,13 +110,11 @@ def bm25s_test():
     retriever = bm25s.BM25()
     retriever.index(corpus_tokens)
 
-    # You can now search the corpus with a query
     query = "how is the relation of dog and human?"
     query_tokens = bm25s.tokenize(query)
     index, score = retriever.retrieve(query_tokens, k=2, return_as="tuple")
     print(f"Best result score: {index[0]}")
 
-    # Happy with your index? Save it for later...
     retriever.save("bm25s_index_animals")
 
     # ...and load it when needed

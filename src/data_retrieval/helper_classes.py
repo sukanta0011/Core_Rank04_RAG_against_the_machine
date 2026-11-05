@@ -9,6 +9,7 @@ from pydantic import (
     AfterValidator,
     validate_call)
 from langchain_text_splitters import Language
+import hashlib
 
 
 FULL_CODE_SYNTAX = {
@@ -89,6 +90,19 @@ class DataManager:
             )
 
     @staticmethod
+    def generate_hash(path: ExistingPath) -> str:
+        buffer_size = 65536
+        hasher = hashlib.sha256()
+
+        with open(path, "rb") as fl:
+            while True:
+                data = fl.read(buffer_size)
+                if not data:
+                    break
+                hasher.update(data)
+        return hasher.hexdigest()
+
+    @staticmethod
     @validate_call
     def save_data(
         storage_path: ValidatedStoragePath,
@@ -129,3 +143,7 @@ class FilesInDir:
         # for syntax, paths in self._all_paths.items():
         #     print(f"{syntax}: {len(paths)}: {paths[0]}")
         return all_paths
+
+
+if __name__ == "__main__":
+    print(DataManager.generate_hash("src/data_retrieval/test.txt"))

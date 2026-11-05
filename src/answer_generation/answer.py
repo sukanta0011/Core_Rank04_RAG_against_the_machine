@@ -29,20 +29,20 @@ class AnswerGenerator(BaseModel):
         if refiner:
             # print("token refiner is running")
             new_search_result, new_chunks = refiner.get_refined_sources(
-                question=search_result.question_str,
+                question=search_result.question,
                 data=[self.chunked_texts[idx]
                       for idx in search_result.retrieved_sources_indexes],
                 minimal_resource=search_result.retrieved_sources
             )
             pre_prompt = self.prompt_generator(
-                question=search_result.question_str,
+                question=search_result.question,
                 context=[new_chunks[idx]
                          for idx in
                          new_search_result.retrieved_sources_indexes])
             # print(new_chunks)
         else:
             pre_prompt = self.prompt_generator(
-                question=search_result.question_str,
+                question=search_result.question,
                 context=[self.chunked_texts[idx]
                          for idx in search_result.retrieved_sources_indexes])
         # print(pre_prompt)
@@ -50,7 +50,7 @@ class AnswerGenerator(BaseModel):
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
         return MinimalAnswer(
             question_id=search_result.question_id,
-            question_str=search_result.question_str,
+            question=search_result.question,
             retrieved_sources_indexes=search_result.retrieved_sources_indexes,
             retrieved_sources_scores=search_result.retrieved_sources_scores,
             retrieved_sources=search_result.retrieved_sources,

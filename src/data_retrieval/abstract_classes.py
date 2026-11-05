@@ -1,9 +1,19 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
 from typing import List, Annotated
+from langchain_core.documents import Document
 from src.base_patterns import MinimalSearchResults, MinimalSource
 from src.data_retrieval.helper_classes import (
     PrepareStorageFolder, ValidatedStoragePath)
+
+
+class DataChunk(ABC, BaseModel):
+    chunk_size: int = Field(gt=20, default=500)
+
+    @abstractmethod
+    def process(self, document: str,
+                chunk_overlap: int) -> List[Document]:
+        pass
 
 
 class Retriever(BaseModel, ABC):

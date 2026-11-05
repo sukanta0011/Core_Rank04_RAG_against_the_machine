@@ -54690,6 +54690,76 @@
         "last_character_index": 6269
     },
     {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/__init__.py",
+        "first_character_index": 0,
+        "last_character_index": 141
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 0,
+        "last_character_index": 818
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 819,
+        "last_character_index": 2701
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 2707,
+        "last_character_index": 4662
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 4692,
+        "last_character_index": 6085
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 6091,
+        "last_character_index": 7491
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 7497,
+        "last_character_index": 9320
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 9338,
+        "last_character_index": 11165
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 11171,
+        "last_character_index": 13099
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/endpoint_request_func.py",
+        "first_character_index": 13133,
+        "last_character_index": 14398
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/utils.py",
+        "first_character_index": 0,
+        "last_character_index": 1630
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/utils.py",
+        "first_character_index": 1633,
+        "last_character_index": 2373
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/ready_checker.py",
+        "first_character_index": 0,
+        "last_character_index": 1785
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/lib/ready_checker.py",
+        "first_character_index": 1799,
+        "last_character_index": 2356
+    },
+    {
         "file_path": "data/raw/vllm-0.10.1/vllm/core/block/interfaces.py",
         "first_character_index": 0,
         "last_character_index": 257
@@ -76918,6 +76988,16 @@
         "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/fused_moe/configs/E=8,N=3584,device_name=AMD_Instinct_MI300X.json",
         "first_character_index": 1937,
         "last_character_index": 3255
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/benchmarks/multi_turn/generate_multi_turn.json",
+        "first_character_index": 0,
+        "last_character_index": 509
+    },
+    {
+        "file_path": "data/raw/vllm-0.10.1/benchmarks/structured_schemas/structured_schema_1.json",
+        "first_character_index": 0,
+        "last_character_index": 355
     },
     {
         "file_path": "data/raw/vllm-0.10.1/examples/online_serving/prometheus_grafana/grafana.json",

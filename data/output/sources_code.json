@@ -2,30 +2,30 @@
     "search_results": [
         {
             "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
-            "question_str": "What activation formats does the fused batched MoE layer return in vLLM?",
+            "question": "What activation formats does the fused batched MoE layer return in vLLM?",
             "retrieved_sources_indexes": [
-                10565,
-                9775,
-                3241,
-                287,
-                10579,
-                10036,
-                10523,
-                14247,
-                296,
-                9740
+                10785,
+                9895,
+                5976,
+                285,
+                10799,
+                10156,
+                10743,
+                3034,
+                294,
+                9860
             ],
             "retrieved_sources_scores": [
-                9.675634384155273,
-                9.055462837219238,
-                8.85922622680664,
-                8.033061027526855,
-                7.952734470367432,
-                7.894637107849121,
-                7.616326332092285,
-                7.436244487762451,
-                7.26957893371582,
-                7.184432506561279
+                9.677379608154297,
+                9.057729721069336,
+                8.860687255859375,
+                8.034246444702148,
+                7.954415321350098,
+                7.89616060256958,
+                7.617520809173584,
+                7.437708377838135,
+                7.27082633972168,
+                7.186117172241211
             ],
             "retrieved_sources": [
                 {
@@ -82,30 +82,30 @@
         },
         {
             "question_id": "02789461-05fd-435d-9673-91606102d6c9",
-            "question_str": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?",
+            "question": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?",
             "retrieved_sources_indexes": [
-                10435,
-                13961,
-                10431,
-                1658,
-                13889,
-                10963,
-                10432,
-                13802,
-                10358,
-                13822
+                10655,
+                2748,
+                10651,
+                13594,
+                2676,
+                1313,
+                10652,
+                2589,
+                10478,
+                2609
             ],
             "retrieved_sources_scores": [
-                9.97981071472168,
-                9.029709815979004,
-                8.988974571228027,
-                8.863378524780273,
-                8.79859733581543,
-                8.771215438842773,
-                8.35586929321289,
-                8.150107383728027,
-                8.014512062072754,
-                7.57110595703125
+                9.981046676635742,
+                9.030744552612305,
+                8.990091323852539,
+                8.864376068115234,
+                8.799579620361328,
+                8.772241592407227,
+                8.356847763061523,
+                8.150962829589844,
+                8.015532493591309,
+                7.5718841552734375
             ],
             "retrieved_sources": [
                 {
@@ -162,30 +162,30 @@
         },
         {
             "question_id": "e852801e-b909-4360-82ea-cedb2a1be919",
-            "question_str": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?",
+            "question": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?",
             "retrieved_sources_indexes": [
-                9521,
-                9518,
-                9512,
-                9507,
-                9510,
-                9505,
-                1940,
-                248,
-                1628,
-                5428
+                9641,
+                9638,
+                9632,
+                9627,
+                9630,
+                9625,
+                4675,
+                246,
+                13872,
+                11748
             ],
             "retrieved_sources_scores": [
-                23.140146255493164,
-                19.60805320739746,
-                13.44249153137207,
-                10.883131980895996,
-                9.980606079101562,
-                9.26018238067627,
-                6.449663162231445,
-                6.444796562194824,
-                6.027352333068848,
-                5.939574241638184
+                23.142000198364258,
+                19.607467651367188,
+                13.443052291870117,
+                10.884053230285645,
+                9.981243133544922,
+                9.260953903198242,
+                6.447716236114502,
+                6.4448957443237305,
+                6.026514530181885,
+                5.938754558563232
             ],
             "retrieved_sources": [
                 {
@@ -242,30 +242,30 @@
         },
         {
             "question_id": "0d29b0e8-686c-41b7-9a48-50f8e4bc63de",
-            "question_str": "What's the default value of trust_remote_code in vLLM's LLM class constructor?",
+            "question": "What's the default value of trust_remote_code in vLLM's LLM class constructor?",
             "retrieved_sources_indexes": [
                 721,
-                569,
-                12787,
-                4562,
-                12783,
-                216,
-                4548,
-                11629,
-                11679,
-                1542
+                466,
+                3837,
+                12643,
+                3833,
+                214,
+                12629,
+                1979,
+                2029,
+                14173
             ],
             "retrieved_sources_scores": [
-                8.61497974395752,
-                7.567975997924805,
-                7.368782043457031,
-                7.236164093017578,
-                7.214407920837402,
-                6.783791542053223,
-                6.655672073364258,
-                6.640248775482178,
-                6.623325347900391,
-                6.291031837463379
+                8.61462116241455,
+                7.568653106689453,
+                7.369483470916748,
+                7.235360622406006,
+                7.214293003082275,
+                6.783937454223633,
+                6.654656887054443,
+                6.640918731689453,
+                6.624237060546875,
+                6.291345119476318
             ],
             "retrieved_sources": [
                 {
@@ -322,30 +322,30 @@
         },
         {
             "question_id": "4235480a-cd9e-42a5-a852-b562386a83a3",
-            "question_str": "What determines the values in cudagraph_inputs_embeds when capturing CUDA graph shapes in vLLM's ModelRunner?",
+            "question": "What determines the values in cudagraph_inputs_embeds when capturing CUDA graph shapes in vLLM's ModelRunner?",
             "retrieved_sources_indexes": [
-                3454,
-                3684,
-                4098,
-                2797,
-                538,
-                5572,
-                3700,
-                5573,
-                3470,
-                3457
+                6189,
+                6419,
+                13382,
+                5532,
+                501,
+                11892,
+                6435,
+                11893,
+                6205,
+                6192
             ],
             "retrieved_sources_scores": [
-                14.91676139831543,
-                8.569087982177734,
-                8.263673782348633,
-                8.162659645080566,
-                8.115212440490723,
-                7.761882781982422,
-                7.481879234313965,
-                7.385659217834473,
-                7.2912397384643555,
-                7.250943183898926
+                14.918828964233398,
+                8.570490837097168,
+                8.265562057495117,
+                8.16452407836914,
+                8.116053581237793,
+                7.763644218444824,
+                7.4824724197387695,
+                7.38691520690918,
+                7.292806625366211,
+                7.252469062805176
             ],
             "retrieved_sources": [
                 {
@@ -402,30 +402,30 @@
         },
         {
             "question_id": "6ffdf5f6-fcd3-4d11-8227-8bedd9b33296",
-            "question_str": "What conditions must be met for vLLM's ModelRunner to use CUDA graphs instead of the regular model?",
+            "question": "What conditions must be met for vLLM's ModelRunner to use CUDA graphs instead of the regular model?",
             "retrieved_sources_indexes": [
-                6653,
-                12172,
-                2382,
-                1405,
-                5543,
-                11917,
+                6773,
+                4556,
+                5117,
+                14036,
+                11863,
+                2267,
                 1094,
-                2569,
-                5541,
-                12179
+                5304,
+                4563,
+                11861
             ],
             "retrieved_sources_scores": [
-                8.330317497253418,
-                8.104371070861816,
-                8.055109024047852,
-                7.67760705947876,
-                6.754863739013672,
-                6.588679313659668,
-                6.209869861602783,
-                6.209869861602783,
-                6.11763858795166,
-                6.11628532409668
+                8.327957153320312,
+                8.105602264404297,
+                8.052899360656738,
+                7.673675060272217,
+                6.75592041015625,
+                6.58828067779541,
+                6.210612773895264,
+                6.210612773895264,
+                6.116916179656982,
+                6.115947723388672
             ],
             "retrieved_sources": [
                 {
@@ -469,43 +469,43 @@
                     "last_character_index": 9156
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/worker/gpu_model_runner.py",
-                    "first_character_index": 70332,
-                    "last_character_index": 72250
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/tests/compile/piecewise/test_multiple_graphs.py",
                     "first_character_index": 8699,
                     "last_character_index": 10565
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/worker/gpu_model_runner.py",
+                    "first_character_index": 70332,
+                    "last_character_index": 72250
                 }
             ]
         },
         {
             "question_id": "c854f979-7900-4772-86c6-f95715529e2d",
-            "question_str": "What is the default timeout value for vLLM RPC operations?",
+            "question": "What is the default timeout value for vLLM RPC operations?",
             "retrieved_sources_indexes": [
-                2990,
-                599,
-                2773,
+                5725,
+                454,
+                5508,
                 1056,
-                13085,
-                2942,
-                12452,
-                6100,
-                1904,
-                92
+                4205,
+                5677,
+                4489,
+                11332,
+                13840,
+                90
             ],
             "retrieved_sources_scores": [
-                8.338464736938477,
-                7.390685081481934,
-                6.7610321044921875,
-                6.582004547119141,
-                5.529327392578125,
-                5.384215831756592,
-                5.339080810546875,
-                5.338596820831299,
-                5.197926998138428,
-                5.1249847412109375
+                8.334261894226074,
+                7.387526035308838,
+                6.756526947021484,
+                6.579479217529297,
+                5.526151657104492,
+                5.379012107849121,
+                5.338112831115723,
+                5.336167335510254,
+                5.194014549255371,
+                5.124264240264893
             ],
             "retrieved_sources": [
                 {
@@ -562,30 +562,30 @@
         },
         {
             "question_id": "48891f49-3fe1-42f9-8bce-4fc4c8027428",
-            "question_str": "What does the Gemma3ForCausalLM constructor assert about the tie_word_embeddings configuration?",
+            "question": "What does the Gemma3ForCausalLM constructor assert about the tie_word_embeddings configuration?",
             "retrieved_sources_indexes": [
-                216,
-                11860,
-                4789,
-                3604,
-                4353,
-                6650,
-                11859,
-                11857,
-                10323,
-                4562
+                214,
+                2210,
+                12876,
+                6339,
+                13093,
+                6770,
+                2209,
+                2207,
+                10443,
+                12643
             ],
             "retrieved_sources_scores": [
-                7.701681137084961,
-                6.795163154602051,
-                6.7544264793396,
-                6.45472526550293,
-                6.285873889923096,
-                6.11810827255249,
-                6.0765156745910645,
-                5.779204845428467,
-                5.659296989440918,
-                5.6164326667785645
+                7.703030586242676,
+                6.796586036682129,
+                6.75554895401001,
+                6.455766677856445,
+                6.287164688110352,
+                6.118704319000244,
+                6.07771110534668,
+                5.7805681228637695,
+                5.660115718841553,
+                5.617461681365967
             ],
             "retrieved_sources": [
                 {
@@ -642,30 +642,30 @@
         },
         {
             "question_id": "0d9b0dbb-a25d-47eb-b35b-ce02e23fda2b",
-            "question_str": "What value is passed for ngroups when has_groups is False in the _bmm_chunk_fwd_kernel call?",
+            "question": "What value is passed for ngroups when has_groups is False in the _bmm_chunk_fwd_kernel call?",
             "retrieved_sources_indexes": [
-                10729,
-                10730,
-                10727,
-                10780,
-                1583,
-                4779,
-                12785,
-                4838,
-                4793,
-                3272
+                10493,
+                10494,
+                10491,
+                10544,
+                14181,
+                12866,
+                3835,
+                12925,
+                12880,
+                6007
             ],
             "retrieved_sources_scores": [
-                14.076942443847656,
-                10.720474243164062,
-                6.9317851066589355,
-                6.4774298667907715,
-                6.290220260620117,
-                6.025107383728027,
-                5.876853942871094,
-                5.727277755737305,
-                5.703473091125488,
-                5.683965682983398
+                14.077413558959961,
+                10.721622467041016,
+                6.932304382324219,
+                6.477492809295654,
+                6.289344787597656,
+                6.023001670837402,
+                5.876486301422119,
+                5.726143836975098,
+                5.702762603759766,
+                5.683818817138672
             ],
             "retrieved_sources": [
                 {
@@ -722,30 +722,30 @@
         },
         {
             "question_id": "442c5e35-6424-4acf-8e79-f6da53e478b0",
-            "question_str": "What is the default cudagraph_support value for TritonAttentionMetadataBuilder?",
+            "question": "What is the default cudagraph_support value for TritonAttentionMetadataBuilder?",
             "retrieved_sources_indexes": [
-                5798,
-                5578,
-                5800,
-                5754,
-                638,
-                2287,
-                14090,
-                5779,
-                2351,
-                11881
+                12210,
+                11898,
+                12212,
+                12166,
+                36,
+                5022,
+                2877,
+                12191,
+                5086,
+                2231
             ],
             "retrieved_sources_scores": [
-                6.112802028656006,
-                5.90093469619751,
-                4.560433387756348,
-                4.51711893081665,
-                4.3550310134887695,
-                4.123701572418213,
-                4.073639392852783,
-                4.009608268737793,
-                3.966733694076538,
-                3.939267635345459
+                6.113107681274414,
+                5.900671005249023,
+                4.560696125030518,
+                4.517037868499756,
+                4.353311538696289,
+                4.1220502853393555,
+                4.072945594787598,
+                4.009117126464844,
+                3.9651851654052734,
+                3.9389472007751465
             ],
             "retrieved_sources": [
                 {
@@ -802,30 +802,30 @@
         },
         {
             "question_id": "d39bfccf-9478-4c98-978d-574c596049b2",
-            "question_str": "What does the get_num_new_matched_tokens method in NIXLConnector return?",
+            "question": "What does the get_num_new_matched_tokens method in NIXLConnector return?",
             "retrieved_sources_indexes": [
-                6338,
-                6336,
-                13089,
-                13090,
-                6318,
-                12264,
-                12659,
-                11857,
-                12654,
-                12657
+                11246,
+                11244,
+                4209,
+                4210,
+                11226,
+                4301,
+                3709,
+                2207,
+                3704,
+                3707
             ],
             "retrieved_sources_scores": [
-                7.745274066925049,
-                6.276675701141357,
-                5.614589214324951,
-                5.501327037811279,
-                5.421914100646973,
-                5.2281951904296875,
-                5.206150054931641,
-                4.993009090423584,
-                4.9896674156188965,
-                4.911224365234375
+                7.746100902557373,
+                6.277737140655518,
+                5.61527156829834,
+                5.502013206481934,
+                5.422548770904541,
+                5.229520797729492,
+                5.206836223602295,
+                4.9943084716796875,
+                4.990302562713623,
+                4.91184139251709
             ],
             "retrieved_sources": [
                 {
@@ -882,30 +882,30 @@
         },
         {
             "question_id": "870c92da-36bb-4c17-9bdc-0fdbf401105a",
-            "question_str": "What types are supported as containers in vLLM's JSONTree type definition?",
+            "question": "What types are supported as containers in vLLM's JSONTree type definition?",
             "retrieved_sources_indexes": [
-                13997,
-                1320,
-                2380,
+                2784,
+                13951,
+                5115,
                 1020,
-                6332,
-                2381,
-                3397,
-                3088,
-                2724,
-                1986
+                11240,
+                5116,
+                6132,
+                5823,
+                5459,
+                4721
             ],
             "retrieved_sources_scores": [
-                6.307829856872559,
-                6.300512790679932,
-                6.2734785079956055,
-                5.498110294342041,
-                5.4205121994018555,
-                5.417271614074707,
-                5.384248733520508,
-                5.185725688934326,
-                5.148289203643799,
-                5.111507415771484
+                6.308509826660156,
+                6.3004937171936035,
+                6.27391242980957,
+                5.497991561889648,
+                5.422072410583496,
+                5.416644096374512,
+                5.3833818435668945,
+                5.1857099533081055,
+                5.148043632507324,
+                5.110528469085693
             ],
             "retrieved_sources": [
                 {
@@ -962,30 +962,30 @@
         },
         {
             "question_id": "925270df-9998-43ab-8603-2ef13c809987",
-            "question_str": "What value does _MAX_IMAGE_SIZE use in vLLM's keye model for determining the image size with most features?",
+            "question": "What value does _MAX_IMAGE_SIZE use in vLLM's keye model for determining the image size with most features?",
             "retrieved_sources_indexes": [
-                557,
-                98,
-                506,
-                4507,
-                1490,
-                3052,
-                1518,
-                2236,
-                245,
-                1384
+                520,
+                96,
+                469,
+                12588,
+                14121,
+                5787,
+                14149,
+                4971,
+                243,
+                14015
             ],
             "retrieved_sources_scores": [
-                7.991840839385986,
-                7.936062812805176,
-                7.647677421569824,
-                7.591339588165283,
-                7.553039073944092,
-                7.501399993896484,
-                7.186951160430908,
-                7.1854729652404785,
-                7.041258811950684,
-                6.878025054931641
+                7.991971492767334,
+                7.936318874359131,
+                7.6480560302734375,
+                7.59122371673584,
+                7.553579330444336,
+                7.502813816070557,
+                7.187617778778076,
+                7.185281753540039,
+                7.042474746704102,
+                6.878733158111572
             ],
             "retrieved_sources": [
                 {
@@ -1042,30 +1042,30 @@
         },
         {
             "question_id": "6d8a314a-59fa-401c-992b-af647969a6ca",
-            "question_str": "What is the default language value when None is passed to Whisper's validate_language method?",
+            "question": "What is the default language value when None is passed to Whisper's validate_language method?",
             "retrieved_sources_indexes": [
-                8566,
-                1498,
-                1446,
-                8567,
-                1399,
-                2247,
-                6498,
-                2156,
-                2351,
-                4628
+                8686,
+                14129,
+                14077,
+                8687,
+                14030,
+                4982,
+                6618,
+                4891,
+                5086,
+                12709
             ],
             "retrieved_sources_scores": [
-                12.994710922241211,
-                8.0802583694458,
-                7.808207035064697,
-                7.661291599273682,
-                7.420382022857666,
-                7.207737922668457,
-                7.066027641296387,
-                6.975945472717285,
-                6.437726974487305,
-                6.246293067932129
+                12.99007511138916,
+                8.078105926513672,
+                7.805917739868164,
+                7.657847881317139,
+                7.418516635894775,
+                7.2070465087890625,
+                7.061075210571289,
+                6.976400852203369,
+                6.436865329742432,
+                6.242678642272949
             ],
             "retrieved_sources": [
                 {
@@ -1122,30 +1122,30 @@
         },
         {
             "question_id": "87977215-9db5-43a6-9e34-186cdfca86ed",
-            "question_str": "What condition determines whether batch reordering is skipped in GPUModelRunner's update_batch_order method?",
+            "question": "What condition determines whether batch reordering is skipped in GPUModelRunner's update_batch_order method?",
             "retrieved_sources_indexes": [
-                5635,
+                11955,
                 1118,
-                2602,
-                5580,
-                533,
-                47,
-                2649,
-                12264,
-                4232,
-                5428
+                5337,
+                11900,
+                496,
+                643,
+                5384,
+                4301,
+                13516,
+                11748
             ],
             "retrieved_sources_scores": [
-                6.002660274505615,
-                5.926290512084961,
-                5.9107208251953125,
-                5.697162628173828,
-                5.685476303100586,
-                5.619809150695801,
-                5.618602752685547,
-                5.2281951904296875,
-                5.1715803146362305,
-                5.084441184997559
+                6.003795146942139,
+                5.893355369567871,
+                5.8778486251831055,
+                5.697977066040039,
+                5.6863579750061035,
+                5.621179580688477,
+                5.603084564208984,
+                5.229520797729492,
+                5.172280788421631,
+                5.085180282592773
             ],
             "retrieved_sources": [
                 {
@@ -1202,30 +1202,30 @@
         },
         {
             "question_id": "3be219c4-dec6-4b83-a6e1-39497cf4affd",
-            "question_str": "What are the default values for tensor fields in vLLM's AiterMLAMetadata class?",
+            "question": "What are the default values for tensor fields in vLLM's AiterMLAMetadata class?",
             "retrieved_sources_indexes": [
-                3191,
-                2416,
-                219,
-                2108,
-                3103,
-                5937,
-                5936,
-                3962,
-                3971,
-                2935
+                5926,
+                5151,
+                217,
+                4843,
+                5838,
+                12349,
+                12348,
+                13246,
+                13255,
+                5670
             ],
             "retrieved_sources_scores": [
-                6.618120193481445,
-                6.296968460083008,
-                6.199149131774902,
-                6.095005035400391,
-                6.035545349121094,
-                5.961618423461914,
-                5.802229881286621,
-                5.785241603851318,
-                5.643936634063721,
-                5.5380682945251465
+                6.617197036743164,
+                6.2966814041137695,
+                6.198457717895508,
+                6.094573020935059,
+                6.035904407501221,
+                5.962738990783691,
+                5.801948547363281,
+                5.784989833831787,
+                5.645052909851074,
+                5.537234306335449
             ],
             "retrieved_sources": [
                 {
@@ -1282,30 +1282,30 @@
         },
         {
             "question_id": "8cb284ad-ec64-4189-ad3a-dd1bcd05bc09",
-            "question_str": "What error is raised when full attention group ids and other attention group ids interleave in HybridKVCacheCoordinator?",
+            "question": "What error is raised when full attention group ids and other attention group ids interleave in HybridKVCacheCoordinator?",
             "retrieved_sources_indexes": [
-                5204,
-                5203,
-                5187,
-                5186,
-                3516,
-                3146,
-                5189,
-                5188,
-                9507,
-                5206
+                11524,
+                11523,
+                11507,
+                11506,
+                6251,
+                5881,
+                11509,
+                11508,
+                9627,
+                11526
             ],
             "retrieved_sources_scores": [
-                23.18914222717285,
-                14.225982666015625,
-                11.10061264038086,
-                11.049018859863281,
-                10.79893970489502,
-                10.419682502746582,
-                10.380483627319336,
-                10.26534652709961,
-                9.604912757873535,
-                9.434989929199219
+                23.194459915161133,
+                14.229124069213867,
+                11.103911399841309,
+                11.052310943603516,
+                10.797120094299316,
+                10.42280387878418,
+                10.383454322814941,
+                10.268507957458496,
+                9.607089042663574,
+                9.438063621520996
             ],
             "retrieved_sources": [
                 {
@@ -1362,30 +1362,30 @@
         },
         {
             "question_id": "9ab959ff-efa6-4f66-b2f2-5514f61c82d0",
-            "question_str": "What is the shape and structure of the array returned by the KV cache mapping metadata computation function in TPUModelRunner?",
+            "question": "What is the shape and structure of the array returned by the KV cache mapping metadata computation function in TPUModelRunner?",
             "retrieved_sources_indexes": [
-                14082,
-                10927,
-                6306,
-                6323,
-                14075,
-                10945,
-                14087,
-                6326,
-                14091,
-                206
+                2869,
+                1277,
+                11214,
+                11231,
+                2862,
+                1295,
+                2874,
+                11234,
+                2878,
+                204
             ],
             "retrieved_sources_scores": [
-                9.953075408935547,
-                9.532999038696289,
-                9.213915824890137,
-                9.012649536132812,
-                8.559951782226562,
-                8.494946479797363,
-                8.134374618530273,
-                8.055134773254395,
-                8.016497611999512,
-                7.966674327850342
+                9.953109741210938,
+                9.535741806030273,
+                9.214045524597168,
+                9.013580322265625,
+                8.560114860534668,
+                8.49332332611084,
+                8.133803367614746,
+                8.056173324584961,
+                8.017374038696289,
+                7.966219902038574
             ],
             "retrieved_sources": [
                 {
@@ -1442,30 +1442,30 @@
         },
         {
             "question_id": "f30cdb97-7bbd-469d-8cdf-3b5c50416007",
-            "question_str": "What is the default value of the z parameter in the selective_state_update function call in vLLM's mamba_mixer2.py?",
+            "question": "What is the default value of the z parameter in the selective_state_update function call in vLLM's mamba_mixer2.py?",
             "retrieved_sources_indexes": [
-                1583,
-                2312,
-                11833,
-                206,
-                4783,
-                4773,
-                171,
-                13134,
-                91,
+                14181,
+                5047,
+                2183,
+                204,
+                12870,
+                12860,
+                169,
+                4121,
+                89,
                 891
             ],
             "retrieved_sources_scores": [
-                7.915140151977539,
-                7.636170387268066,
-                6.6563720703125,
-                6.563408374786377,
-                6.493870735168457,
-                6.468075752258301,
-                6.3849592208862305,
-                6.249818801879883,
-                6.204590320587158,
-                6.180601119995117
+                7.911508083343506,
+                7.632349967956543,
+                6.652721405029297,
+                6.561262607574463,
+                6.490477561950684,
+                6.464694976806641,
+                6.381346225738525,
+                6.245962142944336,
+                6.202573299407959,
+                6.1769208908081055
             ],
             "retrieved_sources": [
                 {
@@ -1522,30 +1522,30 @@
         },
         {
             "question_id": "c1da62cd-07b5-4f25-8556-c8b33774b4f4",
-            "question_str": "What block size divisibility requirement does HybridKVCacheCoordinator enforce when caching is enabled?",
+            "question": "What block size divisibility requirement does HybridKVCacheCoordinator enforce when caching is enabled?",
             "retrieved_sources_indexes": [
-                2719,
-                5204,
-                13263,
-                5200,
-                6474,
-                5145,
-                12716,
-                11725,
-                6469,
-                13235
+                5454,
+                11524,
+                3531,
+                11520,
+                11024,
+                11465,
+                3766,
+                2075,
+                11019,
+                3503
             ],
             "retrieved_sources_scores": [
-                8.072173118591309,
-                7.870355606079102,
-                7.818549633026123,
-                7.523246765136719,
-                7.466375350952148,
-                7.1596550941467285,
-                7.108806133270264,
-                7.076970100402832,
-                6.955062389373779,
-                6.8054938316345215
+                8.074395179748535,
+                7.871212005615234,
+                7.820439338684082,
+                7.524332046508789,
+                7.468340873718262,
+                7.161417007446289,
+                7.110829830169678,
+                7.07832670211792,
+                6.956979274749756,
+                6.807379245758057
             ],
             "retrieved_sources": [
                 {
@@ -1602,30 +1602,30 @@
         },
         {
             "question_id": "706af2a5-9d60-42db-be84-211f217e03f3",
-            "question_str": "What is the default value for min_dynamic_patch parameter in NemotronVL model initialization?",
+            "question": "What is the default value for min_dynamic_patch parameter in NemotronVL model initialization?",
             "retrieved_sources_indexes": [
-                2631,
-                4546,
-                4585,
+                5366,
+                12627,
+                12666,
                 1218,
-                8011,
-                11833,
-                6830,
-                8012,
-                8966,
-                8965
+                8131,
+                2183,
+                6950,
+                9086,
+                8132,
+                9085
             ],
             "retrieved_sources_scores": [
-                5.663019180297852,
-                5.617602348327637,
-                5.537012100219727,
-                5.5251359939575195,
-                5.3731913566589355,
-                5.355162620544434,
-                5.339378356933594,
-                5.31117582321167,
-                5.31117582321167,
-                5.288950443267822
+                5.660909175872803,
+                5.616121292114258,
+                5.535545825958252,
+                5.523056983947754,
+                5.373654365539551,
+                5.353292942047119,
+                5.339771270751953,
+                5.3119797706604,
+                5.3119797706604,
+                5.289402961730957
             ],
             "retrieved_sources": [
                 {
@@ -1664,14 +1664,14 @@
                     "last_character_index": 5196
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/internvl.py",
-                    "first_character_index": 11874,
-                    "last_character_index": 13759
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/skyworkr1v.py",
                     "first_character_index": 9819,
                     "last_character_index": 11708
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/internvl.py",
+                    "first_character_index": 11874,
+                    "last_character_index": 13759
                 },
                 {
                     "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/skyworkr1v.py",
@@ -1682,30 +1682,30 @@
         },
         {
             "question_id": "4830d85c-33a2-4cef-a1cc-9ccad3e8b51b",
-            "question_str": "What exception is raised when pixel_values has incorrect number of channels in InternS1VisionEmbeddings forward method?",
+            "question": "What exception is raised when pixel_values has incorrect number of channels in InternS1VisionEmbeddings forward method?",
             "retrieved_sources_indexes": [
-                3393,
-                7097,
-                5265,
-                8707,
-                8797,
-                8430,
-                8285,
-                7164,
-                9051,
-                8445
+                6128,
+                7217,
+                11585,
+                8827,
+                8917,
+                8550,
+                8405,
+                7284,
+                9171,
+                8565
             ],
             "retrieved_sources_scores": [
-                8.495413780212402,
-                8.41187858581543,
-                8.336518287658691,
-                8.282038688659668,
-                8.066255569458008,
-                8.066255569458008,
-                8.043866157531738,
-                8.021652221679688,
-                7.865178108215332,
-                7.6487250328063965
+                8.491515159606934,
+                8.413824081420898,
+                8.33313274383545,
+                8.283395767211914,
+                8.068096160888672,
+                8.068096160888672,
+                8.045588493347168,
+                8.023399353027344,
+                7.866969108581543,
+                7.650368690490723
             ],
             "retrieved_sources": [
                 {
@@ -1762,30 +1762,30 @@
         },
         {
             "question_id": "937a3e70-2b84-4431-8cb3-08e01991710f",
-            "question_str": "What does the HunyuanA13BReasoningParser return when reasoning_content or response_content has zero length?",
+            "question": "What does the HunyuanA13BReasoningParser return when reasoning_content or response_content has zero length?",
             "retrieved_sources_indexes": [
-                3583,
-                3589,
-                3578,
-                3584,
-                12026,
-                3580,
-                3389,
-                3581,
-                186,
-                3582
+                6318,
+                6324,
+                6313,
+                6319,
+                2376,
+                6315,
+                6124,
+                6316,
+                184,
+                6317
             ],
             "retrieved_sources_scores": [
-                13.145877838134766,
-                12.581101417541504,
-                9.591474533081055,
-                9.37286376953125,
-                6.886128902435303,
-                6.399666786193848,
-                6.357607841491699,
-                6.22830867767334,
-                6.045584678649902,
-                5.979667663574219
+                13.147846221923828,
+                12.582874298095703,
+                9.592529296875,
+                9.373985290527344,
+                6.887436866760254,
+                6.400935649871826,
+                6.358885288238525,
+                6.2295145988464355,
+                6.0473833084106445,
+                5.980748176574707
             ],
             "retrieved_sources": [
                 {
@@ -1842,30 +1842,30 @@
         },
         {
             "question_id": "24caa63b-ddc4-4894-8da4-36d591ede268",
-            "question_str": "What are the input tensor shapes and types used in MiddleAllReduceRMSNormPattern's get_inputs method?",
+            "question": "What are the input tensor shapes and types used in MiddleAllReduceRMSNormPattern's get_inputs method?",
             "retrieved_sources_indexes": [
-                3713,
-                3712,
-                34,
-                5443,
-                12263,
-                3733,
-                3744,
-                3746,
-                3754,
-                1235
+                6448,
+                6447,
+                653,
+                11763,
+                4300,
+                6468,
+                6479,
+                6481,
+                6489,
+                14267
             ],
             "retrieved_sources_scores": [
-                7.870447635650635,
-                6.439744472503662,
-                6.2439141273498535,
-                6.096062660217285,
-                6.093450546264648,
-                6.035462379455566,
-                5.96101188659668,
-                5.862482070922852,
-                5.74302864074707,
-                5.599030494689941
+                7.871868133544922,
+                6.440506458282471,
+                6.244223594665527,
+                6.097212791442871,
+                6.094143867492676,
+                6.036359786987305,
+                5.961732864379883,
+                5.863260269165039,
+                5.743788242340088,
+                5.600329399108887
             ],
             "retrieved_sources": [
                 {
@@ -1922,30 +1922,30 @@
         },
         {
             "question_id": "c593f6af-5d7c-472c-91f1-39020982d9d4",
-            "question_str": "What are all the registered KV connector names in vLLM's KVConnectorFactory?",
+            "question": "What are all the registered KV connector names in vLLM's KVConnectorFactory?",
             "retrieved_sources_indexes": [
-                6258,
-                6284,
-                6283,
-                6314,
-                6309,
-                6304,
-                6000,
-                2191,
-                137,
-                635
+                11166,
+                11192,
+                11191,
+                11222,
+                11217,
+                11212,
+                12127,
+                4926,
+                135,
+                47
             ],
             "retrieved_sources_scores": [
-                10.563310623168945,
-                9.769533157348633,
-                8.449368476867676,
-                8.412467002868652,
-                7.746630668640137,
-                7.439926624298096,
-                7.3146562576293945,
-                7.279394626617432,
-                6.591386318206787,
-                6.401130199432373
+                10.564515113830566,
+                9.770160675048828,
+                8.45046329498291,
+                8.414040565490723,
+                7.74791145324707,
+                7.440781593322754,
+                7.315803527832031,
+                7.2803730964660645,
+                6.592531204223633,
+                6.401810169219971
             ],
             "retrieved_sources": [
                 {
@@ -2002,30 +2002,30 @@
         },
         {
             "question_id": "926b7602-3c5a-48fc-9f25-54eb00d78f0d",
-            "question_str": "What is the default value of the kv_states parameter in HunYuanModel's forward method?",
+            "question": "What is the default value of the kv_states parameter in HunYuanModel's forward method?",
             "retrieved_sources_indexes": [
-                8192,
-                2351,
-                8199,
-                3696,
-                2159,
-                8201,
-                3687,
-                12264,
-                14089,
+                8312,
+                5086,
+                8319,
+                6431,
+                4894,
+                8321,
+                6422,
+                4301,
+                2876,
                 1091
             ],
             "retrieved_sources_scores": [
-                7.069634437561035,
-                6.437726974487305,
-                6.207189559936523,
-                5.8823161125183105,
-                5.80718469619751,
-                5.4305524826049805,
-                5.364220142364502,
-                5.2281951904296875,
-                5.1476826667785645,
-                5.04282283782959
+                7.070605754852295,
+                6.436865329742432,
+                6.207930564880371,
+                5.8830413818359375,
+                5.806839942932129,
+                5.431178092956543,
+                5.364407062530518,
+                5.229520797729492,
+                5.147796630859375,
+                5.042222023010254
             ],
             "retrieved_sources": [
                 {
@@ -2082,30 +2082,30 @@
         },
         {
             "question_id": "794540e4-c04d-4085-9dac-baf3daa46e77",
-            "question_str": "What is the default value for mlp_bias in ExaoneGatedMLP initialization?",
+            "question": "What is the default value for mlp_bias in ExaoneGatedMLP initialization?",
             "retrieved_sources_indexes": [
-                7478,
-                6672,
-                4305,
-                638,
-                2309,
-                4297,
-                12787,
-                2287,
-                14090,
-                219
+                7598,
+                6792,
+                13045,
+                36,
+                5044,
+                13037,
+                3837,
+                5022,
+                2877,
+                217
             ],
             "retrieved_sources_scores": [
-                5.522420883178711,
-                4.874085903167725,
-                4.520521640777588,
-                4.3550310134887695,
-                4.313268661499023,
-                4.233084201812744,
-                4.19932222366333,
-                4.123701572418213,
-                4.073639392852783,
-                3.994023084640503
+                5.522724628448486,
+                4.874704837799072,
+                4.519798278808594,
+                4.353311538696289,
+                4.312803268432617,
+                4.233599662780762,
+                4.20002555847168,
+                4.1220502853393555,
+                4.072945594787598,
+                3.993532180786133
             ],
             "retrieved_sources": [
                 {
@@ -2162,30 +2162,30 @@
         },
         {
             "question_id": "9495e881-8b94-4f72-8273-93f5b6ddd335",
-            "question_str": "What happens when depths parameter is passed as a string in OvisConfig?",
+            "question": "What happens when depths parameter is passed as a string in OvisConfig?",
             "retrieved_sources_indexes": [
-                9384,
-                4345,
-                4346,
-                1308,
-                3418,
-                8496,
-                4284,
-                3657,
-                100,
-                11833
+                9504,
+                13085,
+                13086,
+                13939,
+                6153,
+                8616,
+                13024,
+                6392,
+                98,
+                2183
             ],
             "retrieved_sources_scores": [
-                7.204398155212402,
-                6.671440124511719,
-                6.293859004974365,
-                5.530406951904297,
-                5.498943328857422,
-                5.2008161544799805,
-                5.026125907897949,
-                5.025088310241699,
-                4.969009876251221,
-                4.8723602294921875
+                7.204744815826416,
+                6.672178268432617,
+                6.294571876525879,
+                5.530784606933594,
+                5.5000715255737305,
+                5.2013092041015625,
+                5.026678085327148,
+                5.024085521697998,
+                4.969825744628906,
+                4.870386600494385
             ],
             "retrieved_sources": [
                 {
@@ -2242,30 +2242,30 @@
         },
         {
             "question_id": "56027a35-434a-4c25-9e4d-7964096500c7",
-            "question_str": "What hyperparameters must be shared across all layers in vLLM's FlashInfer backend according to infer_global_hyperparameters?",
+            "question": "What hyperparameters must be shared across all layers in vLLM's FlashInfer backend according to infer_global_hyperparameters?",
             "retrieved_sources_indexes": [
-                4012,
-                5783,
-                4011,
-                5813,
-                5782,
-                4027,
-                14094,
-                4021,
-                344,
-                4026
+                13296,
+                12195,
+                13295,
+                12225,
+                12194,
+                13311,
+                2881,
+                13305,
+                342,
+                13310
             ],
             "retrieved_sources_scores": [
-                17.103954315185547,
-                15.715763092041016,
-                11.638163566589355,
-                11.503515243530273,
-                11.229012489318848,
-                10.226900100708008,
-                9.409114837646484,
-                8.675326347351074,
-                8.157694816589355,
-                7.512758731842041
+                17.10739517211914,
+                15.718846321105957,
+                11.640695571899414,
+                11.50521183013916,
+                11.231300354003906,
+                10.228480339050293,
+                9.411273956298828,
+                8.676660537719727,
+                8.155909538269043,
+                7.514071941375732
             ],
             "retrieved_sources": [
                 {
@@ -2322,30 +2322,30 @@
         },
         {
             "question_id": "495d3729-74d3-4263-b7e6-89dbdca55574",
-            "question_str": "What is the return type annotation for the _apply_matches function in vLLM's multimodal processing module?",
+            "question": "What is the return type annotation for the _apply_matches function in vLLM's multimodal processing module?",
             "retrieved_sources_indexes": [
-                489,
-                473,
-                94,
-                3108,
+                560,
+                544,
+                92,
+                5843,
                 819,
-                11697,
-                5303,
-                3049,
-                482,
-                3017
+                2047,
+                11623,
+                5784,
+                553,
+                5752
             ],
             "retrieved_sources_scores": [
-                7.63192892074585,
-                7.337126731872559,
-                7.265355587005615,
-                7.120721817016602,
-                7.091891288757324,
-                6.997247219085693,
-                6.902003765106201,
-                6.834477424621582,
-                6.718313694000244,
-                6.7102155685424805
+                7.6329779624938965,
+                7.338223457336426,
+                7.266284942626953,
+                7.120384216308594,
+                7.092032432556152,
+                6.99464225769043,
+                6.901719570159912,
+                6.833505153656006,
+                6.719165802001953,
+                6.710328102111816
             ],
             "retrieved_sources": [
                 {
@@ -2402,30 +2402,30 @@
         },
         {
             "question_id": "9f1db215-19ff-4475-bdd5-dd7caf6bf807",
-            "question_str": "What are the default percentiles calculated for ITL and E2EL metrics in vLLM's serve benchmark?",
+            "question": "What are the default percentiles calculated for ITL and E2EL metrics in vLLM's serve benchmark?",
             "retrieved_sources_indexes": [
                 1185,
                 1215,
-                2630,
-                273,
-                1177,
-                2623,
+                5365,
+                271,
+                5358,
                 1200,
+                1177,
                 19,
                 20,
-                2613
+                5348
             ],
             "retrieved_sources_scores": [
-                17.824750900268555,
-                17.37798309326172,
-                16.023557662963867,
-                14.906806945800781,
-                10.080997467041016,
-                10.080997467041016,
-                10.080997467041016,
-                9.026805877685547,
-                8.804276466369629,
-                8.789339065551758
+                17.74222183227539,
+                17.294967651367188,
+                15.968679428100586,
+                14.847193717956543,
+                10.010506629943848,
+                10.010506629943848,
+                10.010506629943848,
+                8.950764656066895,
+                8.79947566986084,
+                8.77789306640625
             ],
             "retrieved_sources": [
                 {
@@ -2449,11 +2449,6 @@
                     "last_character_index": 18205
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_serving_structured_output.py",
-                    "first_character_index": 21767,
-                    "last_character_index": 23573
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/serve.py",
                     "first_character_index": 23235,
                     "last_character_index": 25025
@@ -2462,6 +2457,11 @@
                     "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_serving.py",
                     "first_character_index": 16436,
                     "last_character_index": 18242
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_serving_structured_output.py",
+                    "first_character_index": 21767,
+                    "last_character_index": 23573
                 },
                 {
                     "file_path": "data/raw/vllm-0.10.1/benchmarks/README.md",
@@ -2482,30 +2482,30 @@
         },
         {
             "question_id": "1d220c05-3d71-4af7-95f8-fca998bade77",
-            "question_str": "What happens when min_dynamic_patch is None in InternVL's initialization?",
+            "question": "What happens when min_dynamic_patch is None in InternVL's initialization?",
             "retrieved_sources_indexes": [
-                6831,
-                3418,
-                8966,
-                8012,
-                13532,
-                8345,
-                8516,
-                8011,
-                8965,
-                8346
+                6951,
+                6153,
+                8132,
+                9086,
+                3425,
+                8465,
+                8636,
+                8131,
+                9085,
+                8466
             ],
             "retrieved_sources_scores": [
-                6.147555828094482,
-                6.062363147735596,
-                5.998725891113281,
-                5.998725891113281,
-                5.896151542663574,
-                5.729287147521973,
-                5.452205657958984,
-                5.451091766357422,
-                5.3796796798706055,
-                5.361935615539551
+                6.148349761962891,
+                6.063713550567627,
+                5.99981164932251,
+                5.99981164932251,
+                5.896822929382324,
+                5.730301856994629,
+                5.453139305114746,
+                5.452013969421387,
+                5.380580425262451,
+                5.362859725952148
             ],
             "retrieved_sources": [
                 {
@@ -2519,14 +2519,14 @@
                     "last_character_index": 5975
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/skyworkr1v.py",
-                    "first_character_index": 9819,
-                    "last_character_index": 11708
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/internvl.py",
                     "first_character_index": 11874,
                     "last_character_index": 13759
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/skyworkr1v.py",
+                    "first_character_index": 9819,
+                    "last_character_index": 11708
                 },
                 {
                     "file_path": "data/raw/vllm-0.10.1/tests/models/multimodal/generation/vlm_utils/model_utils.py",
@@ -2562,30 +2562,30 @@
         },
         {
             "question_id": "fd5cc0f3-ab99-4dcd-8c00-78459828605a",
-            "question_str": "What is the default value of _is_remote_reader in vLLM's shared memory broadcast implementation?",
+            "question": "What is the default value of _is_remote_reader in vLLM's shared memory broadcast implementation?",
             "retrieved_sources_indexes": [
-                6160,
-                274,
-                5930,
-                536,
-                2236,
-                516,
-                403,
-                406,
-                336,
-                2117
+                11068,
+                272,
+                12342,
+                499,
+                4971,
+                479,
+                401,
+                404,
+                334,
+                4852
             ],
             "retrieved_sources_scores": [
-                9.477712631225586,
-                7.888951301574707,
-                6.735113143920898,
-                6.620450973510742,
-                6.1477742195129395,
-                6.146973133087158,
-                5.904056072235107,
-                5.839594841003418,
-                5.675447463989258,
-                5.673679351806641
+                9.478739738464355,
+                7.8892822265625,
+                6.7348952293396,
+                6.6195878982543945,
+                6.146377086639404,
+                6.145765781402588,
+                5.903952598571777,
+                5.839532375335693,
+                5.675880432128906,
+                5.673421859741211
             ],
             "retrieved_sources": [
                 {
@@ -2642,30 +2642,30 @@
         },
         {
             "question_id": "a179e20d-14e2-4d73-8cb1-74b1145437e3",
-            "question_str": "What are the default values for alpha and limit parameters in vLLM's SwiGLUOAI activation layer?",
+            "question": "What are the default values for alpha and limit parameters in vLLM's SwiGLUOAI activation layer?",
             "retrieved_sources_indexes": [
-                10288,
-                10103,
-                13721,
-                9423,
-                13776,
-                12450,
-                9427,
-                1747,
-                1754,
-                7733
+                10408,
+                10223,
+                2508,
+                9543,
+                2563,
+                4487,
+                9547,
+                13683,
+                13690,
+                7853
             ],
             "retrieved_sources_scores": [
-                11.918546676635742,
-                11.574146270751953,
-                9.110477447509766,
-                8.804816246032715,
-                8.21192741394043,
-                6.80319881439209,
-                6.526981353759766,
-                6.52130126953125,
-                6.402935028076172,
-                6.338179111480713
+                11.920215606689453,
+                11.575920104980469,
+                9.112384796142578,
+                8.806327819824219,
+                8.213329315185547,
+                6.803619384765625,
+                6.528011322021484,
+                6.52122163772583,
+                6.404090881347656,
+                6.3383283615112305
             ],
             "retrieved_sources": [
                 {
@@ -2722,30 +2722,30 @@
         },
         {
             "question_id": "b6c6a88c-ffc7-486a-a0c7-89ab38cc8e18",
-            "question_str": "What's the default value of the image_mode parameter in vLLM's fetch_video_async method?",
+            "question": "What's the default value of the image_mode parameter in vLLM's fetch_video_async method?",
             "retrieved_sources_indexes": [
-                2999,
-                2998,
-                3040,
-                2351,
-                2159,
-                3000,
-                9701,
-                1399,
-                2163,
-                91
+                5734,
+                5733,
+                5775,
+                5086,
+                4894,
+                5735,
+                9821,
+                14030,
+                4898,
+                89
             ],
             "retrieved_sources_scores": [
-                11.01813793182373,
-                7.959733009338379,
-                6.715932846069336,
-                6.437726974487305,
-                5.80718469619751,
-                5.787132263183594,
-                5.765385627746582,
-                5.677279472351074,
-                5.276586532592773,
-                5.275293350219727
+                11.018415451049805,
+                7.9597859382629395,
+                6.716076850891113,
+                6.436865329742432,
+                5.806839942932129,
+                5.787077903747559,
+                5.764407157897949,
+                5.6767988204956055,
+                5.275653839111328,
+                5.273067951202393
             ],
             "retrieved_sources": [
                 {
@@ -2802,30 +2802,30 @@
         },
         {
             "question_id": "9d2dd3eb-e569-46ea-a9d5-dea4bb6055e6",
-            "question_str": "What happens if you try to call patch_tensor_parallel_group when the tensor parallel state is already patched?",
+            "question": "What happens if you try to call patch_tensor_parallel_group when the tensor parallel state is already patched?",
             "retrieved_sources_indexes": [
-                2804,
-                353,
-                100,
-                3418,
-                333,
+                5539,
+                351,
+                98,
+                6153,
+                331,
                 988,
-                2299,
-                1488,
-                468,
-                4756
+                5034,
+                14119,
+                539,
+                12843
             ],
             "retrieved_sources_scores": [
-                13.530935287475586,
-                9.58249568939209,
-                9.006550788879395,
-                8.360382080078125,
-                7.625807762145996,
-                7.577515125274658,
-                7.545648574829102,
-                7.40959358215332,
-                7.324154853820801,
-                6.980958938598633
+                13.530158996582031,
+                9.585466384887695,
+                9.007797241210938,
+                8.360517501831055,
+                7.62778377532959,
+                7.576937198638916,
+                7.543713092803955,
+                7.408299446105957,
+                7.326484680175781,
+                6.978114604949951
             ],
             "retrieved_sources": [
                 {
@@ -2882,30 +2882,30 @@
         },
         {
             "question_id": "f518d56b-911f-45c8-8392-cfe35cc49704",
-            "question_str": "What does the MessageQueue.create_from_handle method return after calling wait_until_ready in vLLM's shared memory broadcast implementation?",
+            "question": "What does the MessageQueue.create_from_handle method return after calling wait_until_ready in vLLM's shared memory broadcast implementation?",
             "retrieved_sources_indexes": [
-                6175,
-                274,
-                6167,
-                6160,
-                5043,
-                2345,
-                6166,
-                200,
-                290,
-                5045
+                11083,
+                272,
+                11075,
+                11068,
+                11363,
+                5080,
+                11074,
+                198,
+                288,
+                11365
             ],
             "retrieved_sources_scores": [
-                12.796561241149902,
-                9.738372802734375,
-                9.398158073425293,
-                8.296833992004395,
-                7.172475814819336,
-                6.750428676605225,
-                6.347077369689941,
-                6.170866012573242,
-                6.089258670806885,
-                6.007494926452637
+                12.797235488891602,
+                9.73878288269043,
+                9.398756980895996,
+                8.298386573791504,
+                7.173023223876953,
+                6.750321388244629,
+                6.347988128662109,
+                6.17083740234375,
+                6.0900774002075195,
+                6.007856369018555
             ],
             "retrieved_sources": [
                 {
@@ -2962,30 +2962,30 @@
         },
         {
             "question_id": "2e74c1a5-6081-40e2-9049-a03ef68ee261",
-            "question_str": "What happens when cudagraph_capture_sizes is already set in vLLM's init_with_cudagraph_sizes method?",
+            "question": "What happens when cudagraph_capture_sizes is already set in vLLM's init_with_cudagraph_sizes method?",
             "retrieved_sources_indexes": [
-                2264,
-                2265,
-                212,
-                200,
+                4999,
+                5000,
+                210,
+                198,
                 889,
-                9695,
-                11316,
-                5122,
-                100,
-                353
+                9815,
+                1666,
+                11442,
+                98,
+                351
             ],
             "retrieved_sources_scores": [
-                10.263595581054688,
-                7.374015808105469,
-                7.115750789642334,
-                6.690122604370117,
-                6.295757293701172,
-                6.266836643218994,
-                6.225027084350586,
-                5.950418472290039,
-                5.8778276443481445,
-                5.723065376281738
+                10.26456356048584,
+                7.3755202293396,
+                7.116595268249512,
+                6.691277980804443,
+                6.296866416931152,
+                6.267590522766113,
+                6.226352214813232,
+                5.9516921043396,
+                5.878152847290039,
+                5.724313735961914
             ],
             "retrieved_sources": [
                 {
@@ -3042,30 +3042,30 @@
         },
         {
             "question_id": "e9157a40-4465-4de7-bd4d-033b4c173493",
-            "question_str": "What is the requires_grad value set for parameters in GPTQMarlin24's process_weights_after_loading method?",
+            "question": "What is the requires_grad value set for parameters in GPTQMarlin24's process_weights_after_loading method?",
             "retrieved_sources_indexes": [
-                10626,
-                10026,
-                10561,
-                10582,
-                9269,
-                10610,
-                9975,
-                10596,
-                1503,
-                10524
+                10913,
+                10146,
+                10781,
+                10802,
+                9389,
+                10897,
+                10095,
+                10816,
+                14134,
+                10744
             ],
             "retrieved_sources_scores": [
-                8.05421257019043,
-                7.5364990234375,
-                7.401434898376465,
-                6.422072887420654,
-                6.076992988586426,
-                5.735320568084717,
-                5.711773872375488,
-                5.710012912750244,
-                5.673279762268066,
-                5.66569185256958
+                8.05562973022461,
+                7.536871433258057,
+                7.4016618728637695,
+                6.422451496124268,
+                6.078155994415283,
+                5.736391544342041,
+                5.712749004364014,
+                5.710992813110352,
+                5.674602031707764,
+                5.666157245635986
             ],
             "retrieved_sources": [
                 {
@@ -3122,30 +3122,30 @@
         },
         {
             "question_id": "dc9be3c4-dbfd-4384-8cd1-ce3f37b0ac2e",
-            "question_str": "What happens when encoder_inputs is None in the encoder_seq creation in LLMEngine?",
+            "question": "What happens when encoder_inputs is None in the encoder_seq creation in LLMEngine?",
             "retrieved_sources_indexes": [
-                2842,
-                2754,
-                2755,
-                3418,
+                5577,
+                5489,
+                5490,
+                6153,
                 983,
-                2846,
+                5581,
                 718,
-                9384,
-                2706,
-                2872
+                9504,
+                5441,
+                5607
             ],
             "retrieved_sources_scores": [
-                10.26028823852539,
-                6.455280780792236,
-                6.365653991699219,
-                6.062363147735596,
-                6.02188777923584,
-                5.845799922943115,
-                5.727097511291504,
-                5.7219672203063965,
-                5.660400390625,
-                5.608640670776367
+                10.261545181274414,
+                6.456260681152344,
+                6.366599082946777,
+                6.063713550567627,
+                6.022792816162109,
+                5.846638202667236,
+                5.7279157638549805,
+                5.723408222198486,
+                5.661237716674805,
+                5.609471321105957
             ],
             "retrieved_sources": [
                 {
@@ -3202,30 +3202,30 @@
         },
         {
             "question_id": "b0fa5524-77d7-4288-8967-f606f32d9066",
-            "question_str": "What assertion is made about vocab_size and tp_size when loading fairseq2 LLaMA embedding weights?",
+            "question": "What assertion is made about vocab_size and tp_size when loading fairseq2 LLaMA embedding weights?",
             "retrieved_sources_indexes": [
-                7892,
-                7891,
-                2151,
-                14341,
-                9554,
-                11957,
-                8326,
-                155,
-                7890,
-                11879
+                8012,
+                8011,
+                4886,
+                14351,
+                9674,
+                2307,
+                8446,
+                153,
+                8010,
+                2229
             ],
             "retrieved_sources_scores": [
-                11.14243221282959,
-                8.099090576171875,
-                7.506738662719727,
-                7.269979000091553,
-                7.231325626373291,
-                7.054288864135742,
-                6.484635353088379,
-                6.377364635467529,
-                6.346614360809326,
-                6.300813674926758
+                11.144551277160645,
+                8.100537300109863,
+                7.508820533752441,
+                7.271247386932373,
+                7.233063697814941,
+                7.0559282302856445,
+                6.486222743988037,
+                6.378805160522461,
+                6.347739219665527,
+                6.302293300628662
             ],
             "retrieved_sources": [
                 {
@@ -3282,30 +3282,30 @@
         },
         {
             "question_id": "67336e58-c7ca-4ea4-a6ac-4b976ab3f1e8",
-            "question_str": "What is the default max_threads value used when creating the GrammarCompiler in vLLM's XGrammar backend?",
+            "question": "What is the default max_threads value used when creating the GrammarCompiler in vLLM's XGrammar backend?",
             "retrieved_sources_indexes": [
-                2186,
+                4921,
                 771,
-                5258,
-                2312,
+                11578,
+                5047,
                 1044,
-                5418,
-                2256,
+                11738,
+                4991,
                 1042,
-                35,
-                2187
+                618,
+                4922
             ],
             "retrieved_sources_scores": [
-                9.236984252929688,
-                8.120259284973145,
-                7.716422080993652,
-                7.71358585357666,
-                7.61131477355957,
-                7.53870153427124,
-                7.261266231536865,
-                7.249295234680176,
-                7.051387786865234,
-                7.002490997314453
+                9.236505508422852,
+                8.119479179382324,
+                7.717214584350586,
+                7.712298393249512,
+                7.610556602478027,
+                7.539358615875244,
+                7.260591506958008,
+                7.2479047775268555,
+                7.048686981201172,
+                7.003926753997803
             ],
             "retrieved_sources": [
                 {
@@ -3362,30 +3362,30 @@
         },
         {
             "question_id": "e10b9511-a69a-4206-bef4-eaa7f7159090",
-            "question_str": "What does the usage property return in vLLM's KV cache manager?",
+            "question": "What does the usage property return in vLLM's KV cache manager?",
             "retrieved_sources_indexes": [
-                3149,
-                2205,
-                3145,
+                5884,
+                4940,
+                5880,
                 1057,
-                5154,
-                2948,
-                5192,
-                5199,
-                5194,
-                2146
+                11474,
+                5683,
+                11512,
+                11519,
+                11514,
+                4881
             ],
             "retrieved_sources_scores": [
-                8.770183563232422,
-                8.161593437194824,
-                8.036290168762207,
-                7.844111442565918,
-                7.714630603790283,
-                7.440049648284912,
-                7.39638614654541,
-                7.08411979675293,
-                6.555906295776367,
-                6.531474590301514
+                8.772342681884766,
+                8.163827896118164,
+                8.033883094787598,
+                7.841334342956543,
+                7.708917617797852,
+                7.432703018188477,
+                7.398445129394531,
+                7.085798263549805,
+                6.557628631591797,
+                6.532288551330566
             ],
             "retrieved_sources": [
                 {
@@ -3442,30 +3442,30 @@
         },
         {
             "question_id": "5e9ccc6d-8cc5-4579-b891-8fb40b40012a",
-            "question_str": "What is the default value of the stream parameter in vLLM's OpenAI protocol translation parameters?",
+            "question": "What is the default value of the stream parameter in vLLM's OpenAI protocol translation parameters?",
             "retrieved_sources_indexes": [
-                310,
-                4596,
+                308,
+                12677,
+                305,
+                13885,
                 307,
-                1254,
-                309,
-                12310,
-                312,
-                4595,
-                2631,
-                12200
+                4347,
+                310,
+                12676,
+                5366,
+                4237
             ],
             "retrieved_sources_scores": [
-                13.635843276977539,
-                11.930203437805176,
-                9.904208183288574,
-                9.494661331176758,
-                8.79450798034668,
-                8.581390380859375,
-                8.563682556152344,
-                8.346105575561523,
-                8.074811935424805,
-                7.946653366088867
+                13.630754470825195,
+                11.919111251831055,
+                9.898351669311523,
+                9.483445167541504,
+                8.789114952087402,
+                8.572057723999023,
+                8.559741020202637,
+                8.341789245605469,
+                8.06838321685791,
+                7.9347734451293945
             ],
             "retrieved_sources": [
                 {
@@ -3522,30 +3522,30 @@
         },
         {
             "question_id": "63554d9e-17e8-478c-b29a-4f3b013c7e91",
-            "question_str": "What is the default value for the multimodal_embeddings parameter in the get_input_embeddings method of the Molmo model?",
+            "question": "What is the default value for the multimodal_embeddings parameter in the get_input_embeddings method of the Molmo model?",
             "retrieved_sources_indexes": [
-                7443,
-                8426,
-                6610,
-                8594,
-                8543,
-                8338,
-                6767,
-                9008,
-                8766,
-                7126
+                7563,
+                8546,
+                6730,
+                8714,
+                8663,
+                8458,
+                6887,
+                9128,
+                8886,
+                7246
             ],
             "retrieved_sources_scores": [
-                8.031132698059082,
-                7.644089221954346,
-                7.566371917724609,
-                7.438445568084717,
-                7.343230724334717,
-                7.2985310554504395,
-                7.278598785400391,
-                7.255195617675781,
-                7.25350284576416,
-                7.218165397644043
+                8.0322847366333,
+                7.6450514793396,
+                7.56712007522583,
+                7.439334392547607,
+                7.344113349914551,
+                7.299401760101318,
+                7.279146194458008,
+                7.256180286407471,
+                7.254386901855469,
+                7.219018936157227
             ],
             "retrieved_sources": [
                 {
@@ -3602,30 +3602,30 @@
         },
         {
             "question_id": "409b78bd-dafb-46b1-b453-3d16a1ae058b",
-            "question_str": "What are the supported bit values for W4A16Sparse24 quantization in vLLM's compressed tensors?",
+            "question": "What are the supported bit values for W4A16Sparse24 quantization in vLLM's compressed tensors?",
             "retrieved_sources_indexes": [
-                10553,
-                595,
-                9815,
-                14327,
-                4323,
-                2132,
-                14340,
-                9827,
-                14342,
-                9694
+                10773,
+                450,
+                9935,
+                14360,
+                13063,
+                4867,
+                14350,
+                9947,
+                14352,
+                9814
             ],
             "retrieved_sources_scores": [
-                9.81470012664795,
-                9.247211456298828,
-                8.142690658569336,
-                7.401885509490967,
-                7.345940113067627,
-                7.273554801940918,
-                7.209821701049805,
-                7.19819450378418,
-                7.162050247192383,
-                7.014686584472656
+                9.816551208496094,
+                9.248659133911133,
+                8.144560813903809,
+                7.4034929275512695,
+                7.347622394561768,
+                7.275183200836182,
+                7.211297512054443,
+                7.199825286865234,
+                7.1635541915893555,
+                7.015551567077637
             ],
             "retrieved_sources": [
                 {
@@ -3682,30 +3682,30 @@
         },
         {
             "question_id": "d7e4baa5-3106-4de4-b164-4de3211de137",
-            "question_str": "What class does TritonScaledMMLinearKernel inherit from in vLLM's quantization kernels?",
+            "question": "What class does TritonScaledMMLinearKernel inherit from in vLLM's quantization kernels?",
             "retrieved_sources_indexes": [
-                10665,
-                10668,
-                10682,
-                11496,
-                10382,
-                4350,
-                13990,
-                13938,
-                8595,
-                1420
+                10825,
+                10828,
+                10842,
+                1846,
+                10602,
+                13090,
+                2777,
+                2725,
+                8715,
+                14051
             ],
             "retrieved_sources_scores": [
-                12.581912994384766,
-                9.330402374267578,
-                8.019027709960938,
-                7.849532127380371,
-                7.708480358123779,
-                7.663626194000244,
-                7.267420291900635,
-                6.861655235290527,
-                6.815311908721924,
-                6.811166763305664
+                12.583385467529297,
+                9.330909729003906,
+                8.02021312713623,
+                7.85023307800293,
+                7.709310531616211,
+                7.664604187011719,
+                7.268216133117676,
+                6.862495422363281,
+                6.8154191970825195,
+                6.811217308044434
             ],
             "retrieved_sources": [
                 {
@@ -3762,30 +3762,30 @@
         },
         {
             "question_id": "67acae76-ee3b-46c1-a287-044c71fc78ac",
-            "question_str": "What quantization methods are supported for Mixtral models in vLLM?",
+            "question": "What quantization methods are supported for Mixtral models in vLLM?",
             "retrieved_sources_indexes": [
-                609,
-                10151,
-                13854,
-                9281,
-                98,
-                592,
-                598,
-                13993,
-                11172,
-                595
+                464,
+                10271,
+                2641,
+                9401,
+                96,
+                447,
+                453,
+                2780,
+                1522,
+                450
             ],
             "retrieved_sources_scores": [
-                8.695928573608398,
-                7.802663803100586,
-                6.931439399719238,
-                6.922927379608154,
-                6.428471565246582,
-                6.314820289611816,
-                6.150207996368408,
-                6.049715042114258,
-                5.984411716461182,
-                5.958277702331543
+                8.697428703308105,
+                7.80413293838501,
+                6.932082653045654,
+                6.924773216247559,
+                6.429635047912598,
+                6.315768241882324,
+                6.151370048522949,
+                6.051164627075195,
+                5.985238075256348,
+                5.959378242492676
             ],
             "retrieved_sources": [
                 {
@@ -3842,30 +3842,30 @@
         },
         {
             "question_id": "c544d846-d47c-4254-9ff4-a79467b234ce",
-            "question_str": "How many bytes are allocated for the internal field in ncclUniqueId structure in vLLM's PyNCCL wrapper?",
+            "question": "How many bytes are allocated for the internal field in ncclUniqueId structure in vLLM's PyNCCL wrapper?",
             "retrieved_sources_indexes": [
-                6129,
-                2443,
-                2157,
-                6266,
-                5451,
-                1419,
-                2195,
-                3492,
-                3276,
-                76
+                11037,
+                5178,
+                4892,
+                11174,
+                11771,
+                14050,
+                4930,
+                6227,
+                6011,
+                74
             ],
             "retrieved_sources_scores": [
-                11.411579132080078,
-                8.11858081817627,
-                6.803945064544678,
-                6.314151763916016,
-                6.245854377746582,
-                6.214232444763184,
-                6.009406089782715,
-                5.991898059844971,
-                5.974686145782471,
-                5.883113861083984
+                11.413064956665039,
+                8.119932174682617,
+                6.801700115203857,
+                6.315223693847656,
+                6.245626449584961,
+                6.21425199508667,
+                6.006078243255615,
+                5.991669654846191,
+                5.975790977478027,
+                5.883244514465332
             ],
             "retrieved_sources": [
                 {
@@ -3922,30 +3922,30 @@
         },
         {
             "question_id": "16deace0-4e51-4c3d-8f04-ffeadc97a2c3",
-            "question_str": "What is the default value of pp_locks in RayDistributedExecutor?",
+            "question": "What is the default value of pp_locks in RayDistributedExecutor?",
             "retrieved_sources_indexes": [
-                1965,
-                1985,
-                2838,
-                5050,
-                638,
-                2287,
-                14090,
-                2351,
-                11881,
+                4700,
+                4720,
+                5573,
+                11370,
+                36,
+                5022,
+                2877,
+                5086,
+                2231,
                 1215
             ],
             "retrieved_sources_scores": [
-                5.891355991363525,
-                5.82334566116333,
-                4.394567489624023,
-                4.381242752075195,
-                4.3550310134887695,
-                4.123701572418213,
-                4.073639392852783,
-                3.966733694076538,
-                3.939267635345459,
-                3.922618865966797
+                5.891909122467041,
+                5.823883533477783,
+                4.39492130279541,
+                4.381593704223633,
+                4.353311538696289,
+                4.1220502853393555,
+                4.072945594787598,
+                3.9651851654052734,
+                3.9389472007751465,
+                3.921036720275879
             ],
             "retrieved_sources": [
                 {
@@ -4002,30 +4002,30 @@
         },
         {
             "question_id": "12f7ab0a-fce8-4891-a6ed-9b402171b591",
-            "question_str": "What does the extract_tool_calls method in MistralToolParser return when the bot_token is not present in the model output?",
+            "question": "What does the extract_tool_calls method in MistralToolParser return when the bot_token is not present in the model output?",
             "retrieved_sources_indexes": [
-                13658,
-                4793,
-                4794,
-                4900,
-                13659,
-                4756,
-                4909,
-                4848,
-                200,
-                11817
+                3188,
+                12880,
+                12881,
+                12987,
+                3189,
+                12843,
+                12996,
+                12935,
+                198,
+                2167
             ],
             "retrieved_sources_scores": [
-                9.855279922485352,
-                9.831690788269043,
-                9.508828163146973,
-                9.459149360656738,
-                9.042299270629883,
-                8.927264213562012,
-                7.870162487030029,
-                7.2010087966918945,
-                6.92423677444458,
-                6.4596076011657715
+                9.855709075927734,
+                9.832730293273926,
+                9.509714126586914,
+                9.460223197937012,
+                9.041044235229492,
+                8.925768852233887,
+                7.870865821838379,
+                7.201929569244385,
+                6.922529697418213,
+                6.460657596588135
             ],
             "retrieved_sources": [
                 {
@@ -4082,30 +4082,30 @@
         },
         {
             "question_id": "96e48e54-5737-4f6e-a274-b5de6c36997d",
-            "question_str": "What happens when key is None in the CPU attention backend's reshape logic?",
+            "question": "What happens when key is None in the CPU attention backend's reshape logic?",
             "retrieved_sources_indexes": [
-                3885,
-                4086,
-                14089,
-                14086,
-                14087,
-                3846,
-                5580,
-                5575,
+                13169,
+                13370,
+                2876,
+                2873,
+                2874,
+                6581,
+                11900,
+                11895,
                 1042,
-                4089
+                13373
             ],
             "retrieved_sources_scores": [
-                9.493380546569824,
-                8.220537185668945,
-                7.842164039611816,
-                7.700657844543457,
-                7.511472702026367,
-                7.310129165649414,
-                7.254827499389648,
-                7.253133773803711,
-                7.1208391189575195,
-                6.935369968414307
+                9.49494457244873,
+                8.221510887145996,
+                7.843330383300781,
+                7.701987266540527,
+                7.512740612030029,
+                7.310985565185547,
+                7.256685256958008,
+                7.254398345947266,
+                7.122416973114014,
+                6.936250686645508
             ],
             "retrieved_sources": [
                 {
@@ -4162,30 +4162,30 @@
         },
         {
             "question_id": "f1fb35e6-1a65-48e1-8c99-f5e25df6f00c",
-            "question_str": "What is the default data type for indices_type parameter in the routing simulator's expert selection method?",
+            "question": "What is the default data type for indices_type parameter in the routing simulator's expert selection method?",
             "retrieved_sources_indexes": [
-                10207,
-                10212,
+                10327,
+                10332,
                 755,
                 756,
                 757,
-                10209,
-                10213,
-                9825,
-                10167,
-                10208
+                10329,
+                10333,
+                9945,
+                10287,
+                10328
             ],
             "retrieved_sources_scores": [
-                16.13691520690918,
-                15.061211585998535,
-                10.939348220825195,
-                10.44068717956543,
-                9.832921981811523,
-                9.18213176727295,
-                8.143230438232422,
-                7.7690582275390625,
-                7.766283988952637,
-                7.5465826988220215
+                16.136804580688477,
+                15.061155319213867,
+                10.940628051757812,
+                10.44202995300293,
+                9.832884788513184,
+                9.18166732788086,
+                8.144363403320312,
+                7.770054817199707,
+                7.767571449279785,
+                7.545656204223633
             ],
             "retrieved_sources": [
                 {
@@ -4242,30 +4242,30 @@
         },
         {
             "question_id": "5dee8def-bbf7-44f4-b163-96968cd1572f",
-            "question_str": "What dimension handling does vLLM's transformers model apply to vision embeddings when they are 2D tensors?",
+            "question": "What dimension handling does vLLM's transformers model apply to vision embeddings when they are 2D tensors?",
             "retrieved_sources_indexes": [
-                5443,
-                6479,
-                98,
-                155,
-                8594,
-                9509,
-                7139,
-                476,
-                123,
-                133
+                11763,
+                6599,
+                96,
+                153,
+                8714,
+                9629,
+                7259,
+                547,
+                121,
+                131
             ],
             "retrieved_sources_scores": [
-                9.562112808227539,
-                9.535669326782227,
-                9.282397270202637,
-                9.219830513000488,
-                8.591129302978516,
-                8.436347961425781,
-                8.429012298583984,
-                8.3290433883667,
-                7.335509777069092,
-                7.111386775970459
+                9.563055038452148,
+                9.536539077758789,
+                9.282916069030762,
+                9.220812797546387,
+                8.59189224243164,
+                8.438033103942871,
+                8.430126190185547,
+                8.33055305480957,
+                7.335939407348633,
+                7.111713886260986
             ],
             "retrieved_sources": [
                 {
@@ -4322,30 +4322,30 @@
         },
         {
             "question_id": "4d752f03-1006-4df9-9fde-98b947c79f66",
-            "question_str": "What is the default value of the pin_memory parameter in MultiModalKwargs._try_stack method?",
+            "question": "What is the default value of the pin_memory parameter in MultiModalKwargs._try_stack method?",
             "retrieved_sources_indexes": [
-                3105,
-                3104,
-                3002,
-                2351,
-                2159,
-                3094,
-                12264,
-                2566,
+                5840,
+                5839,
+                5737,
+                5086,
+                4894,
+                5829,
+                4301,
                 1091,
-                9701
+                5301,
+                9821
             ],
             "retrieved_sources_scores": [
-                10.389793395996094,
-                8.992494583129883,
-                7.423972129821777,
-                6.437726974487305,
-                5.80718469619751,
-                5.677988052368164,
-                5.2281951904296875,
-                5.04282283782959,
-                5.04282283782959,
-                5.031366348266602
+                10.39006519317627,
+                8.993410110473633,
+                7.425360679626465,
+                6.436865329742432,
+                5.806839942932129,
+                5.678901672363281,
+                5.229520797729492,
+                5.042222023010254,
+                5.042222023010254,
+                5.03076696395874
             ],
             "retrieved_sources": [
                 {
@@ -4384,14 +4384,14 @@
                     "last_character_index": 4136
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
-                    "first_character_index": 2352,
-                    "last_character_index": 4318
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_dataset.py",
                     "first_character_index": 1824,
                     "last_character_index": 3706
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
+                    "first_character_index": 2352,
+                    "last_character_index": 4318
                 },
                 {
                     "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/base_config.py",
@@ -4402,30 +4402,30 @@
         },
         {
             "question_id": "b0792edd-53b8-40b5-aaf0-d00416dfae23",
-            "question_str": "What are all possible values for the QuickReduceRegime enum in vLLM's distributed communication?",
+            "question": "What are all possible values for the QuickReduceRegime enum in vLLM's distributed communication?",
             "retrieved_sources_indexes": [
-                6148,
-                66,
-                67,
-                5209,
-                1220,
-                6260,
-                2072,
-                2068,
-                2772,
+                11056,
+                64,
+                65,
+                11529,
+                14249,
+                11168,
+                4807,
+                4803,
+                5507,
                 1019
             ],
             "retrieved_sources_scores": [
-                9.925779342651367,
-                6.932466506958008,
-                6.875607490539551,
-                6.862898826599121,
-                6.708886623382568,
-                6.60328483581543,
-                6.502596855163574,
-                6.38592004776001,
-                6.322500228881836,
-                6.145874500274658
+                9.926512718200684,
+                6.933283805847168,
+                6.87650203704834,
+                6.8632988929748535,
+                6.70977783203125,
+                6.604376792907715,
+                6.503153324127197,
+                6.386430740356445,
+                6.323569297790527,
+                6.146975994110107
             ],
             "retrieved_sources": [
                 {
@@ -4482,30 +4482,30 @@
         },
         {
             "question_id": "3786b834-ca12-4d88-9b2e-47c2d878827c",
-            "question_str": "What's the default value of max_position_embeddings in ChameleonSwinDecoderLayer?",
+            "question": "What's the default value of max_position_embeddings in ChameleonSwinDecoderLayer?",
             "retrieved_sources_indexes": [
-                6593,
-                3679,
-                4305,
-                4323,
-                638,
-                3667,
-                2287,
-                14090,
-                2351,
-                11881
+                6713,
+                6414,
+                13045,
+                13063,
+                36,
+                6402,
+                5022,
+                2877,
+                5086,
+                2231
             ],
             "retrieved_sources_scores": [
-                6.3682146072387695,
-                5.03334903717041,
-                4.819626808166504,
-                4.403321266174316,
-                4.3550310134887695,
-                4.2820658683776855,
-                4.123701572418213,
-                4.073639392852783,
-                3.966733694076538,
-                3.939267635345459
+                6.368983745574951,
+                5.033599376678467,
+                4.819250106811523,
+                4.402832984924316,
+                4.353311538696289,
+                4.282299995422363,
+                4.1220502853393555,
+                4.072945594787598,
+                3.9651851654052734,
+                3.9389472007751465
             ],
             "retrieved_sources": [
                 {
@@ -4562,30 +4562,30 @@
         },
         {
             "question_id": "9024881e-e178-462f-8435-7fc4609da96a",
-            "question_str": "What happens when the residual parameter is None in Gemma2DecoderLayer's forward method?",
+            "question": "What happens when the residual parameter is None in Gemma2DecoderLayer's forward method?",
             "retrieved_sources_indexes": [
-                2159,
-                1766,
-                9480,
-                8257,
-                3418,
-                4789,
-                8685,
-                6817,
-                3604,
-                11965
+                4894,
+                13702,
+                9600,
+                8377,
+                6153,
+                12876,
+                8805,
+                6937,
+                6339,
+                2315
             ],
             "retrieved_sources_scores": [
-                7.000762939453125,
-                6.750188827514648,
-                6.315624713897705,
-                6.107339859008789,
-                6.062363147735596,
-                5.708758354187012,
-                5.633052825927734,
-                5.566876411437988,
-                5.486550331115723,
-                5.456465244293213
+                7.001687526702881,
+                6.750888347625732,
+                6.316588878631592,
+                6.108156204223633,
+                6.063713550567627,
+                5.710310935974121,
+                5.6334381103515625,
+                5.568515300750732,
+                5.488018035888672,
+                5.457124710083008
             ],
             "retrieved_sources": [
                 {
@@ -4642,30 +4642,30 @@
         },
         {
             "question_id": "a1660e69-44a1-48da-a2a7-5a84be305016",
-            "question_str": "What is the default value of the spec_step_index parameter in DeepSeekMultiTokenPredictor's forward method?",
+            "question": "What is the default value of the spec_step_index parameter in DeepSeekMultiTokenPredictor's forward method?",
             "retrieved_sources_indexes": [
-                2351,
-                3696,
-                2159,
-                3687,
-                12264,
-                14089,
-                2566,
+                5086,
+                6431,
+                4894,
+                6422,
+                4301,
+                2876,
                 1091,
-                9701,
-                5826
+                5301,
+                9821,
+                12238
             ],
             "retrieved_sources_scores": [
-                6.437726974487305,
-                5.8823161125183105,
-                5.80718469619751,
-                5.364220142364502,
-                5.2281951904296875,
-                5.1476826667785645,
-                5.04282283782959,
-                5.04282283782959,
-                5.031366348266602,
-                4.984199523925781
+                6.436865329742432,
+                5.8830413818359375,
+                5.806839942932129,
+                5.364407062530518,
+                5.229520797729492,
+                5.147796630859375,
+                5.042222023010254,
+                5.042222023010254,
+                5.03076696395874,
+                4.984646797180176
             ],
             "retrieved_sources": [
                 {
@@ -4699,14 +4699,14 @@
                     "last_character_index": 29928
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
-                    "first_character_index": 2352,
-                    "last_character_index": 4318
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_dataset.py",
                     "first_character_index": 1824,
                     "last_character_index": 3706
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
+                    "first_character_index": 2352,
+                    "last_character_index": 4318
                 },
                 {
                     "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/quantization/base_config.py",
@@ -4722,30 +4722,30 @@
         },
         {
             "question_id": "22018181-e293-4308-8289-ecfaac26406f",
-            "question_str": "What happens when a reshape operation in vLLM's noop elimination has more than one -1 in the shape parameter?",
+            "question": "What happens when a reshape operation in vLLM's noop elimination has more than one -1 in the shape parameter?",
             "retrieved_sources_indexes": [
-                211,
-                207,
-                2355,
-                171,
-                2329,
-                4274,
-                1503,
-                2109,
-                13385,
-                13611
+                209,
+                205,
+                5090,
+                169,
+                5064,
+                13558,
+                14134,
+                4844,
+                3278,
+                3141
             ],
             "retrieved_sources_scores": [
-                8.144184112548828,
-                8.06972885131836,
-                7.653504848480225,
-                7.403961181640625,
-                6.928661823272705,
-                6.833762168884277,
-                6.756448268890381,
-                6.748658180236816,
-                6.727362632751465,
-                6.7238359451293945
+                8.14566421508789,
+                8.071087837219238,
+                7.654690742492676,
+                7.40326452255249,
+                6.929328918457031,
+                6.834766387939453,
+                6.756227970123291,
+                6.7489800453186035,
+                6.727154731750488,
+                6.724513053894043
             ],
             "retrieved_sources": [
                 {
@@ -4802,30 +4802,30 @@
         },
         {
             "question_id": "79ef0eef-b8b3-49d1-a8d9-30b99ce0c4d7",
-            "question_str": "What is the default value for the use_bitsandbytes_4bit attribute when it's not present on a parameter object in vLLM's linear layer?",
+            "question": "What is the default value for the use_bitsandbytes_4bit attribute when it's not present on a parameter object in vLLM's linear layer?",
             "retrieved_sources_indexes": [
-                513,
-                469,
-                9444,
-                193,
-                9473,
-                171,
-                9939,
+                476,
+                540,
+                9564,
+                191,
+                9593,
+                169,
+                10059,
                 816,
-                2335,
-                9455
+                5070,
+                9575
             ],
             "retrieved_sources_scores": [
-                7.99338436126709,
-                7.802658557891846,
-                7.6092047691345215,
-                7.498448371887207,
-                7.252133846282959,
-                7.181897163391113,
-                6.996823310852051,
-                6.993131637573242,
-                6.915156841278076,
-                6.739809989929199
+                7.992234706878662,
+                7.802805423736572,
+                7.609311103820801,
+                7.497922897338867,
+                7.25177526473999,
+                7.180458068847656,
+                6.99753999710083,
+                6.99227237701416,
+                6.914211750030518,
+                6.740473747253418
             ],
             "retrieved_sources": [
                 {
@@ -4882,30 +4882,30 @@
         },
         {
             "question_id": "92d69198-b21e-416c-a8ba-bc8a6653c4d9",
-            "question_str": "What conditions must be met for use_aiter_and_is_supported to be True in vLLM's FP8 quantization?",
+            "question": "What conditions must be met for use_aiter_and_is_supported to be True in vLLM's FP8 quantization?",
             "retrieved_sources_indexes": [
-                591,
-                10012,
-                2569,
+                446,
+                10132,
+                5304,
                 1094,
-                11473,
-                2382,
-                10429,
-                6653,
-                10151,
-                10883
+                1823,
+                5117,
+                10649,
+                6773,
+                10271,
+                1233
             ],
             "retrieved_sources_scores": [
-                7.008184432983398,
-                6.912142276763916,
-                6.875795364379883,
-                6.875795364379883,
-                6.852596282958984,
-                6.835038185119629,
-                6.8026862144470215,
-                6.681029319763184,
-                6.374075889587402,
-                6.348210334777832
+                7.006227016448975,
+                6.913435935974121,
+                6.876038551330566,
+                6.876038551330566,
+                6.85283899307251,
+                6.832319736480713,
+                6.803613662719727,
+                6.6783599853515625,
+                6.3723554611206055,
+                6.347925186157227
             ],
             "retrieved_sources": [
                 {
@@ -4962,30 +4962,30 @@
         },
         {
             "question_id": "7d3ccec1-4036-465d-a081-579807af5896",
-            "question_str": "What are the supported spatial pooling modes in LlavaNextVideoPooler?",
+            "question": "What are the supported spatial pooling modes in LlavaNextVideoPooler?",
             "retrieved_sources_indexes": [
-                8061,
-                13560,
-                9563,
-                3371,
-                98,
-                129,
-                309,
-                7929,
-                3362,
-                2934
+                8181,
+                3090,
+                9683,
+                6106,
+                96,
+                127,
+                307,
+                8049,
+                6097,
+                5669
             ],
             "retrieved_sources_scores": [
-                5.765835285186768,
-                5.729914665222168,
-                4.855508327484131,
-                4.79490852355957,
-                4.489745140075684,
-                4.386977195739746,
-                4.308438301086426,
-                4.233132362365723,
-                4.196243762969971,
-                4.185489177703857
+                5.766432762145996,
+                5.730736255645752,
+                4.8567094802856445,
+                4.796079635620117,
+                4.490823268890381,
+                4.387993812561035,
+                4.30945348739624,
+                4.234114646911621,
+                4.197213172912598,
+                4.186487674713135
             ],
             "retrieved_sources": [
                 {
@@ -5042,30 +5042,30 @@
         },
         {
             "question_id": "cb7cbccd-ab96-4695-9c7a-9197e6b254a8",
-            "question_str": "What is the default value for apply_router_weight_on_input parameter in the DeepGemm MoE kernel function call?",
+            "question": "What is the default value for apply_router_weight_on_input parameter in the DeepGemm MoE kernel function call?",
             "retrieved_sources_indexes": [
-                10028,
-                10262,
-                1583,
-                10021,
+                10148,
+                10382,
+                14181,
+                10141,
                 1053,
-                10076,
-                10199,
-                2312,
-                11833,
-                4783
+                10196,
+                10319,
+                5047,
+                2183,
+                12870
             ],
             "retrieved_sources_scores": [
-                8.214788436889648,
-                7.943286418914795,
-                7.915140151977539,
-                7.872842788696289,
-                7.128805160522461,
-                6.931515693664551,
-                6.921435356140137,
-                6.791418075561523,
-                6.6563720703125,
-                6.493870735168457
+                8.21471881866455,
+                7.943007469177246,
+                7.911508083343506,
+                7.874255657196045,
+                7.129455089569092,
+                6.931571006774902,
+                6.921689987182617,
+                6.788021087646484,
+                6.652721405029297,
+                6.490477561950684
             ],
             "retrieved_sources": [
                 {
@@ -5122,30 +5122,30 @@
         },
         {
             "question_id": "02b4ba56-66f8-4cf5-8d0a-621ea70030e7",
-            "question_str": "What are the compilation levels that cause do_not_compile to be set to True in vLLM's compilation decorator?",
+            "question": "What are the compilation levels that cause do_not_compile to be set to True in vLLM's compilation decorator?",
             "retrieved_sources_indexes": [
-                3689,
-                2214,
-                3686,
-                2251,
-                2258,
-                12970,
-                204,
-                12160,
-                212,
-                2256
+                6424,
+                4949,
+                6421,
+                4986,
+                4993,
+                4020,
+                202,
+                4544,
+                210,
+                4991
             ],
             "retrieved_sources_scores": [
-                12.624038696289062,
-                9.666302680969238,
-                9.582735061645508,
-                9.33565902709961,
-                8.973714828491211,
-                8.733345031738281,
-                8.251900672912598,
-                8.17655086517334,
-                7.9586405754089355,
-                7.7690253257751465
+                12.625518798828125,
+                9.667465209960938,
+                9.583045959472656,
+                9.336304664611816,
+                8.974468231201172,
+                8.734130859375,
+                8.252645492553711,
+                8.177066802978516,
+                7.959158897399902,
+                7.769876003265381
             ],
             "retrieved_sources": [
                 {
@@ -5202,30 +5202,30 @@
         },
         {
             "question_id": "a96c1a73-d5d0-4599-85ac-9dd74c52c20f",
-            "question_str": "What is the default value of inputs_embeds parameter in DeepSeek model's forward method?",
+            "question": "What is the default value of inputs_embeds parameter in DeepSeek model's forward method?",
             "retrieved_sources_indexes": [
-                2159,
-                3675,
-                2351,
-                12264,
-                5074,
-                7046,
-                7240,
-                9701,
-                8587,
-                3696
+                4894,
+                6410,
+                5086,
+                4301,
+                11394,
+                7166,
+                7360,
+                9821,
+                8707,
+                6431
             ],
             "retrieved_sources_scores": [
-                7.1833953857421875,
-                6.500957012176514,
-                6.437726974487305,
-                6.344460964202881,
-                6.298645973205566,
-                6.277979373931885,
-                6.234598159790039,
-                6.195331573486328,
-                6.063841342926025,
-                5.8823161125183105
+                7.182590007781982,
+                6.500270366668701,
+                6.436865329742432,
+                6.345394134521484,
+                6.299358367919922,
+                6.27924919128418,
+                6.234984874725342,
+                6.1943206787109375,
+                6.064088344573975,
+                5.8830413818359375
             ],
             "retrieved_sources": [
                 {
@@ -5282,30 +5282,30 @@
         },
         {
             "question_id": "94ade925-c345-413f-8410-48cf17c65b99",
-            "question_str": "What prefixes does the AutoWeightsLoader skip in MiniCPM Eagle model when tie_word_embeddings is True?",
+            "question": "What prefixes does the AutoWeightsLoader skip in MiniCPM Eagle model when tie_word_embeddings is True?",
             "retrieved_sources_indexes": [
-                12508,
-                11054,
-                8263,
-                200,
-                7626,
-                12923,
-                1405,
-                4314,
-                8890,
-                12515
+                3558,
+                1404,
+                8383,
+                198,
+                7746,
+                3973,
+                14036,
+                13054,
+                9010,
+                3565
             ],
             "retrieved_sources_scores": [
-                8.949532508850098,
-                8.787370681762695,
-                8.547521591186523,
-                8.451908111572266,
-                8.201983451843262,
-                7.524493217468262,
-                7.399232864379883,
-                7.137261867523193,
-                7.046783447265625,
-                6.837775230407715
+                8.949878692626953,
+                8.787693977355957,
+                8.548179626464844,
+                8.453060150146484,
+                8.203262329101562,
+                7.525698184967041,
+                7.399909019470215,
+                7.138031005859375,
+                7.0469818115234375,
+                6.838543891906738
             ],
             "retrieved_sources": [
                 {
@@ -5362,30 +5362,30 @@
         },
         {
             "question_id": "eea9e938-c8f8-4a7a-b262-66e81e9a0201",
-            "question_str": "What are all the NVML GPU instance profile constants defined in vLLM's pynvml module?",
+            "question": "What are all the NVML GPU instance profile constants defined in vLLM's pynvml module?",
             "retrieved_sources_indexes": [
-                2034,
-                2355,
-                2100,
-                5452,
-                651,
-                2443,
-                2097,
-                2099,
-                2236,
-                2317
+                4769,
+                5090,
+                4835,
+                11772,
+                32,
+                5178,
+                4832,
+                4834,
+                4971,
+                5052
             ],
             "retrieved_sources_scores": [
-                12.353035926818848,
-                11.726485252380371,
-                8.873370170593262,
-                7.223514080047607,
-                7.039191246032715,
-                6.842550754547119,
-                6.782707691192627,
-                6.089107036590576,
-                6.077950954437256,
-                6.046942710876465
+                12.353981971740723,
+                11.728075981140137,
+                8.874326705932617,
+                7.219346523284912,
+                7.030828952789307,
+                6.843117713928223,
+                6.783449172973633,
+                6.089849948883057,
+                6.078760623931885,
+                6.048124313354492
             ],
             "retrieved_sources": [
                 {
@@ -5442,30 +5442,30 @@
         },
         {
             "question_id": "b9f85113-c988-47ad-993b-01aec1efe22d",
-            "question_str": "What are the shard_id values used in the stacked_params_mapping for gate_up_proj in vLLM's step3_text model?",
+            "question": "What are the shard_id values used in the stacked_params_mapping for gate_up_proj in vLLM's step3_text model?",
             "retrieved_sources_indexes": [
-                7181,
-                6760,
-                7007,
-                7440,
-                7713,
-                7960,
-                8051,
-                7036,
-                7504,
-                7979
+                7301,
+                6880,
+                7127,
+                7560,
+                7833,
+                8080,
+                8171,
+                7156,
+                7624,
+                8099
             ],
             "retrieved_sources_scores": [
-                8.63841438293457,
-                8.628393173217773,
-                8.612321853637695,
-                8.596673011779785,
-                8.509531021118164,
-                8.471698760986328,
-                8.32370376586914,
-                8.181072235107422,
-                8.126781463623047,
-                8.126781463623047
+                8.640073776245117,
+                8.630029678344727,
+                8.613972663879395,
+                8.597892761230469,
+                8.511150360107422,
+                8.473318099975586,
+                8.324698448181152,
+                8.18218994140625,
+                8.1283597946167,
+                8.1283597946167
             ],
             "retrieved_sources": [
                 {
@@ -5522,30 +5522,30 @@
         },
         {
             "question_id": "ef591476-8135-4e25-baa9-96c42dbe3ee5",
-            "question_str": "What is the default value of tie_word_embeddings in vLLM's FalconForCausalLM class when the config doesn't specify it?",
+            "question": "What is the default value of tie_word_embeddings in vLLM's FalconForCausalLM class when the config doesn't specify it?",
             "retrieved_sources_indexes": [
-                6679,
+                6799,
                 1185,
-                513,
+                476,
                 1214,
-                2629,
+                5364,
                 1184,
-                3338,
-                35,
-                9701,
-                3781
+                6073,
+                618,
+                9821,
+                6516
             ],
             "retrieved_sources_scores": [
-                12.644580841064453,
-                7.441661834716797,
-                7.197623252868652,
-                7.078062057495117,
-                7.009047031402588,
-                6.919386863708496,
-                6.688587665557861,
-                6.461015701293945,
-                6.441958427429199,
-                6.377018928527832
+                12.643503189086914,
+                7.440794944763184,
+                7.1966047286987305,
+                7.077841281890869,
+                7.008641242980957,
+                6.91840934753418,
+                6.688930511474609,
+                6.45978307723999,
+                6.43978214263916,
+                6.3770527839660645
             ],
             "retrieved_sources": [
                 {
@@ -5602,30 +5602,30 @@
         },
         {
             "question_id": "df39833c-7c8c-4e82-b6fd-a66f3b8ce929",
-            "question_str": "What is the default value for engine_id when creating connectors in MultiKVConnector?",
+            "question": "What is the default value for engine_id when creating connectors in MultiKVConnector?",
             "retrieved_sources_indexes": [
-                6309,
-                6334,
-                2312,
-                6358,
-                6337,
-                2192,
-                11239,
-                6283,
-                638,
-                6355
+                11217,
+                11242,
+                5047,
+                11266,
+                11245,
+                4927,
+                1589,
+                11191,
+                36,
+                11263
             ],
             "retrieved_sources_scores": [
-                7.893970489501953,
-                7.164687156677246,
-                6.868833541870117,
-                5.638881206512451,
-                5.40728235244751,
-                5.393062114715576,
-                5.267232894897461,
-                5.202945709228516,
-                5.1973066329956055,
-                5.053234100341797
+                7.894886493682861,
+                7.164982795715332,
+                6.867969512939453,
+                5.639828681945801,
+                5.408038139343262,
+                5.393039226531982,
+                5.267026424407959,
+                5.203502178192139,
+                5.195843696594238,
+                5.053951263427734
             ],
             "retrieved_sources": [
                 {
@@ -5682,30 +5682,30 @@
         },
         {
             "question_id": "17204ac3-d7f6-4d82-b2fc-69125f6bb1e9",
-            "question_str": "What datasets are supported by ASRDataset and MLPerfDataset in vLLM benchmarks?",
+            "question": "What datasets are supported by ASRDataset and MLPerfDataset in vLLM benchmarks?",
             "retrieved_sources_indexes": [
-                2580,
+                5315,
                 1189,
-                1422,
+                14053,
                 16,
-                2607,
-                2539,
-                376,
+                5342,
+                5274,
+                374,
                 1206,
-                2603,
-                2564
+                5338,
+                5299
             ],
             "retrieved_sources_scores": [
-                10.618250846862793,
-                8.570138931274414,
-                7.2392473220825195,
-                7.103388786315918,
-                6.761086463928223,
-                6.728835582733154,
-                6.2849297523498535,
-                6.190851211547852,
-                5.834345817565918,
-                5.827516555786133
+                10.619046211242676,
+                8.559856414794922,
+                7.22966194152832,
+                7.104189395904541,
+                6.748993873596191,
+                6.718352317810059,
+                6.268599987030029,
+                6.191410064697266,
+                5.834792613983154,
+                5.8277506828308105
             ],
             "retrieved_sources": [
                 {
@@ -5762,30 +5762,30 @@
         },
         {
             "question_id": "d40d1b96-89d9-49b0-b2bb-85202cb491f3",
-            "question_str": "What are some of the test model names used in vLLM's test_utils.py for testing different model types and quantization methods?",
+            "question": "What are some of the test model names used in vLLM's test_utils.py for testing different model types and quantization methods?",
             "retrieved_sources_indexes": [
-                294,
-                652,
-                11496,
-                355,
-                12995,
-                609,
-                295,
-                13993,
-                13516,
-                13990
+                292,
+                33,
+                1846,
+                353,
+                4045,
+                464,
+                293,
+                2780,
+                3409,
+                2777
             ],
             "retrieved_sources_scores": [
-                13.095331192016602,
-                9.438741683959961,
-                8.897577285766602,
-                8.881125450134277,
-                8.849231719970703,
-                8.60590648651123,
-                8.344191551208496,
-                8.151946067810059,
-                8.137977600097656,
-                7.943690299987793
+                13.094914436340332,
+                9.437241554260254,
+                8.898229598999023,
+                8.878729820251465,
+                8.848907470703125,
+                8.606103897094727,
+                8.34432601928711,
+                8.15235424041748,
+                8.137035369873047,
+                7.943762302398682
             ],
             "retrieved_sources": [
                 {
@@ -5842,30 +5842,30 @@
         },
         {
             "question_id": "5ddbbb60-4372-4ce2-b0a9-64e59803e7e1",
-            "question_str": "What is the default value of global_num_experts parameter in the forward_xpu method of vLLM's fused MOE layer?",
+            "question": "What is the default value of global_num_experts parameter in the forward_xpu method of vLLM's fused MOE layer?",
             "retrieved_sources_indexes": [
-                10565,
-                9911,
-                10149,
-                513,
-                10298,
-                14247,
-                9701,
-                10517,
-                10581,
-                9775
+                10785,
+                10031,
+                10269,
+                476,
+                10418,
+                3034,
+                9821,
+                10737,
+                10801,
+                9895
             ],
             "retrieved_sources_scores": [
-                10.55694580078125,
-                8.180559158325195,
-                8.163772583007812,
-                7.995993614196777,
-                7.9794440269470215,
-                7.918509483337402,
-                7.7541823387146,
-                7.726935386657715,
-                7.725717544555664,
-                7.718564033508301
+                10.558792114257812,
+                8.18121337890625,
+                8.165051460266113,
+                7.994750022888184,
+                7.981204032897949,
+                7.91881799697876,
+                7.753914833068848,
+                7.727631568908691,
+                7.726712226867676,
+                7.720503807067871
             ],
             "retrieved_sources": [
                 {
@@ -5922,30 +5922,30 @@
         },
         {
             "question_id": "8e79a26d-0035-449d-9fb8-e50ac242396a",
-            "question_str": "What is the default value for the intermediate_tensors parameter in GranitemoehybridForCausalLM's forward method?",
+            "question": "What is the default value for the intermediate_tensors parameter in GranitemoehybridForCausalLM's forward method?",
             "retrieved_sources_indexes": [
-                2351,
-                3696,
-                7046,
-                2159,
-                3687,
-                12264,
-                8257,
-                14089,
-                2566,
-                1091
+                5086,
+                6431,
+                7166,
+                4894,
+                6422,
+                4301,
+                8377,
+                2876,
+                1091,
+                5301
             ],
             "retrieved_sources_scores": [
-                6.437726974487305,
-                5.8823161125183105,
-                5.839155197143555,
-                5.80718469619751,
-                5.364220142364502,
-                5.2281951904296875,
-                5.1718549728393555,
-                5.1476826667785645,
-                5.04282283782959,
-                5.04282283782959
+                6.436865329742432,
+                5.8830413818359375,
+                5.84065055847168,
+                5.806839942932129,
+                5.364407062530518,
+                5.229520797729492,
+                5.172296524047852,
+                5.147796630859375,
+                5.042222023010254,
+                5.042222023010254
             ],
             "retrieved_sources": [
                 {
@@ -5989,43 +5989,43 @@
                     "last_character_index": 29928
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
-                    "first_character_index": 2352,
-                    "last_character_index": 4318
-                },
-                {
                     "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_dataset.py",
                     "first_character_index": 1824,
                     "last_character_index": 3706
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/datasets.py",
+                    "first_character_index": 2352,
+                    "last_character_index": 4318
                 }
             ]
         },
         {
             "question_id": "4ac3026d-7b4f-4723-9116-7aa546efed71",
-            "question_str": "What is the default value of the dst parameter in tensor_model_parallel_gather function?",
+            "question": "What is the default value of the dst parameter in tensor_model_parallel_gather function?",
             "retrieved_sources_indexes": [
-                11833,
-                10458,
-                2811,
-                11835,
-                11830,
-                11829,
-                1583,
-                2786,
-                2791,
-                171
+                2183,
+                10678,
+                5546,
+                2185,
+                2180,
+                2179,
+                14181,
+                5521,
+                5526,
+                169
             ],
             "retrieved_sources_scores": [
-                6.6563720703125,
-                6.564663887023926,
-                5.835124969482422,
-                5.76143741607666,
-                5.7601518630981445,
-                5.690868377685547,
-                5.621635437011719,
-                5.612236022949219,
-                5.604599952697754,
-                5.482016563415527
+                6.652721405029297,
+                6.564307689666748,
+                5.83560848236084,
+                5.7580671310424805,
+                5.75676965713501,
+                5.687522888183594,
+                5.618860244750977,
+                5.6114349365234375,
+                5.604374885559082,
+                5.47885799407959
             ],
             "retrieved_sources": [
                 {
@@ -6082,30 +6082,30 @@
         },
         {
             "question_id": "e5baac73-d8dc-4ea5-ac58-41c8d3419f28",
-            "question_str": "What value is used for m_j when the computed maximum is negative infinity in vLLM's Triton attention implementation?",
+            "question": "What value is used for m_j when the computed maximum is negative infinity in vLLM's Triton attention implementation?",
             "retrieved_sources_indexes": [
-                4194,
-                4188,
-                4126,
-                14082,
-                14078,
-                9689,
-                555,
-                274,
-                14075,
-                4058
+                13478,
+                13472,
+                13410,
+                2869,
+                2865,
+                9809,
+                518,
+                272,
+                2862,
+                13342
             ],
             "retrieved_sources_scores": [
-                10.659975051879883,
-                10.492631912231445,
-                9.317497253417969,
-                9.094038009643555,
-                8.932135581970215,
-                8.717243194580078,
-                8.111194610595703,
-                7.910312652587891,
-                7.732071876525879,
-                7.697729587554932
+                10.659317016601562,
+                10.491982460021973,
+                9.316308975219727,
+                9.093984603881836,
+                8.932414054870605,
+                8.716968536376953,
+                8.111364364624023,
+                7.910309314727783,
+                7.732774257659912,
+                7.697971343994141
             ],
             "retrieved_sources": [
                 {
@@ -6162,30 +6162,30 @@
         },
         {
             "question_id": "b01b004f-6b12-404b-923d-c9e9aac9fb84",
-            "question_str": "What is the default value of the pad_to parameter in vLLM's pad_vocab_size function?",
+            "question": "What is the default value of the pad_to parameter in vLLM's pad_vocab_size function?",
             "retrieved_sources_indexes": [
-                9545,
-                11833,
-                171,
-                11835,
-                11830,
-                11829,
-                1583,
-                2312,
-                11697,
-                4785
+                9665,
+                2183,
+                169,
+                2185,
+                2180,
+                2179,
+                14181,
+                5047,
+                2047,
+                12862
             ],
             "retrieved_sources_scores": [
-                11.791088104248047,
-                6.6563720703125,
-                6.3849592208862305,
-                5.76143741607666,
-                5.7601518630981445,
-                5.690868377685547,
-                5.621635437011719,
-                5.61773157119751,
-                5.430070877075195,
-                5.401952743530273
+                11.790755271911621,
+                6.652721405029297,
+                6.381346225738525,
+                5.7580671310424805,
+                5.75676965713501,
+                5.687522888183594,
+                5.618860244750977,
+                5.614681720733643,
+                5.428347587585449,
+                5.399223804473877
             ],
             "retrieved_sources": [
                 {
@@ -6234,38 +6234,38 @@
                     "last_character_index": 2703
                 },
                 {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/entrypoints/openai/tool_parsers/llama4_pythonic_tool_parser.py",
-                    "first_character_index": 10844,
-                    "last_character_index": 12310
+                    "file_path": "data/raw/vllm-0.10.1/vllm/entrypoints/openai/tool_parsers/pythonic_tool_parser.py",
+                    "first_character_index": 10222,
+                    "last_character_index": 11688
                 }
             ]
         },
         {
             "question_id": "6adb31ac-4f50-4dc4-8383-47b6c47a3a3f",
-            "question_str": "What is the default lora_int_id value when lora_request is None in vLLM's sequence?",
+            "question": "What is the default lora_int_id value when lora_request is None in vLLM's sequence?",
             "retrieved_sources_indexes": [
                 734,
-                11080,
-                3619,
+                1430,
+                6354,
                 989,
-                3618,
+                6353,
                 978,
-                2684,
-                3345,
-                3200,
-                11586
+                5419,
+                6080,
+                5935,
+                1936
             ],
             "retrieved_sources_scores": [
-                8.722264289855957,
-                8.673891067504883,
-                8.368185997009277,
-                7.892922878265381,
-                7.874859809875488,
-                7.415535926818848,
-                7.390802383422852,
-                7.210920810699463,
-                7.208697319030762,
-                7.161124229431152
+                8.72409439086914,
+                8.675864219665527,
+                8.36996078491211,
+                7.894657135009766,
+                7.8765034675598145,
+                7.41712760925293,
+                7.392615795135498,
+                7.2109856605529785,
+                7.2100830078125,
+                7.16244649887085
             ],
             "retrieved_sources": [
                 {
@@ -6322,30 +6322,30 @@
         },
         {
             "question_id": "5cd305eb-6726-4663-a730-441d0060daf4",
-            "question_str": "What condition must be met for prompt_tokens_details to be included in the final usage info in vLLM's completion serving?",
+            "question": "What condition must be met for prompt_tokens_details to be included in the final usage info in vLLM's completion serving?",
             "retrieved_sources_indexes": [
-                427,
-                4733,
-                69,
-                48,
-                4665,
+                582,
+                12814,
+                67,
+                644,
+                12746,
                 680,
-                312,
-                4947,
-                4985,
-                99
+                310,
+                12401,
+                12439,
+                97
             ],
             "retrieved_sources_scores": [
-                8.184595108032227,
-                8.143608093261719,
-                8.132325172424316,
-                7.5781402587890625,
-                7.321505546569824,
-                6.787117958068848,
-                6.6024370193481445,
-                6.378579139709473,
-                6.256888389587402,
-                6.054479598999023
+                8.179363250732422,
+                8.135643005371094,
+                8.122956275939941,
+                7.5713911056518555,
+                7.311716079711914,
+                6.775165557861328,
+                6.596383571624756,
+                6.379055023193359,
+                6.257256507873535,
+                6.050670623779297
             ],
             "retrieved_sources": [
                 {
@@ -6402,30 +6402,30 @@
         },
         {
             "question_id": "30622359-490d-493a-8f1c-6f05f80bc91b",
-            "question_str": "What happens to input_ids when inputs_embeds is None in LlaVA-NeXT-Video's forward pass?",
+            "question": "What happens to input_ids when inputs_embeds is None in LlaVA-NeXT-Video's forward pass?",
             "retrieved_sources_indexes": [
-                8067,
-                7311,
-                6523,
-                8300,
-                7240,
-                7543,
-                8481,
-                7000,
-                7126,
-                7197
+                8187,
+                7431,
+                6643,
+                8420,
+                7360,
+                7663,
+                8601,
+                7120,
+                7246,
+                7317
             ],
             "retrieved_sources_scores": [
-                14.481731414794922,
-                11.215232849121094,
-                10.962139129638672,
-                10.406671524047852,
-                10.088102340698242,
-                9.809761047363281,
-                9.5150728225708,
-                9.345200538635254,
-                9.326065063476562,
-                9.26620101928711
+                14.483430862426758,
+                11.21627140045166,
+                10.964381217956543,
+                10.408706665039062,
+                10.090188980102539,
+                9.811799049377441,
+                9.517152786254883,
+                9.347299575805664,
+                9.328152656555176,
+                9.268281936645508
             ],
             "retrieved_sources": [
                 {
@@ -6482,30 +6482,30 @@
         },
         {
             "question_id": "ce1a4fb2-2386-462d-9e53-7c343d769c9a",
-            "question_str": "What environment variable does vLLM's collect_env.py check as a fallback when CUDNN library detection fails?",
+            "question": "What environment variable does vLLM's collect_env.py check as a fallback when CUDNN library detection fails?",
             "retrieved_sources_indexes": [
-                242,
-                509,
-                2074,
+                240,
+                472,
+                4809,
                 827,
-                2373,
-                499,
-                81,
-                9379,
-                413,
-                2311
+                5108,
+                570,
+                79,
+                9499,
+                411,
+                5046
             ],
             "retrieved_sources_scores": [
-                10.939216613769531,
-                10.197149276733398,
-                9.856329917907715,
-                9.847718238830566,
-                9.798196792602539,
-                8.398636817932129,
-                8.350152015686035,
-                8.256436347961426,
-                8.228584289550781,
-                8.1710786819458
+                10.938021659851074,
+                10.19916820526123,
+                9.85739803314209,
+                9.848337173461914,
+                9.796891212463379,
+                8.399253845214844,
+                8.351198196411133,
+                8.257551193237305,
+                8.22563648223877,
+                8.168476104736328
             ],
             "retrieved_sources": [
                 {
@@ -6562,30 +6562,30 @@
         },
         {
             "question_id": "17087e20-d7c9-4c3a-9b8b-0e948a681694",
-            "question_str": "What parameter value is set for requires_grad when creating Parameter objects in _load_weights_from_qkv_linear method?",
+            "question": "What parameter value is set for requires_grad when creating Parameter objects in _load_weights_from_qkv_linear method?",
             "retrieved_sources_indexes": [
-                2814,
-                2813,
-                9985,
-                10561,
-                10524,
-                10518,
-                10031,
-                10520,
-                10572,
-                10611
+                5549,
+                5548,
+                10105,
+                10781,
+                10744,
+                10738,
+                10151,
+                10740,
+                10792,
+                10898
             ],
             "retrieved_sources_scores": [
-                12.670461654663086,
-                12.030570030212402,
-                11.154295921325684,
-                10.66274642944336,
-                10.630363464355469,
-                10.579475402832031,
-                10.021127700805664,
-                9.772360801696777,
-                9.772360801696777,
-                9.722529411315918
+                12.669506072998047,
+                12.029350280761719,
+                11.153350830078125,
+                10.660928726196289,
+                10.629125595092773,
+                10.57823657989502,
+                10.020004272460938,
+                9.771225929260254,
+                9.771225929260254,
+                9.721324920654297
             ],
             "retrieved_sources": [
                 {
@@ -6642,30 +6642,30 @@
         },
         {
             "question_id": "b7a33ae4-5232-47be-b8fc-9370be3ab073",
-            "question_str": "What are the dimensions and data types of the tensors returned by get_inputs method in LastAllReduceRMSNormPattern?",
+            "question": "What are the dimensions and data types of the tensors returned by get_inputs method in LastAllReduceRMSNormPattern?",
             "retrieved_sources_indexes": [
-                3687,
-                3714,
-                2174,
-                13997,
-                13996,
-                8693,
-                8991,
-                8910,
-                12306,
-                13995
+                6422,
+                6449,
+                4909,
+                2784,
+                2783,
+                8813,
+                9111,
+                9030,
+                4343,
+                2782
             ],
             "retrieved_sources_scores": [
-                7.026112079620361,
-                6.589936256408691,
-                6.498457431793213,
-                6.111713409423828,
-                5.8494110107421875,
-                5.786157608032227,
-                5.704916954040527,
-                5.638683795928955,
-                5.523995876312256,
-                5.5166826248168945
+                7.027657508850098,
+                6.59047794342041,
+                6.499569892883301,
+                6.113217353820801,
+                5.850865840911865,
+                5.78575325012207,
+                5.7034759521484375,
+                5.637325286865234,
+                5.522220134735107,
+                5.517991542816162
             ],
             "retrieved_sources": [
                 {
@@ -6722,30 +6722,30 @@
         },
         {
             "question_id": "3c524f7f-48dd-49f2-95a6-a668f6d5af26",
-            "question_str": "Can draft_probs be None in vLLM's rejection sampler and when does this happen?",
+            "question": "Can draft_probs be None in vLLM's rejection sampler and when does this happen?",
             "retrieved_sources_indexes": [
-                202,
-                5106,
-                5108,
-                5089,
-                5104,
-                5103,
-                12587,
-                5107,
-                12589,
-                12584
+                200,
+                11426,
+                11428,
+                11409,
+                11424,
+                11423,
+                3637,
+                11427,
+                3639,
+                3634
             ],
             "retrieved_sources_scores": [
-                10.46663761138916,
-                10.31439208984375,
-                10.081306457519531,
-                9.988896369934082,
-                9.412030220031738,
-                8.797228813171387,
-                8.21942138671875,
-                7.78977108001709,
-                7.5778656005859375,
-                7.136478900909424
+                10.467612266540527,
+                10.31566047668457,
+                10.08268928527832,
+                9.990303039550781,
+                9.412994384765625,
+                8.798678398132324,
+                8.220381736755371,
+                7.7907209396362305,
+                7.578691482543945,
+                7.137105464935303
             ],
             "retrieved_sources": [
                 {
@@ -6801,111 +6801,31 @@
             ]
         },
         {
-            "question_id": "b18b84c9-0350-4316-bb67-e165ad791ec9",
-            "question_str": "What string prefix is used to identify SSE comments in vLLM's endpoint request processing?",
-            "retrieved_sources_indexes": [
-                2627,
-                223,
-                1084,
-                153,
-                444,
-                1183,
-                5160,
-                851,
-                11203,
-                2824
-            ],
-            "retrieved_sources_scores": [
-                8.7550687789917,
-                7.703728675842285,
-                6.974467754364014,
-                6.79163932800293,
-                6.659698009490967,
-                6.601508617401123,
-                6.588407516479492,
-                6.567936897277832,
-                6.430944919586182,
-                6.304083347320557
-            ],
-            "retrieved_sources": [
-                {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/benchmarks/serve.py",
-                    "first_character_index": 28071,
-                    "last_character_index": 29872
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/docs/design/metrics.md",
-                    "first_character_index": 0,
-                    "last_character_index": 1118
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/benchmarks/backend_request_func.py",
-                    "first_character_index": 14946,
-                    "last_character_index": 16788
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/docs/features/reasoning_outputs.md",
-                    "first_character_index": 8592,
-                    "last_character_index": 10491
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/docs/deployment/frameworks/skypilot.md",
-                    "first_character_index": 5372,
-                    "last_character_index": 7189
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/benchmarks/benchmark_serving_structured_output.py",
-                    "first_character_index": 30387,
-                    "last_character_index": 32341
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/v1/core/kv_cache_manager.py",
-                    "first_character_index": 13275,
-                    "last_character_index": 15133
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/outputs.py",
-                    "first_character_index": 2749,
-                    "last_character_index": 3911
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/tests/distributed/conftest.py",
-                    "first_character_index": 0,
-                    "last_character_index": 1949
-                },
-                {
-                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/kv_events.py",
-                    "first_character_index": 9915,
-                    "last_character_index": 11231
-                }
-            ]
-        },
-        {
             "question_id": "a99a010d-4de4-4f17-ac4f-bf31f19db7ea",
-            "question_str": "What parameter type does the copy_operation parameter accept in NixlConnector's set_host_xfer_buffer_ops method?",
+            "question": "What parameter type does the copy_operation parameter accept in NixlConnector's set_host_xfer_buffer_ops method?",
             "retrieved_sources_indexes": [
-                6335,
-                11833,
-                6304,
-                65,
-                6348,
-                9438,
-                6488,
-                2159,
-                11857,
-                11835
+                11243,
+                2183,
+                11212,
+                632,
+                11256,
+                9558,
+                6608,
+                4894,
+                2207,
+                2185
             ],
             "retrieved_sources_scores": [
-                8.637855529785156,
-                8.12392807006836,
-                7.73107385635376,
-                7.191128730773926,
-                7.148959159851074,
-                6.9415483474731445,
-                6.664646148681641,
-                6.6605072021484375,
-                6.634179592132568,
-                6.491547107696533
+                8.638410568237305,
+                8.120918273925781,
+                7.731441497802734,
+                7.189919471740723,
+                7.149344444274902,
+                6.940546989440918,
+                6.664752006530762,
+                6.659945487976074,
+                6.6345720291137695,
+                6.489493370056152
             ],
             "retrieved_sources": [
                 {
@@ -6962,30 +6882,30 @@
         },
         {
             "question_id": "ec9d99ac-0dd1-4e40-b840-df41a82aff1b",
-            "question_str": "What value is used for the num_kv_heads parameter when calling get_mla_metadata in FlashMLAState's graph_capture method?",
+            "question": "What value is used for the num_kv_heads parameter when calling get_mla_metadata in FlashMLAState's graph_capture method?",
             "retrieved_sources_indexes": [
-                4003,
-                4001,
-                2159,
+                13287,
+                13285,
+                4894,
+                169,
+                2895,
+                10105,
+                6339,
                 171,
-                14108,
-                9985,
-                3604,
-                173,
-                2156,
-                469
+                4891,
+                540
             ],
             "retrieved_sources_scores": [
-                11.814571380615234,
-                8.210225105285645,
-                7.8445539474487305,
-                7.043422698974609,
-                6.493958473205566,
-                6.475265979766846,
-                6.308107376098633,
-                6.294482231140137,
-                6.247551918029785,
-                6.2397780418396
+                11.815558433532715,
+                8.2108154296875,
+                7.844371795654297,
+                7.043559551239014,
+                6.493967056274414,
+                6.473952770233154,
+                6.308684349060059,
+                6.295735836029053,
+                6.247538089752197,
+                6.238401889801025
             ],
             "retrieved_sources": [
                 {
@@ -7042,30 +6962,30 @@
         },
         {
             "question_id": "c741046d-939d-4493-bd9a-2a5d89cc5f7f",
-            "question_str": "What is the default value of the bias parameter in the __init__ method of vLLM's mllama model convolution class?",
+            "question": "What is the default value of the bias parameter in the __init__ method of vLLM's mllama model convolution class?",
             "retrieved_sources_indexes": [
-                6895,
-                2159,
-                1346,
-                1446,
-                9701,
-                1399,
-                8756,
-                8325,
-                4303,
-                2415
+                7015,
+                4894,
+                13977,
+                14077,
+                9821,
+                14030,
+                8876,
+                8445,
+                13043,
+                5150
             ],
             "retrieved_sources_scores": [
-                9.943772315979004,
-                7.183395862579346,
-                7.043643474578857,
-                7.014069080352783,
-                6.92935037612915,
-                6.757335662841797,
-                6.689554214477539,
-                6.642800807952881,
-                6.506475448608398,
-                6.466780662536621
+                9.94444465637207,
+                7.182589530944824,
+                7.043703556060791,
+                7.013033390045166,
+                6.927960395812988,
+                6.756467342376709,
+                6.6908698081970215,
+                6.642011642456055,
+                6.506680965423584,
+                6.465298175811768
             ],
             "retrieved_sources": [
                 {
@@ -7122,30 +7042,30 @@
         },
         {
             "question_id": "df5084f8-4378-43c9-aaf1-55147460923a",
-            "question_str": "What is the constant value for NVML_FI_DEV_NVLINK_RECOVERY_ERROR_COUNT_TOTAL in vLLM's pynvml module?",
+            "question": "What is the constant value for NVML_FI_DEV_NVLINK_RECOVERY_ERROR_COUNT_TOTAL in vLLM's pynvml module?",
             "retrieved_sources_indexes": [
-                2355,
-                2034,
-                13774,
-                2099,
-                2084,
-                3123,
-                2098,
-                2107,
-                6596,
+                5090,
+                4769,
+                2561,
+                4834,
+                4819,
+                5858,
+                4833,
+                4842,
+                6716,
                 816
             ],
             "retrieved_sources_scores": [
-                9.90038013458252,
-                6.480152606964111,
-                6.177857398986816,
-                6.089107036590576,
-                5.79995059967041,
-                5.732238292694092,
-                5.715078830718994,
-                5.488377571105957,
-                5.400959014892578,
-                5.168670654296875
+                9.901473045349121,
+                6.4802045822143555,
+                6.165823936462402,
+                6.089849948883057,
+                5.799874305725098,
+                5.72010612487793,
+                5.715737819671631,
+                5.479564189910889,
+                5.3931474685668945,
+                5.160101890563965
             ],
             "retrieved_sources": [
                 {
@@ -7202,30 +7122,30 @@
         },
         {
             "question_id": "83396129-7585-435e-9683-271ddfa46475",
-            "question_str": "What are the expected tensor dimensions for w13_weight_scale in vLLM's MXFP4 quantization layer?",
+            "question": "What are the expected tensor dimensions for w13_weight_scale in vLLM's MXFP4 quantization layer?",
             "retrieved_sources_indexes": [
-                9981,
-                10569,
-                9821,
-                9847,
-                10518,
-                587,
-                10573,
-                10582,
-                10570,
-                10149
+                10101,
+                10789,
+                9941,
+                9967,
+                10738,
+                442,
+                10793,
+                10802,
+                10790,
+                10269
             ],
             "retrieved_sources_scores": [
-                9.126435279846191,
-                8.599725723266602,
-                8.431167602539062,
-                8.426194190979004,
-                7.999372482299805,
-                7.957740783691406,
-                7.586228370666504,
-                7.498987197875977,
-                7.368450164794922,
-                7.23075532913208
+                9.127674102783203,
+                8.602192878723145,
+                8.432774543762207,
+                8.428167343139648,
+                8.001559257507324,
+                7.958749294281006,
+                7.5879011154174805,
+                7.5007524490356445,
+                7.370170593261719,
+                7.232186794281006
             ],
             "retrieved_sources": [
                 {
@@ -7282,30 +7202,30 @@
         },
         {
             "question_id": "da1e13f1-5be1-4854-ac7c-4ee8f6508469",
-            "question_str": "What's the default value of min_stats_update_interval_ms in DPCoordinatorProc's __init__ method?",
+            "question": "What's the default value of min_stats_update_interval_ms in DPCoordinatorProc's __init__ method?",
             "retrieved_sources_indexes": [
-                5378,
-                2351,
+                11698,
+                5086,
                 1091,
-                2566,
-                12264,
-                3696,
-                9701,
-                1399,
-                12263,
-                1993
+                5301,
+                4301,
+                6431,
+                9821,
+                14030,
+                4300,
+                4728
             ],
             "retrieved_sources_scores": [
-                13.350883483886719,
-                6.437726974487305,
-                5.781034469604492,
-                5.781034469604492,
-                5.2281951904296875,
-                5.110097885131836,
-                5.031366348266602,
-                4.747757434844971,
-                4.5050835609436035,
-                4.488351821899414
+                13.352253913879395,
+                6.436865329742432,
+                5.7807135581970215,
+                5.7807135581970215,
+                5.229520797729492,
+                5.110600471496582,
+                5.03076696395874,
+                4.747738838195801,
+                4.506176948547363,
+                4.488683700561523
             ],
             "retrieved_sources": [
                 {
@@ -7362,30 +7282,30 @@
         },
         {
             "question_id": "8b219348-ad43-407d-9b13-46cd8fa2fa1c",
-            "question_str": "What does the simple_buffer module return when tokens_recver is None in the KV lookup buffer?",
+            "question": "What does the simple_buffer module return when tokens_recver is None in the KV lookup buffer?",
             "retrieved_sources_indexes": [
-                635,
-                6286,
-                6294,
-                6285,
-                6287,
-                6289,
-                6304,
-                11456,
-                2338,
-                6322
+                47,
+                11194,
+                11202,
+                11193,
+                11195,
+                11197,
+                11212,
+                1806,
+                5073,
+                11230
             ],
             "retrieved_sources_scores": [
-                11.212221145629883,
-                11.091617584228516,
-                10.732495307922363,
-                10.463617324829102,
-                9.241104125976562,
-                8.412229537963867,
-                6.991960525512695,
-                6.409770965576172,
-                6.183035373687744,
-                6.152176856994629
+                11.211325645446777,
+                11.09063720703125,
+                10.731382369995117,
+                10.462190628051758,
+                9.240043640136719,
+                8.411168098449707,
+                6.990801811218262,
+                6.406963348388672,
+                6.185072422027588,
+                6.151363372802734
             ],
             "retrieved_sources": [
                 {
@@ -7442,30 +7362,30 @@
         },
         {
             "question_id": "f9d7bb96-a32b-4caf-86a0-158a821354c4",
-            "question_str": "What is the default value of the cutlass_block_fp8_supported parameter in apply_w8a8_block_fp8_linear?",
+            "question": "What is the default value of the cutlass_block_fp8_supported parameter in apply_w8a8_block_fp8_linear?",
             "retrieved_sources_indexes": [
-                10428,
-                10019,
-                10430,
-                10367,
-                4585,
-                2631,
-                4546,
+                10648,
+                10139,
+                10650,
+                10587,
+                12666,
+                5366,
+                12627,
                 1218,
-                10561,
-                34
+                10781,
+                653
             ],
             "retrieved_sources_scores": [
-                7.921978950500488,
-                7.594132423400879,
-                7.285647869110107,
-                4.783359050750732,
-                4.613215446472168,
-                4.594924449920654,
-                4.583854675292969,
-                4.500540733337402,
-                4.468268394470215,
-                4.411362648010254
+                7.922555923461914,
+                7.5946502685546875,
+                7.286050796508789,
+                4.783782005310059,
+                4.612094879150391,
+                4.593200206756592,
+                4.5827507972717285,
+                4.498836517333984,
+                4.466655731201172,
+                4.410462379455566
             ],
             "retrieved_sources": [
                 {
@@ -7522,30 +7442,30 @@
         },
         {
             "question_id": "e9b6052b-222e-432d-9582-064471de4b91",
-            "question_str": "What is the default value of BLOCK_TABLE_EXTENDER in MLACommonMetadataBuilder?",
+            "question": "What is the default value of BLOCK_TABLE_EXTENDER in MLACommonMetadataBuilder?",
             "retrieved_sources_indexes": [
-                3965,
-                4265,
-                4268,
-                638,
-                4254,
-                2287,
-                5977,
-                14090,
-                2351,
-                11881
+                13249,
+                13549,
+                13552,
+                36,
+                13538,
+                5022,
+                12389,
+                2877,
+                5086,
+                2231
             ],
             "retrieved_sources_scores": [
-                5.788370609283447,
-                5.416810035705566,
-                4.879390239715576,
-                4.3550310134887695,
-                4.184886932373047,
-                4.123701572418213,
-                4.093286991119385,
-                4.073639392852783,
-                3.966733694076538,
-                3.939267635345459
+                5.7886962890625,
+                5.417085647583008,
+                4.878876686096191,
+                4.353311538696289,
+                4.185304641723633,
+                4.1220502853393555,
+                4.093685626983643,
+                4.072945594787598,
+                3.9651851654052734,
+                3.9389472007751465
             ],
             "retrieved_sources": [
                 {
@@ -7602,30 +7522,30 @@
         },
         {
             "question_id": "4a5b9aca-fbf7-486d-b210-47913db68ba7",
-            "question_str": "What condition prevents tensors from being moved to device in FlashInfer attention backend's prepare method?",
+            "question": "What condition prevents tensors from being moved to device in FlashInfer attention backend's prepare method?",
             "retrieved_sources_indexes": [
-                2091,
-                2093,
-                13012,
-                1785,
-                2373,
-                4021,
-                3846,
-                12992,
-                3207,
-                12967
+                4826,
+                4828,
+                4062,
+                13721,
+                5108,
+                13305,
+                6581,
+                4042,
+                5942,
+                4017
             ],
             "retrieved_sources_scores": [
-                8.246333122253418,
-                8.002340316772461,
-                7.809011459350586,
-                7.604501724243164,
-                7.552806854248047,
-                6.989461898803711,
-                6.8722615242004395,
-                6.827165603637695,
-                6.824936389923096,
-                6.748283386230469
+                8.24848461151123,
+                8.004486083984375,
+                7.8112592697143555,
+                7.605988025665283,
+                7.554616451263428,
+                6.991293907165527,
+                6.874105453491211,
+                6.8290510177612305,
+                6.826581001281738,
+                6.750002861022949
             ],
             "retrieved_sources": [
                 {
@@ -7682,30 +7602,30 @@
         },
         {
             "question_id": "43927740-4195-49d1-b606-e2e813d3e2fe",
-            "question_str": "What's the default value of the gpu parameter in vLLM's get_max_shared_memory_bytes function?",
+            "question": "What's the default value of the gpu parameter in vLLM's get_max_shared_memory_bytes function?",
             "retrieved_sources_indexes": [
-                2236,
-                11833,
-                14133,
-                171,
-                2289,
-                11835,
-                11830,
-                11829,
-                2411,
-                1583
+                4971,
+                2183,
+                2920,
+                169,
+                5024,
+                2185,
+                2180,
+                2179,
+                5146,
+                14181
             ],
             "retrieved_sources_scores": [
-                6.911782741546631,
-                6.6563720703125,
-                6.508841514587402,
-                6.3849592208862305,
-                5.958456993103027,
-                5.76143741607666,
-                5.7601518630981445,
-                5.690868377685547,
-                5.672956466674805,
-                5.621635437011719
+                6.910638809204102,
+                6.652721405029297,
+                6.508748531341553,
+                6.381346225738525,
+                5.958283424377441,
+                5.7580671310424805,
+                5.75676965713501,
+                5.687522888183594,
+                5.671017169952393,
+                5.618860244750977
             ],
             "retrieved_sources": [
                 {
@@ -7762,30 +7682,30 @@
         },
         {
             "question_id": "ea812b8d-317d-48bd-a149-bf73747592d5",
-            "question_str": "What is the type hint for the kv_range_for_decode parameter in the _attention_with_mask method?",
+            "question": "What is the type hint for the kv_range_for_decode parameter in the _attention_with_mask method?",
             "retrieved_sources_indexes": [
-                6912,
-                6911,
-                2892,
-                12264,
-                6916,
-                6918,
-                6931,
-                11833,
-                11860,
-                2159
+                7032,
+                7031,
+                5627,
+                4301,
+                7036,
+                7038,
+                7051,
+                2183,
+                2210,
+                4894
             ],
             "retrieved_sources_scores": [
-                9.421136856079102,
-                6.849709510803223,
-                5.720465660095215,
-                5.2281951904296875,
-                5.113986968994141,
-                5.087197780609131,
-                5.011037826538086,
-                4.9846296310424805,
-                4.788339138031006,
-                4.776954650878906
+                9.421390533447266,
+                6.850131988525391,
+                5.71978759765625,
+                5.229520797729492,
+                5.114594459533691,
+                5.087762355804443,
+                5.011584281921387,
+                4.982621192932129,
+                4.78817081451416,
+                4.777081489562988
             ],
             "retrieved_sources": [
                 {
@@ -7842,30 +7762,30 @@
         },
         {
             "question_id": "5ff8e342-b4e2-45e1-9ef0-990915c5bb1f",
-            "question_str": "What is the default timeout value for VLLM_RPC_TIMEOUT environment variable?",
+            "question": "What is the default timeout value for VLLM_RPC_TIMEOUT environment variable?",
             "retrieved_sources_indexes": [
-                599,
-                392,
-                11460,
-                1961,
-                167,
+                454,
+                390,
+                1810,
+                4696,
                 165,
-                9385,
-                3854,
-                536,
-                6100
+                163,
+                9505,
+                6589,
+                499,
+                11332
             ],
             "retrieved_sources_scores": [
-                9.80223560333252,
-                9.199383735656738,
-                7.800273895263672,
-                7.597169876098633,
-                7.388544082641602,
-                7.104828834533691,
-                7.015137672424316,
-                6.944972038269043,
-                6.803264141082764,
-                6.778541564941406
+                9.80002212524414,
+                9.19969367980957,
+                7.796688079833984,
+                7.594420433044434,
+                7.38602352142334,
+                7.102362632751465,
+                7.015224456787109,
+                6.9447221755981445,
+                6.802530765533447,
+                6.776288986206055
             ],
             "retrieved_sources": [
                 {
@@ -7922,30 +7842,30 @@
         },
         {
             "question_id": "cc784ab6-ef8a-402d-b874-4160ec7c87f1",
-            "question_str": "What determines whether custom allreduce is enabled in vLLM's CudaCommunicator?",
+            "question": "What determines whether custom allreduce is enabled in vLLM's CudaCommunicator?",
             "retrieved_sources_indexes": [
-                2253,
-                6137,
-                6193,
-                6135,
-                6150,
+                4988,
+                11045,
+                11101,
+                11043,
+                11058,
                 1049,
-                6152,
+                11060,
                 1048,
-                6149,
-                6141
+                11057,
+                11049
             ],
             "retrieved_sources_scores": [
-                10.147605895996094,
-                8.280133247375488,
-                8.209450721740723,
-                7.543545722961426,
-                7.47697639465332,
-                7.01446533203125,
-                6.856589317321777,
-                6.8439154624938965,
-                6.768690586090088,
-                6.46600341796875
+                10.149469375610352,
+                8.281620979309082,
+                8.209722518920898,
+                7.544919967651367,
+                7.478340148925781,
+                7.015685081481934,
+                6.857789516448975,
+                6.845364570617676,
+                6.769835472106934,
+                6.4670891761779785
             ],
             "retrieved_sources": [
                 {

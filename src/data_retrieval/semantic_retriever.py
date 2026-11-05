@@ -30,8 +30,8 @@ class MiniLML6Retriever(Retriever):
                 embedding_function=self._embed_fn
             )
 
-            if self._collection.count() == len(self.data):
-                return
+            # if self._collection.count() == len(self.data):
+            #     return
 
             for i in tqdm(
                 range(0, len(self.data), CHROMADB_BATCH_SIZE),

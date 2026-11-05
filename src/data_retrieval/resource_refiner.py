@@ -52,7 +52,7 @@ class ResourceRefiner(BaseModel, ABC):
 
         text_chunk_instance = self.text_chunk(
             chunk_size=self.chunk_size)
-        code_chunk_instance = self.text_chunk(
+        code_chunk_instance = self.code_chunk(
             chunk_size=self.chunk_size)
 
         for idx, resource in enumerate(minimal_resource):
@@ -78,7 +78,7 @@ class ResourceRefiner(BaseModel, ABC):
             # print(docs)
             for doc in docs:
                 new_data.append(doc.page_content)
-                start = doc.metadata["start_index"]
+                start = doc.metadata["start_index"] + resource.first_character_index
                 new_minimal_source.append(
                     MinimalSource(
                         file_path=resource.file_path,

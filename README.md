@@ -40,20 +40,30 @@ uv run python3 -m src search --query "what is vLLM" --k 10
 uv run python3 -m src search_dataset \
   --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" \
   --k 10 \
-  --save_directory "data/output/sources.json"
+  --save_directory "data/output/sources_code.json"
+
+# Run search over the full dataset
+uv run python3 -m src search_dataset \
+  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_docs_public.json" \
+  --k 10 \
+  --save_directory "data/output/sources_docs.json"
 
 # Answer a single question
 uv run python3 -m src answer --question "what is vLLM?" --k 10
 
 # Answer questions over the full dataset
 uv run python3 -m src answer_dataset \
-  --student_search_results_path "data/output/sources.json" \
-  --save_directory "data/output/source_answers.json"
+  --student_search_results_path "data/output/sources_docs.json" \
+  --save_directory "data/output/source_docs_answers.json"
+
+uv run python3 -m src answer_dataset \
+  --student_search_results_path "data/output/sources_code.json" \
+  --save_directory "data/output/source_code_answers.json"
 
 # Evaluate retrieval performance
 uv run python3 -m src evaluate \
-  --student_answer_path "data/output/sources.json" \
-  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" \
+  --student_answer_path "data/output/sources_docs.json" \
+  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_docs_public.json" \
   --k 10
 
 # Evaluate using moulinette

@@ -29,7 +29,7 @@ class MinimalSearchResults(BaseModel):
     """The MinimalSearchResults and MinimalAnswer models represent the search
        results and an answer"""
     question_id: str
-    question_str: str
+    question: str
     retrieved_sources_indexes: List[int]
     retrieved_sources_scores: List[float]
     retrieved_sources: List[MinimalSource]
@@ -48,3 +48,4 @@ class StudentSearchResults(BaseModel):
 
 class StudentSearchResultsAndAnswer(StudentSearchResults):
     search_results: List[MinimalAnswer]
+    k: int

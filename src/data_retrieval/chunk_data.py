@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import json
 from pathlib import Path
 from pydantic import (
@@ -12,15 +11,7 @@ from .helper_classes import (
     DataManager, ExistingPath,
     FileFormats, PrepareStorageFolder)
 from src.base_patterns import MinimalSource
-
-
-class DataChunk(ABC, BaseModel):
-    chunk_size: int = Field(gt=20, default=500)
-
-    @abstractmethod
-    def process(self, document: str,
-                chunk_overlap: int) -> List[Document]:
-        pass
+from .abstract_classes import DataChunk
 
 
 class TextChunk(DataChunk):
@@ -74,7 +65,7 @@ class SplitDataByChunks(BaseModel):
         DataManager.save_data(text_file, self._all_chunk_txt)
         minimal_source = "/".join([storage_folder, 'minimal_source.json'])
         DataManager.save_data(minimal_source, self._all_chunks)
-
+    
     @staticmethod
     @validate_call
     def load_from_files(
@@ -141,6 +132,26 @@ class SplitDataByChunks(BaseModel):
             )
             self._all_chunk_txt.append(doc.page_content)
             storage.append(minimal_source)
+
+
+def indexing(chunk_size: int):
+    storage = {}
+    storage["settings"] = {"chunk_size": chunk_size}
+    storage["files"] = {}
+    
+
+{
+  "settings": {"chunk_size": 2000},
+  "files": {
+    "data/raw/.../lora.md": {
+      "hash": "ab12...",
+      "chunks": [
+        {"first": 0, "last": 1882, "text": "..."},
+        {"first": 1884, "last": 3790, "text": "..."}
+      ]
+    }
+  }
+}
 
 
 # ------------- Tests---------------------
