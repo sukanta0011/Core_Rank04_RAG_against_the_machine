@@ -8,7 +8,7 @@ from pydantic import (
     PrivateAttr, Field, validate_call,
     BaseModel, ConfigDict)
 from src.data_retrieval.abstract_classes import Retriever
-from src.base_patterns import (
+from src.base_patterns import (MinimalSource,
     MinimalSearchResults, StudentSearchResults)
 from src.data_retrieval.helper_classes import ValidatedStoragePath
 
@@ -19,9 +19,9 @@ class BM25Retriever(Retriever):
 
     def create_and_save_corpus_index(self, storage_path) -> None:
         # corpus_tokens: List[List[str]]
-        if isinstance(self.data, list):
+        if isinstance(self.data, dict):
             corpus_tokens = bm25s.tokenize(
-                self.data, stopwords='en'
+                list(self.data.values()), stopwords='en'
                 )
             self._retriever = BM25()
             self._retriever.index(corpus_tokens)
@@ -65,8 +65,7 @@ class BM25Retriever(Retriever):
             question_id=question_id,
             retrieved_sources_indexes=indexes[0],
             retrieved_sources_scores=scores[0],
-            retrieved_sources=[self.all_minimal_resource[i]
-                               for i in indexes[0]]
+            retrieved_sources=self.get_all_minimal_source(indexes[0])
         )
 
 

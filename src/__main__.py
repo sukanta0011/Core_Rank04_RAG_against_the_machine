@@ -23,11 +23,11 @@ from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
 from .data_retrieval.lexical_retriever import BM25Retriever
-# from .data_retrieval.semantic_retriever import MiniLML6Retriever
+from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = BM25Retriever
+RETRIEVER = MiniLML6Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 
@@ -36,20 +36,22 @@ class CLI:
     def __init__(self):
         self._retriever = None
         self._all_chunks = None
+        self._all_updates = None
         self._answer_generator = None
 
     def _get_retriever(self) -> Retriever:
         """Helper to initialize resources once."""
         if self._retriever is None:
             # 1. Load Chunks
-            all_sources, all_chunks =\
+            all_chunks, all_updates =\
                 SplitDataByChunks.load_from_files("data/chunks")
             self._all_chunks = all_chunks
+            self._all_updates = all_updates
 
             # 2. Initialize Retriever
             self._retriever = RETRIEVER(
                 data=all_chunks,
-                all_minimal_resource=all_sources
+                update=all_updates
             )
             # 3. Load Index
             self._retriever.load_corpus_index(storage_path="data/processed/")
@@ -92,6 +94,7 @@ class CLI:
         # Extracting all valid path from the folder
         all_valid_paths = FilesInDir.extract_all_file_paths(
             path='data/raw/vllm-0.10.1')
+        print(f"File path extracted: {time.time() - start_time}")
 
         # Split the data into chunks
         overlap = 50 if max_chunk_size >= 500 else 0
@@ -99,19 +102,25 @@ class CLI:
             all_paths=all_valid_paths,
             chunk_size=max_chunk_size,
             txt_overlap=overlap,
-            code_overlap=overlap)
+            code_overlap=overlap,
+            use_indexing=True,
+            folder="data/chunks")
         splitter.chunk_all_files()
-        splitter.save_chunked_data("data/chunks")
+        print(f"Chunking done: {time.time() - start_time}")
+        splitter.save_chunked_data()
+        print(f"Chunk saved: {time.time() - start_time}")
+
 
         # splitter.save_chunked_data("data/chunks")
         # all_minimal_sources, all_data_chunks = splitter.load_from_files(
         #     "data/chunks")
 
-        all_minimal_sources, all_data_chunks = splitter.get_all_data()
+        all_data_chunks, all_updates = splitter.get_all_data()
 
         retriever = RETRIEVER(
             data=all_data_chunks,
-            all_minimal_resource=all_minimal_sources)
+            update=all_updates
+            )
 
         retriever.create_and_save_corpus_index(storage_path="data/processed/")
 

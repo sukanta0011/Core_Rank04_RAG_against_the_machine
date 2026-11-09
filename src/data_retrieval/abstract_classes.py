@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
-from typing import List, Annotated
+from typing import List, Annotated, Dict
 from langchain_core.documents import Document
 from src.base_patterns import MinimalSearchResults, MinimalSource
 from src.data_retrieval.helper_classes import (
@@ -17,8 +17,8 @@ class DataChunk(ABC, BaseModel):
 
 
 class Retriever(BaseModel, ABC):
-    data: List[str]
-    all_minimal_resource: List[MinimalSource]
+    data: Dict
+    update: Dict
 
     @abstractmethod
     def create_and_save_corpus_index(
@@ -38,3 +38,22 @@ class Retriever(BaseModel, ABC):
         question_id: str | None = None
             ) -> MinimalSearchResults:
         pass
+
+    def get_all_minimal_source(self, ids: List) -> List[MinimalSource]:
+        keys = list(self.data.keys())
+        all_minimal_sources: List[MinimalSource] = []
+        for i in ids:
+            parts = str(keys[i]).split(":")
+            if len(parts) > 3:
+                path = ":".join(parts[:-2])
+            else:
+                path = parts[0]
+            all_minimal_sources.append(
+                MinimalSource(
+                    file_path=path,
+                    first_character_index=int(parts[-2]),
+                    last_character_index=int(parts[-1])
+                )
+            )
+        return all_minimal_sources
+
