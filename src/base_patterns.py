@@ -30,7 +30,7 @@ class MinimalSearchResults(BaseModel):
        results and an answer"""
     question_id: str
     question: str
-    retrieved_sources_indexes: List[int]
+    retrieved_sources_indexes: List[int | str]
     retrieved_sources_scores: List[float]
     retrieved_sources: List[MinimalSource]
 

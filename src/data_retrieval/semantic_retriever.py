@@ -30,8 +30,6 @@ class MiniLML6Retriever(Retriever):
                 embedding_function=self._embed_fn
             )
 
-            # if self._collection.count() == len(self.data):
-            #     return
             remove_data = list(self.update["remove"].values())
             remove_data_ids = list(self.update["remove"].keys())
             add_data = list(self.update["add"].values())
@@ -60,11 +58,7 @@ class MiniLML6Retriever(Retriever):
 
     def load_corpus_index(self, storage_path):
         try:
-            self._client = chromadb.PersistentClient(path=storage_path)
-            self._collection = self._client.get_or_create_collection(
-                name="vLLM",
-                embedding_function=self._embed_fn
-            )
+            create_and_save_corpus_index(storage_path)
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
@@ -83,10 +77,10 @@ class MiniLML6Retriever(Retriever):
         if question_id is None:
             question_id = str(uuid.uuid4())
 
-        indexes = [int(i) for i in results['ids'][0]]
+        indexes = results['ids'][0]
 
         return MinimalSearchResults(
-            question_str=question,
+            question=question,
             question_id=question_id,
             retrieved_sources_indexes=indexes,
             retrieved_sources_scores=results['distances'][0],

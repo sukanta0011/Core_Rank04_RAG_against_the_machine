@@ -27,7 +27,7 @@ from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = MiniLML6Retriever
+RETRIEVER = BM25Retriever
 LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 

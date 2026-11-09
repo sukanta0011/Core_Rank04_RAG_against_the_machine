@@ -10,6 +10,7 @@ from pydantic import (
     validate_call)
 from langchain_text_splitters import Language
 import hashlib
+import os
 
 
 FULL_CODE_SYNTAX = {
@@ -64,7 +65,7 @@ PrepareStorageFolder = Annotated[str, AfterValidator(prepare_storage_folder)]
 
 class DataManager:
     @staticmethod
-    def load_data(path: ExistingPath) -> str:
+    def load_data(path: ExistingPath) -> str | Dict:
         try:
             main_path = Path(path)
             if main_path.suffix == '.json':
@@ -127,6 +128,7 @@ class FilesInDir:
             )
 
         all_paths: Dict[str, List[Path]] = {}
+        only_paths: List[str] = []
         for item in parent_path.rglob("*"):
             if item.is_file():
                 suffix = item.suffix[1:]
@@ -142,7 +144,53 @@ class FilesInDir:
 
         # for syntax, paths in self._all_paths.items():
         #     print(f"{syntax}: {len(paths)}: {paths[0]}")
+        only_paths = FilesInDir.get_flatten_paths(all_paths)
+        FilesInDir.save_file_stats(only_paths)
         return all_paths
+    
+    @staticmethod
+    def get_flatten_paths(paths: Dict[str, List[Path]]) -> List[Path]:
+        flatten_paths = []
+        for _, path in paths.items():
+            flatten_paths.extend(path)
+        return flatten_paths
+
+    @staticmethod
+    def get_file_stats(paths: List[Path]) -> Dict:
+        stats = {}
+        for path in paths:
+            stats.update({
+                str(path): {
+                    "time": os.stat(path).st_mtime,
+                    "size": os.stat(path).st_size
+                }
+            })
+        return stats
+        
+    @staticmethod
+    def save_file_stats(paths: List[Path]) -> None:
+        stats = FilesInDir.get_file_stats(paths)
+        DataManager.save_data("data/cache/all_stats.json", stats)
+    
+    @staticmethod
+    def load_file_stats(path: str = "data/cache/all_stats.json") -> Dict:
+        return DataManager.load_data(path)
+    
+    @staticmethod
+    def has_file_stats_changed(paths: List[Path],
+            saved_states_path: str = "data/cache/all_stats.json"
+            ) -> bool:
+        current_stats = FilesInDir.get_file_stats(paths)
+        old_stats = FilesInDir.load_file_stats()
+        if len(list(current_stats.keys())) != len(list(old_stats.keys())):
+            return True
+        for key, val in current_stats.items():
+            old_val = old_stats.get(key)
+            if old_val is None:
+                return True
+            if (val["time"] != old_val["time"]) or\
+                (val["size"] != old_val["size"]):
+                return True
 
 
 if __name__ == "__main__":
