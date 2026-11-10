@@ -23,12 +23,11 @@ from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
 from .data_retrieval.lexical_retriever import BM25Retriever
-from .data_retrieval.semantic_retriever import MiniLML6Retriever
+# from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
 RETRIEVER = BM25Retriever
-LLM = SmallLLM
 DEVICE_TYPE = "cpu"
 
 
@@ -60,12 +59,13 @@ class CLI:
 
     def _get_answer_generator(
             self,
+            llm_model,
             all_chunks: List[str]
             ) -> AnswerGenerator:
         if self._answer_generator is None:
             print("Initiating answer generator")
             # 1. Load llm
-            llm = LLM(
+            llm = llm_model(
                 device_type=DEVICE_TYPE)
 
             # 2. Initialize Answer Generator
@@ -184,6 +184,14 @@ class CLI:
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     def answer(self, question: str, k: int = 10) -> None:
+
+        start_time = time.time()
+        print("Starting package import...")
+        from src.answer_generation.models.qwen3__0_6B import SmallLLM
+        from src.answer_generation.pre_prompt import InitialPromptGenerator
+        from src.answer_generation.answer import (
+            AnswerGenerator, BatchAnswerGenerator)
+        print(f"Package import time: {(time.time() - start_time):.3f}")
         start_time = time.time()
 
         print(f"answer generation started: {(time.time() - start_time):.3f}")
@@ -201,7 +209,7 @@ class CLI:
         print(f"refined results: {(time.time() - start_time):.3f}")
 
         # Generate Answer
-        answer_generator = self._get_answer_generator(self._all_chunks)
+        answer_generator = self._get_answer_generator(SmallLLM, self._all_chunks)
         print(f"answer generator: {(time.time() - start_time):.3f}")
 
 
@@ -401,3 +409,5 @@ if __name__ == "__main__":
     #     fire.Fire(CLI)
     # except Exception as e:
     #     print(e)
+
+

@@ -77,7 +77,8 @@ class MiniLML6Retriever(Retriever):
         if question_id is None:
             question_id = str(uuid.uuid4())
 
-        indexes = results['ids'][0]
+        keys = results['ids'][0]
+        
 
         return MinimalSearchResults(
             question=question,

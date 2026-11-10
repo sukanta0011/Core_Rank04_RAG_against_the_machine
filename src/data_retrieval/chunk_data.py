@@ -79,7 +79,9 @@ class SplitDataByChunks(BaseModel):
 
     def prepare_indexing_storage(self) -> None:
         try:
-            with open(self._indexing_storage_path, "r") as fl:
+            with open(
+                    self._indexing_storage_path, "r",
+                    encoding="utf-8", newline="") as fl:
                 self._indexing_storage = json.load(fl)
             if self.validate_settings(
                     self._indexing_storage.get("settings")):
@@ -135,10 +137,10 @@ class SplitDataByChunks(BaseModel):
         all_data = {}
         all_update = {}
 
-        with open(all_data_source, 'r') as fl:
+        with open(all_data_source, 'r', encoding="utf-8", newline="") as fl:
             all_data = json.load(fl)
 
-        with open(all_update_source, 'r') as fl:
+        with open(all_update_source, 'r', encoding="utf-8", newline="") as fl:
             all_update = json.load(fl)
 
         return all_data, all_update

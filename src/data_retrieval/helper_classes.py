@@ -69,10 +69,10 @@ class DataManager:
         try:
             main_path = Path(path)
             if main_path.suffix == '.json':
-                with open(path, 'r', errors='ignore') as fl:
+                with open(path, 'r', encoding="utf-8", newline="") as fl:
                     data = json.load(fl)
                 return data
-            with open(path, 'r', errors='ignore') as fl:
+            with open(path, 'r', encoding="utf-8", newline="") as fl:
                 data = fl.read()
             return data
         except FileNotFoundError:
@@ -112,7 +112,7 @@ class DataManager:
         data_json = adapter.dump_json(
             data, indent=4).decode('utf-8')
         try:
-            with open(storage_path, 'w') as fl:
+            with open(storage_path, 'w', encoding="utf-8", newline="") as fl:
                 fl.write(data_json)
         except Exception as e:
             raise Exception(e)
