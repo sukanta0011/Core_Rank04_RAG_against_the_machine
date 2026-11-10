@@ -16,9 +16,14 @@ class DataChunk(ABC, BaseModel):
         pass
 
 
+class Update(BaseModel):
+    add: Dict = Field(default_factory={})
+    remove: Dict = Field(default_factory={})
+
+
 class Retriever(BaseModel, ABC):
     data: Dict
-    update: Dict
+    update: Update
 
     @abstractmethod
     def create_and_save_corpus_index(
@@ -38,22 +43,4 @@ class Retriever(BaseModel, ABC):
         question_id: str | None = None
             ) -> MinimalSearchResults:
         pass
-
-    def get_all_minimal_source(self, ids: List) -> List[MinimalSource]:
-        keys = list(self.data.keys())
-        all_minimal_sources: List[MinimalSource] = []
-        for i in ids:
-            parts = str(keys[i]).split(":")
-            if len(parts) > 3:
-                path = ":".join(parts[:-2])
-            else:
-                path = parts[0]
-            all_minimal_sources.append(
-                MinimalSource(
-                    file_path=path,
-                    first_character_index=int(parts[-2]),
-                    last_character_index=int(parts[-1])
-                )
-            )
-        return all_minimal_sources
 

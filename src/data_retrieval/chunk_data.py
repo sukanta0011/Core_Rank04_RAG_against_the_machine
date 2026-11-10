@@ -12,7 +12,7 @@ from .helper_classes import (
     DataManager, ExistingPath,
     FileFormats, prepare_storage_folder)
 from src.base_patterns import MinimalSource
-from .abstract_classes import DataChunk
+from .abstract_classes import DataChunk, Update
 
 
 class TextChunk(DataChunk):
@@ -63,15 +63,15 @@ class SplitDataByChunks(BaseModel):
     _all_chunk_txt: List[str] = PrivateAttr(default=list())
     _indexing_storage: Dict = PrivateAttr(default=dict())
     _all_chunks_with_id: Dict = PrivateAttr(default=dict())
-    _chunks_to_be_updated: Dict = PrivateAttr(default=dict())
+    _chunks_to_be_updated: Update = Update(add={}, remove={})
 
     def model_post_init(self, __context) -> Any:
         if self.use_indexing:
             self._indexing_storage_path = "/".join([self.folder, 'indexed_data.json'])
-            self._chunks_to_be_updated = {
-                "add": {},
-                "remove": {}
-            }
+            # self._chunks_to_be_updated = {
+            #     "add": {},
+            #     "remove": {}
+            # }
             self.prepare_indexing_storage()
 
     def get_all_data(self) -> Tuple[Dict, Dict]:
@@ -161,12 +161,12 @@ class SplitDataByChunks(BaseModel):
         return allowed_paths
 
     def chunk_to_be_removed(self, files: Dict) -> None:
-        self._chunks_to_be_updated["remove"].update(
+        self._chunks_to_be_updated.remove.update(
             {k: v["text"] for k, v in files.items()}
         )
 
     def chunk_to_be_added(self, files: Dict) -> None:
-        self._chunks_to_be_updated["add"].update(
+        self._chunks_to_be_updated.add.update(
             {k: v["text"] for k, v in files.items()}
         )
 

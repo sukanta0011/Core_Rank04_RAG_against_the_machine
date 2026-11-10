@@ -1,8 +1,9 @@
-from typing import Callable, List
+from typing import Callable, Dict, List
 # import time
 from tqdm import tqdm
 from pydantic import BaseModel, validate_call, Field, ConfigDict
 from src.base_patterns import (
+    MinimalSource,
     MinimalSearchResults,
     MinimalAnswer,
     StudentSearchResults,
@@ -16,7 +17,7 @@ class AnswerGenerator(BaseModel):
 
     model: Model
     prompt_generator: Callable
-    chunked_texts: List[str]
+    chunked_texts: Dict
 
     @validate_call
     def generate_answer(
@@ -30,32 +31,46 @@ class AnswerGenerator(BaseModel):
             # print("token refiner is running")
             new_search_result, new_chunks = refiner.get_refined_sources(
                 question=search_result.question,
-                data=[self.chunked_texts[idx]
-                      for idx in search_result.retrieved_sources_indexes],
+                data=self._extract_resource(
+                    search_result.retrieved_sources,
+                    self.chunked_texts),
                 minimal_resource=search_result.retrieved_sources
             )
             pre_prompt = self.prompt_generator(
                 question=search_result.question,
-                context=[new_chunks[idx]
-                         for idx in
-                         new_search_result.retrieved_sources_indexes])
+                context=self._extract_resource(
+                    new_search_result.retrieved_sources,
+                    new_chunks)
+                )
             # print(new_chunks)
         else:
             pre_prompt = self.prompt_generator(
                 question=search_result.question,
-                context=[self.chunked_texts[idx]
-                         for idx in search_result.retrieved_sources_indexes])
+                context=self._extract_resource(
+                    search_result.retrieved_sources,
+                    self.chunked_texts)
+            )
         # print(pre_prompt)
 
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
         return MinimalAnswer(
             question_id=search_result.question_id,
             question=search_result.question,
-            retrieved_sources_indexes=search_result.retrieved_sources_indexes,
             retrieved_sources_scores=search_result.retrieved_sources_scores,
             retrieved_sources=search_result.retrieved_sources,
             answer=answer
         )
+
+    def _extract_resource(
+            self, resources: List[MinimalSource],
+            chunked_texts: Dict) -> List[str]:
+        text = []
+        for resource in resources:
+            text.append(
+                chunked_texts[
+                    f"{resource.file_path}:{resource.first_character_index}:{resource.last_character_index}"])
+        return text
+
 
 
 class BatchAnswerGenerator(BaseModel):

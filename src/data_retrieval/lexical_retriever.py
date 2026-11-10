@@ -63,10 +63,27 @@ class BM25Retriever(Retriever):
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
-            retrieved_sources_indexes=indexes[0],
             retrieved_sources_scores=scores[0],
             retrieved_sources=self.get_all_minimal_source(indexes[0])
         )
+
+    def get_all_minimal_source(self, ids: List) -> List[MinimalSource]:
+        keys = list(self.data.keys())
+        all_minimal_sources: List[MinimalSource] = []
+        for i in ids:
+            parts = str(keys[i]).split(":")
+            if len(parts) > 3:
+                path = ":".join(parts[:-2])
+            else:
+                path = parts[0]
+            all_minimal_sources.append(
+                MinimalSource(
+                    file_path=path,
+                    first_character_index=int(parts[-2]),
+                    last_character_index=int(parts[-1])
+                )
+            )
+        return all_minimal_sources
 
 
 class BatchSourceRetriever(BaseModel):

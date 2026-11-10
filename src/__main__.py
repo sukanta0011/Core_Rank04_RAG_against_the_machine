@@ -1,7 +1,7 @@
 import time
 import fire
 # import torch
-from typing import List
+from typing import Dict
 from src.data_retrieval.helper_classes import (
     FilesInDir,
     DataManager)
@@ -23,11 +23,11 @@ from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
 from .data_retrieval.lexical_retriever import BM25Retriever
-# from .data_retrieval.semantic_retriever import MiniLML6Retriever
+from .data_retrieval.semantic_retriever import MiniLML6Retriever
 # from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = BM25Retriever
+RETRIEVER = MiniLML6Retriever
 DEVICE_TYPE = "cpu"
 
 
@@ -60,7 +60,7 @@ class CLI:
     def _get_answer_generator(
             self,
             llm_model,
-            all_chunks: List[str]
+            all_chunks: Dict
             ) -> AnswerGenerator:
         if self._answer_generator is None:
             print("Initiating answer generator")
@@ -185,13 +185,13 @@ class CLI:
 
     def answer(self, question: str, k: int = 10) -> None:
 
-        start_time = time.time()
-        print("Starting package import...")
-        from src.answer_generation.models.qwen3__0_6B import SmallLLM
-        from src.answer_generation.pre_prompt import InitialPromptGenerator
-        from src.answer_generation.answer import (
-            AnswerGenerator, BatchAnswerGenerator)
-        print(f"Package import time: {(time.time() - start_time):.3f}")
+        # start_time = time.time()
+        # print("Starting package import...")
+        # from src.answer_generation.models.qwen3__0_6B import SmallLLM
+        # from src.answer_generation.pre_prompt import InitialPromptGenerator
+        # from src.answer_generation.answer import (
+        #     AnswerGenerator, BatchAnswerGenerator)
+        # print(f"Package import time: {(time.time() - start_time):.3f}")
         start_time = time.time()
 
         print(f"answer generation started: {(time.time() - start_time):.3f}")

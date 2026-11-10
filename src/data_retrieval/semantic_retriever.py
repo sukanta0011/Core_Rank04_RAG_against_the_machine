@@ -30,10 +30,10 @@ class MiniLML6Retriever(Retriever):
                 embedding_function=self._embed_fn
             )
 
-            remove_data = list(self.update["remove"].values())
-            remove_data_ids = list(self.update["remove"].keys())
-            add_data = list(self.update["add"].values())
-            add_data_ids = list(self.update["add"].keys())
+            remove_data = list(self.update.remove.values())
+            remove_data_ids = list(self.update.remove.keys())
+            add_data = list(self.update.add.values())
+            add_data_ids = list(self.update.add.keys())
 
             for i in tqdm(
                 range(0, len(remove_data), CHROMADB_BATCH_SIZE),
@@ -58,7 +58,7 @@ class MiniLML6Retriever(Retriever):
 
     def load_corpus_index(self, storage_path):
         try:
-            create_and_save_corpus_index(storage_path)
+            self.create_and_save_corpus_index(storage_path)
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
@@ -83,9 +83,8 @@ class MiniLML6Retriever(Retriever):
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
-            retrieved_sources_indexes=indexes,
             retrieved_sources_scores=results['distances'][0],
-            retrieved_sources=self.get_all_minimal_source(indexes)
+            retrieved_sources=self.get_all_minimal_source(keys)
         )
 
     def get_all_minimal_source(
