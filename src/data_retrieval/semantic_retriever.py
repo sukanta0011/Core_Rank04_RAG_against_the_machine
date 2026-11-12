@@ -78,7 +78,6 @@ class MiniLML6Retriever(Retriever):
             question_id = str(uuid.uuid4())
 
         keys = results['ids'][0]
-        
 
         return MinimalSearchResults(
             question=question,

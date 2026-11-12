@@ -147,7 +147,7 @@ class FilesInDir:
         only_paths = FilesInDir.get_flatten_paths(all_paths)
         FilesInDir.save_file_stats(only_paths)
         return all_paths
-    
+
     @staticmethod
     def get_flatten_paths(paths: Dict[str, List[Path]]) -> List[Path]:
         flatten_paths = []
@@ -166,19 +166,20 @@ class FilesInDir:
                 }
             })
         return stats
-        
+
     @staticmethod
     def save_file_stats(paths: List[Path]) -> None:
         stats = FilesInDir.get_file_stats(paths)
         DataManager.save_data("data/cache/all_stats.json", stats)
-    
+
     @staticmethod
     def load_file_stats(path: str = "data/cache/all_stats.json") -> Dict:
         return DataManager.load_data(path)
-    
+
     @staticmethod
-    def has_file_stats_changed(paths: List[Path],
-            saved_states_path: str = "data/cache/all_stats.json"
+    def has_file_stats_changed(
+        paths: List[Path],
+        saved_states_path: str = "data/cache/all_stats.json"
             ) -> bool:
         current_stats = FilesInDir.get_file_stats(paths)
         old_stats = FilesInDir.load_file_stats()
@@ -189,7 +190,7 @@ class FilesInDir:
             if old_val is None:
                 return True
             if (val["time"] != old_val["time"]) or\
-                (val["size"] != old_val["size"]):
+               (val["size"] != old_val["size"]):
                 return True
 
 

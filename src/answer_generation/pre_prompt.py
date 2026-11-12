@@ -9,7 +9,7 @@ class InitialPromptGenerator:
         messages = [
             {"role": "system",
              "content": "You are a vLLM expert. "
-             "Use the context to answer. "
+             "Use the context to answer. No new information generation"
              "No need for introductory sentences. "
              "Directly generate the answer."},
         ]

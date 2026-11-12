@@ -1,5 +1,6 @@
 import time
 import fire
+import Path
 # import torch
 from typing import Dict
 from src.data_retrieval.helper_classes import (
@@ -22,13 +23,26 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
+from .data_retrieval.helper_classes import ValidatedStoragePath
 from .data_retrieval.lexical_retriever import BM25Retriever
 from .data_retrieval.semantic_retriever import MiniLML6Retriever
-# from .data_retrieval.hybrid_retriever import HybridRetriever
+from .data_retrieval.hybrid_retriever import HybridRetriever
 
 
-RETRIEVER = MiniLML6Retriever
+RETRIEVER = BM25Retriever
 DEVICE_TYPE = "cpu"
+CACHE_LOCATION = "data/cache"
+
+
+class RetrieveMethod(Enum):
+    LEXICAL = "lexical"
+    SEMANTIC = "semantic"
+    HYBRID = "hybrid"
+
+
+class AnswerCacheStructure(BaseModel):
+    sources: List[MinimalSource] | None = None
+    answer: str | None = None
 
 
 class CLI:
@@ -37,10 +51,17 @@ class CLI:
         self._all_chunks = None
         self._all_updates = None
         self._answer_generator = None
+        self._answer_from_cache: Dict[str, AnswerCacheStructure] = None
 
-    def _get_retriever(self) -> Retriever:
+    def _get_retriever(self, method: str) -> Retriever:
         """Helper to initialize resources once."""
         if self._retriever is None:
+            if method == RetrieveMethod.HYBRID.value:
+                RETRIEVER = BM25Retriever
+            elif method == RetrieveMethod.SEMANTIC.value:
+                RETRIEVER = MiniLML6Retriever
+            else:
+                RETRIEVER = BM25Retriever
             # 1. Load Chunks
             all_chunks, all_updates =\
                 SplitDataByChunks.load_from_files("data/chunks")
@@ -56,6 +77,34 @@ class CLI:
             self._retriever.load_corpus_index(storage_path="data/processed/")
 
         return self._retriever
+
+    def _get_sources_from_cache(
+            self,
+            question: str,
+            resource_numbers: int,
+            method: RetrieveMethod,
+            path_str: ValidatedStoragePath
+            ) -> Tuple[str, None | AnswerCacheStructure]:
+        # path_str = "/".join(CACHE_LOCATION, "answer.json")
+        # prepare_storage(path_str)
+        if self._answer_from_cache is None:
+            self._answer_from_cache = DataManager.load_data(path_str)
+        question_hash = DataManager.generate_hash(
+            f"{question}:{resource_numbers}:{method}")
+        resources: AnswerCacheStructure | None =\
+            self._answer_from_cache.get(question_hash)
+        return question_hash, resources
+
+    def _update_answer_cache(
+        self,
+        hash: str,
+        resources=None,
+        answer=None
+            ) -> None:
+        self._answer_from_cache[hash](
+            sources=resources,
+            answer=answer
+        )
 
     def _get_answer_generator(
             self,
@@ -110,7 +159,6 @@ class CLI:
         splitter.save_chunked_data()
         print(f"Chunk saved: {time.time() - start_time}")
 
-
         # splitter.save_chunked_data("data/chunks")
         # all_minimal_sources, all_data_chunks = splitter.load_from_files(
         #     "data/chunks")
@@ -127,14 +175,15 @@ class CLI:
         print("Ingestion complete! Indices saved under data/processed")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
-    def search(self, query: str, k: int = 10):
+    def search(self, query: str, k: int = 10, method: str = "lexical"):
         start_time = time.time()
-
-        retriever = self._get_retriever()
-
+        hash, resource = self._get_sources_from_cache(
+            query, k, method, "data/cache/answer_cache.json")
+        if resource.sources:
+            pass
+        retriever = self._get_retriever(method)
         search_result = retriever.get_matching_chunk(
             question=query, k=k)
-
         print(f"Question: {query}")
         print("Matching Resources")
         for source in search_result.retrieved_sources:
@@ -145,11 +194,12 @@ class CLI:
             self,
             dataset_path: str,
             k: int = 10,
+            method: str = "lexical",
             save_directory: str = "data/output/sources.json"
             ) -> None:
         start_time = time.time()
 
-        retriever = self._get_retriever()
+        retriever = self._get_retriever(method)
 
         batch_source_retriever = BatchSourceRetriever(
             retriever=retriever,
@@ -183,7 +233,7 @@ class CLI:
               f"\033[92m{save_directory}\033[0m")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
-    def answer(self, question: str, k: int = 10) -> None:
+    def answer(self, question: str, k: int = 10, method: str = "lexical") -> None:
 
         # start_time = time.time()
         # print("Starting package import...")
@@ -205,17 +255,17 @@ class CLI:
         # Refining the retrieved source
 
         refiner = self._get_refiner(200, 50, 5)
-        
+
         print(f"refined results: {(time.time() - start_time):.3f}")
 
         # Generate Answer
-        answer_generator = self._get_answer_generator(SmallLLM, self._all_chunks)
+        answer_generator = self._get_answer_generator(
+            SmallLLM, self._all_chunks)
         print(f"answer generator: {(time.time() - start_time):.3f}")
-
 
         generated_answer = answer_generator.generate_answer(
             search_result=search_result, tokens_limit=100,
-            refiner=refiner
+            refiner=None
             )
 
         print(f"Question: {question}")
@@ -225,7 +275,8 @@ class CLI:
     def answer_dataset(
             self,
             student_search_results_path: str,
-            save_directory: str
+            save_directory: str,
+            method: str = "lexical",
             ) -> None:
         start_time = time.time()
 
