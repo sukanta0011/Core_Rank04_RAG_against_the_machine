@@ -24,7 +24,7 @@ class RagDatasetParser(BaseModel):
     @staticmethod
     def _load_json(path) -> Dict:
         try:
-            with open(path, 'r') as fl:
+            with open(path, 'r', encoding="utf-8") as fl:
                 data = json.load(fl)
         except OSError as e:
             raise ParsingError(f"Unable to open {path}, Error: {e}")

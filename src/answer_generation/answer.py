@@ -35,9 +35,10 @@ class AnswerGenerator(BaseModel):
             resource_numbers=len(search_result.retrieved_sources),
             method=self.method)
         if resources is None:
-            self.generate_new_answer(hash, search_result, tokens_limit, refiner)
-        elif resources.answer is None:
-            self.generate_new_answer(hash, search_result, tokens_limit, refiner)
+            return self.generate_new_answer(hash, search_result, tokens_limit, refiner)
+
+        if resources.answer is None:
+            return self.generate_new_answer(hash, search_result, tokens_limit, refiner)
         else:
             return MinimalAnswer(
                 question_id=search_result.question_id,
@@ -54,7 +55,7 @@ class AnswerGenerator(BaseModel):
         search_result: MinimalSearchResults,
         tokens_limit: int = Field(gt=0, default=500),
         refiner: ResourceRefiner | None = None
-        ) -> MinimalAnswer:
+            ) -> MinimalAnswer:
         if refiner:
             # print("token refiner is running")
             new_search_result, new_chunks = refiner.get_refined_sources(

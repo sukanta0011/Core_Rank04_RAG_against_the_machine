@@ -28,7 +28,7 @@ from .data_retrieval.semantic_retriever import MiniLML6Retriever
 from .data_retrieval.hybrid_retriever import HybridRetriever
 from .base_patterns import MinimalSource
 from src.data_retrieval.abstract_classes import RetrieveMethod
-from .speed_optimization.cache import AnswerCache
+from .speed_optimization.cache import AnswerCache, IndexCache
 
 
 RETRIEVER = BM25Retriever
@@ -48,24 +48,35 @@ class CLI:
         self._all_updates = None
         self._answer_generator = None
         self._answer_cache = None
+        self._index_cache = None
 
-
-    def load_index_cache(self):
-        pass
+    def load_index_cache(
+            self, chunk_size: int, overlap: int, method: int):
+        if self._index_cache is None:
+            self._index_cache = IndexCache(
+                path="data/cache/digests.json",
+                chunk_size=chunk_size,
+                overlap=overlap,
+                method=method)
+        return self._index_cache
 
     def _get_answer_cache(self):
         if self._answer_cache is None:
             self._answer_cache = AnswerCache("data/cache/answer_cache.json")
         return self._answer_cache
 
-    def _get_retriever(self, method: str) -> Retriever:
+    def _get_retriever(
+            self, method: str, load: bool = True) -> Retriever:
         """Helper to initialize resources once."""
         if self._retriever is None:
             if method == RetrieveMethod.HYBRID.value:
+                print("Using hybrid retriever....")
                 RETRIEVER = HybridRetriever
             elif method == RetrieveMethod.SEMANTIC.value:
+                print("Using semantic retriever....")
                 RETRIEVER = MiniLML6Retriever
             else:
+                print("Using lexical retriever....")
                 RETRIEVER = BM25Retriever
 
             all_chunks, all_updates =\
@@ -80,10 +91,10 @@ class CLI:
                 cache=self._get_answer_cache(),
                 method=method
             )
-            self._retriever.load_corpus_index(storage_path="data/processed/")
-
+            if load:
+                self._retriever.load_corpus_index(
+                    storage_path="data/processed/")
         return self._retriever
-
 
     def _get_answer_generator(
             self,
@@ -119,49 +130,44 @@ class CLI:
             retriever=RETRIEVER
         )
 
-    def index(self, max_chunk_size: int = 2000, method: str = "lexical") -> None:
+    def index(
+            self, max_chunk_size: int = 2000, method: str = "lexical") -> None:
         start_time = time.time()
 
         # Extracting all valid path from the folder
         all_valid_paths = FilesInDir.extract_all_file_paths(
             path='data/raw/vllm-0.10.1')
+        only_paths = IndexCache.get_only_paths(all_valid_paths)
         print(f"File path extracted: {time.time() - start_time}")
 
         # Split the data into chunks
         overlap = 50 if max_chunk_size >= 500 else 0
-        splitter = SplitDataByChunks(
-            all_paths=all_valid_paths,
-            chunk_size=max_chunk_size,
-            txt_overlap=overlap,
-            code_overlap=overlap,
-            use_indexing=True,
-            folder="data/chunks")
-        splitter.chunk_all_files()
-        print(f"Chunking done: {time.time() - start_time}")
-        splitter.save_chunked_data()
-        print(f"Chunk saved: {time.time() - start_time}")
+        index_cache = self.load_index_cache(
+            max_chunk_size, overlap, method)
+        digest, info_changed = index_cache.has_file_stats_changed(only_paths)
+        if info_changed:
+            print("File has been changed")
+            splitter = SplitDataByChunks(
+                all_paths=all_valid_paths,
+                chunk_size=max_chunk_size,
+                txt_overlap=overlap,
+                code_overlap=overlap,
+                use_indexing=True,
+                folder="data/chunks")
+            splitter.chunk_all_files()
+            splitter.save_chunked_data()
 
-        # splitter.save_chunked_data("data/chunks")
-        # all_minimal_sources, all_data_chunks = splitter.load_from_files(
-        #     "data/chunks")
-
-        all_data_chunks, all_updates = splitter.get_all_data()
-
-        retriever = RETRIEVER(
-            data=all_data_chunks,
-            update=all_updates,
-            cache=self._get_answer_cache(),
-            method=method
-            )
-
-        retriever.create_and_save_corpus_index(storage_path="data/processed/")
+            all_data_chunks, all_updates = splitter.get_all_data()
+            retriever = self._get_retriever(method, False)
+            retriever.create_and_save_corpus_index(storage_path="data/processed/")
+            index_cache.save_stats_digest(digest)
 
         print("Ingestion complete! Indices saved under data/processed")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     def search(self, query: str, k: int = 10, method: str = "lexical"):
         start_time = time.time()
- 
+
         retriever = self._get_retriever(method)
         search_result = retriever.get_matching_chunk(
             question=query, k=k)
@@ -214,15 +220,8 @@ class CLI:
               f"\033[92m{save_directory}\033[0m")
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
-    def answer(self, question: str, k: int = 10, method: str = "lexical") -> None:
-
-        # start_time = time.time()
-        # print("Starting package import...")
-        # from src.answer_generation.models.qwen3__0_6B import SmallLLM
-        # from src.answer_generation.pre_prompt import InitialPromptGenerator
-        # from src.answer_generation.answer import (
-        #     AnswerGenerator, BatchAnswerGenerator)
-        # print(f"Package import time: {(time.time() - start_time):.3f}")
+    def answer(
+            self, question: str, k: int = 10, method: str = "lexical") -> None:
         start_time = time.time()
 
         print(f"answer generation started: {(time.time() - start_time):.3f}")
@@ -234,8 +233,7 @@ class CLI:
         print(f"search results: {(time.time() - start_time):.3f}")
 
         # Refining the retrieved source
-
-        refiner = self._get_refiner(200, 50, 5)
+        # refiner = self._get_refiner(200, 50, 5)
 
         print(f"refined results: {(time.time() - start_time):.3f}")
 
@@ -266,17 +264,16 @@ class CLI:
         student_search_results = StudentSearchResults(**data)
 
         if self._all_chunks is None:
-            self._get_retriever()
+            self._get_retriever(method)
 
-        refiner = self._get_refiner(200, 50, 5)
-
+        # refiner = self._get_refiner(200, 50, 5)
         answer_generator = self._get_answer_generator(
             SmallLLM, self._all_chunks, method)
 
         batch_answer_generator = BatchAnswerGenerator(
             generator=answer_generator,
-            tokens_limit=500,
-            refiner=refiner
+            tokens_limit=100,
+            refiner=None
         )
         answers = batch_answer_generator.process_batch(
             search_results=student_search_results
@@ -328,114 +325,6 @@ class CLI:
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
 
-def main():
-    start_time = time.time()
-
-    all_valid_paths = FilesInDir.extract_all_file_paths(
-        path='data/raw/vllm-0.10.1')
-    splitter = SplitDataByChunks(
-        all_paths=all_valid_paths,
-        chunk_size=2000, txt_overlap=50,
-        code_overlap=50)
-    splitter.chunk_all_files()
-    # splitter.save_chunked_data("data/chunks")
-
-    # all_minimal_sources, all_data_chunks = splitter.load_from_files(
-    #     "data/chunks")
-    # print(len(all_minimal_sources))
-    all_minimal_sources, all_data_chunks = splitter.get_all_data()
-    print("Data chunking is completed with "
-          f"\033[92m{len(all_data_chunks)}\033[0m chunks")
-    print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
-
-    bm25_retriever = BM25Retriever(
-        storage_path="data/processed/",
-        data=all_data_chunks,
-        all_minimal_resource=all_minimal_sources)
-
-    bm25_retriever.create_and_save_corpus_index(storage_path="data/processed/")
-    # bm25_retriever.load_corpus_index()
-
-    answered_path = [
-        "datasets_public/public/AnsweredQuestions/dataset_code_public.json"
-        ]
-    unanswered_path = [
-        "datasets_public/public/UnansweredQuestions/dataset_docs_public.json"
-        ]
-
-    rag_parser = RagDatasetParser(
-        answered_question_paths=answered_path,
-        unanswered_question_paths=unanswered_path
-    )
-    rag_parser.extract_data_from_paths()
-    ground_truth = rag_parser.get_ground_truth()
-
-    all_questions = []
-    for _, data in ground_truth.items():
-        all_questions.append({
-            "question": data.question,
-            "question_id": data.question_id
-        })
-
-    # Retrieving the resources for the questions
-    batch_source_retriever = BatchSourceRetriever(
-        retriever=bm25_retriever,
-        k=1
-    )
-    student_answers = batch_source_retriever.process_batch(
-        questions=all_questions)
-
-    DataManager.save_data(
-        storage_path="data/answers/sources.json",
-        data=student_answers
-    )
-    print("Answer retrieval is completed "
-          f"\033[92m{len(student_answers.search_results)}\033[0m chunks")
-    print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
-
-    # Validating resources Recall@N
-    for validator_type in [RecallN, RecallOverlap]:
-        answer_validator_recall = AnswerValidator(
-            ground_truth_map=ground_truth,
-            recall=validator_type,
-            n=1
-        )
-        batch_validator = BatchAnswerValidator(
-            validator=answer_validator_recall
-        )
-        validation_list = batch_validator.process_batch(
-            answers=student_answers
-        )
-        # print(validation_list)
-        print("Validation: "
-              f"\033[92m{100 * sum(
-                validation_list)/len(validation_list)}%\033[0m")
-        print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
-
-    # Using model to get the answer
-    llm = SmallLLM(device_type='cpu')
-    answer_generator = AnswerGenerator(
-        model=llm,
-        prompt_generator=InitialPromptGenerator.get_type1_prompt,
-        chunked_texts=all_data_chunks
-    )
-    batch_answer_generator = BatchAnswerGenerator(
-        generator=answer_generator,
-        tokens_limit=500
-    )
-    answers = batch_answer_generator.process_batch(
-        search_results=student_answers
-    )
-
-    DataManager.save_data(
-        storage_path="data/answers/sources_with_answer.json",
-        data=answers
-    )
-    print("\033[92mAnswer Generation Completed\033[0m")
-    end_time = time.time()
-    print(f"Time taken: {(end_time - start_time):.3f}s")
-
-
 if __name__ == "__main__":
     # main()
     fire.Fire(CLI)
@@ -444,5 +333,3 @@ if __name__ == "__main__":
     #     fire.Fire(CLI)
     # except Exception as e:
     #     print(e)
-
-

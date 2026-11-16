@@ -25,29 +25,33 @@ class MiniLML6Retriever(Retriever):
         if isinstance(self.data, dict):
             self._client = chromadb.PersistentClient(path=storage_path)
 
+            try:
+                if self.update.reset_flag:
+                    print("Removing old semantic tokens...")
+                    self._client.delete_collection("vLLM")
+            except Exception:
+                pass
+
             self._collection = self._client.get_or_create_collection(
                 name="vLLM",
                 embedding_function=self._embed_fn
             )
 
-            remove_data = list(self.update.remove.values())
+            # remove_data = list(self.update.remove.values())
             remove_data_ids = list(self.update.remove.keys())
             add_data = list(self.update.add.values())
             add_data_ids = list(self.update.add.keys())
 
             for i in tqdm(
-                range(0, len(remove_data), CHROMADB_BATCH_SIZE),
+                range(0, len(remove_data_ids), CHROMADB_BATCH_SIZE),
                     desc="Removing Embeddings"):
-                batch_data = remove_data[i: i + CHROMADB_BATCH_SIZE]
-                batch_ids = remove_data_ids[i: i + CHROMADB_BATCH_SIZE]
-                self._collection.upsert(
-                        ids=batch_ids,
-                        documents=batch_data
+                self._collection.delete(
+                        ids=remove_data_ids[i: i + CHROMADB_BATCH_SIZE]
                     )
 
             for i in tqdm(
                 range(0, len(add_data), CHROMADB_BATCH_SIZE),
-                      desc="Adding Embeddings"):
+                    desc="Adding Embeddings"):
                 batch_data = add_data[i: i + CHROMADB_BATCH_SIZE]
                 batch_ids = add_data_ids[i: i + CHROMADB_BATCH_SIZE]
 
@@ -55,6 +59,7 @@ class MiniLML6Retriever(Retriever):
                     ids=batch_ids,
                     documents=batch_data
                 )
+            print(f"{self._collection.count()} chunks are saved in Chroma DB")
 
     def load_corpus_index(self, storage_path):
         try:

@@ -128,7 +128,7 @@ Chunks and queries are embedded into vector space using the `all-MiniLM-L6-v2` m
 
 ### Hybrid Search (RRF)
 
-Results from BM25 and ChromaDB are merged using **Reciprocal Rank Fusion (RRF)**. Because the two methods use different scoring scales, RRF normalises them by rank position rather than raw score, then selects the top-k results from the combined pool of 4×k candidates.
+Results from BM25 and ChromaDB are merged using **Reciprocal Rank Fusion (RRF)**. Because the two methods use different scoring scales, RRF normalises them by rank position rather than raw score, then selects the top-k results from the combined pool of 2×k candidates.
 
 ### Hybrid Search with Cross-Encoder Re-ranking
 

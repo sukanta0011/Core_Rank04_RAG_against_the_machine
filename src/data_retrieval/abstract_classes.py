@@ -21,6 +21,7 @@ class DataChunk(ABC, BaseModel):
 
 
 class Update(BaseModel):
+    reset_flag: bool = Field(default_factory=False)
     add: Dict = Field(default_factory={})
     remove: Dict = Field(default_factory={})
 
@@ -69,13 +70,11 @@ class Retriever(BaseModel, ABC):
                 hash=hash
             )
         else:
-            cash_source = AnswerCacheStructure(**resources)
             return MinimalSearchResults(
                 question=question,
-                question_id=cash_source.question_id,
-                retrieved_sources_scores=\
-                    cash_source.retrieved_sources_scores,
-                retrieved_sources=cash_source.retrieved_sources
+                question_id=resources.question_id,
+                retrieved_sources_scores=resources.retrieved_sources_scores,
+                retrieved_sources=resources.retrieved_sources
             )
 
     @abstractmethod

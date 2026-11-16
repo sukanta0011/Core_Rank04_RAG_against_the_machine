@@ -1,6 +1,10 @@
 from __future__ import annotations
+import os
+import json
+import hashlib
+from pathlib import Path
 from pydantic import BaseModel
-from typing import List, Tuple, TYPE_CHECKING
+from typing import List, Tuple, TYPE_CHECKING, Dict
 from src.data_retrieval.helper_classes import (
     DataManager, prepare_storage)
 from src.base_patterns import MinimalSource
@@ -17,7 +21,56 @@ class AnswerCacheStructure(BaseModel):
 
 
 class IndexCache:
-    pass
+    def __init__(self, path: str, chunk_size: int, overlap: int, method: int) -> None:
+        self.path = path
+        self.settings = {
+            "chunk_size": chunk_size,
+            "overlap": overlap,
+            "method": method
+        }
+        prepare_storage(self.path)
+
+    def get_file_stats(self, paths: List[Path]) -> Dict:
+        stats = {}
+        for path in paths:
+            stats.update({
+                str(path): {
+                    "time": os.stat(path).st_mtime,
+                    "size": os.stat(path).st_size
+                }
+            })
+        return stats
+
+    def save_stats_digest(self, digest: str) -> None:
+        DataManager.save_data(self.path, {"hash": digest})
+
+    def get_stat_digest(self, stats: Dict) -> str:
+        canonical = json.dumps(
+            {"stats": stats, "settings": self.settings},
+            sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def load_digest(self) -> str | None:
+        try:
+            old_digest = DataManager.load_data(self.path)
+            old_hash = old_digest.get("hash")
+            return old_hash
+        except Exception:
+            return None
+
+    def has_file_stats_changed(
+            self, paths: List[Path]) -> Tuple[Dict, bool]:
+        current_stats = self.get_file_stats(paths)
+        current_digest = self.get_stat_digest(current_stats)
+        old_hash = self.load_digest()
+        return current_digest, current_digest != old_hash
+
+    @staticmethod
+    def get_only_paths(paths: Dict[str, List[Path]]) -> List[Path]:
+        flat_path = []
+        for _, path in paths.items():
+            flat_path.extend(path)
+        return flat_path
 
 
 class AnswerCache:
@@ -38,9 +91,13 @@ class AnswerCache:
             ) -> Tuple[str, None | AnswerCacheStructure]:
         question_hash = DataManager.generate_hash_from_text(
             f"{question}:{resource_numbers}:{method}")
-        resources: AnswerCacheStructure | None =\
-            self._answer_from_cache.get(question_hash)
-        return question_hash, resources
+        retrieved_resources = self._answer_from_cache.get(question_hash)
+        if isinstance(retrieved_resources, Dict):
+            if retrieved_resources is not None:
+                resources = AnswerCacheStructure(**retrieved_resources)
+                return question_hash, resources
+            return question_hash, None
+        return question_hash, retrieved_resources
 
     def update_answer_cache(
         self,

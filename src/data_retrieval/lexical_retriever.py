@@ -50,7 +50,7 @@ class BM25Retriever(Retriever):
         question_id: str | None = None
             ) -> MinimalSearchResults:
 
-        query_tokens = bm25s.tokenize(question)
+        query_tokens = bm25s.tokenize(question, stopwords='en')
         indexes, scores = self._retriever.retrieve(
             query_tokens, k=k, return_as="tuple")
         source_score = scores[0]

@@ -63,15 +63,11 @@ class SplitDataByChunks(BaseModel):
     _all_chunk_txt: List[str] = PrivateAttr(default=list())
     _indexing_storage: Dict = PrivateAttr(default=dict())
     _all_chunks_with_id: Dict = PrivateAttr(default=dict())
-    _chunks_to_be_updated: Update = Update(add={}, remove={})
+    _chunks_to_be_updated: Update = Update(reset_flag=False, add={}, remove={})
 
     def model_post_init(self, __context) -> Any:
         if self.use_indexing:
             self._indexing_storage_path = "/".join([self.folder, 'indexed_data.json'])
-            # self._chunks_to_be_updated = {
-            #     "add": {},
-            #     "remove": {}
-            # }
             self.prepare_indexing_storage()
 
     def get_all_data(self) -> Tuple[Dict, Dict]:
@@ -88,6 +84,7 @@ class SplitDataByChunks(BaseModel):
                 self._exist_indexing_storage = True
             else:
                 self._prepare_fresh_storage()
+                self._chunks_to_be_updated.reset_flag = True
         except (OSError, json.JSONDecodeError, FileNotFoundError):
             self._prepare_fresh_storage()
 
@@ -105,8 +102,8 @@ class SplitDataByChunks(BaseModel):
 
     def validate_settings(self, settings: Dict) -> bool:
         existing_chunk_size = settings.get("chunk_size")
-        existing_text_overlap = settings.get("code_overlap")
-        existing_code_overlap = settings.get("txt_overlap")
+        existing_text_overlap = settings.get("txt_overlap")
+        existing_code_overlap = settings.get("code_overlap")
         return (
             self.chunk_size == existing_chunk_size and
             self.code_overlap == existing_code_overlap and
@@ -127,13 +124,11 @@ class SplitDataByChunks(BaseModel):
     @validate_call
     def load_from_files(
         storage_folder: ExistingPath
-            ) -> Tuple[Dict, Dict]:
+            ) -> Tuple[Dict, Dict, bool]:
 
         all_data_source = "/".join([storage_folder, 'data.json'])
         all_update_source = "/".join([storage_folder, 'update.json'])
 
-        # all_minimum_source = []
-        # all_text_data = []
         all_data = {}
         all_update = {}
 
@@ -195,8 +190,8 @@ class SplitDataByChunks(BaseModel):
                 else:
                     self._indexing_storage["files"][str(path)] = {}
                     self._indexing_storage[
-                        "files"][str(path)]["hash"] =\
-                            DataManager.generate_hash(path)
+                        "files"][str(path)]["hash"] = \
+                        DataManager.generate_hash(path)
 
                 data = DataManager.load_data(str(path))
                 if syntax in FileFormats.CODING_LANGUAGES.value:
@@ -214,12 +209,14 @@ class SplitDataByChunks(BaseModel):
                     start = doc.metadata["start_index"]
                     self._indexing_storage[
                         "files"][str(path)]["chunks"].update(
-                        {   f"{path}:{start}:{start + len(doc.page_content)}":
+                        {
+                            f"{path}:{start}:{start + len(doc.page_content)}":
                             {
-                            "first": start,
-                            "last": start + len(doc.page_content),
-                            "text": doc.page_content,
-                        }})
+                                "first": start,
+                                "last": start + len(doc.page_content),
+                                "text": doc.page_content,
+                            }
+                        })
                 self.chunk_to_be_added(
                     self._indexing_storage["files"][str(path)]["chunks"])
 
@@ -231,6 +228,7 @@ class SplitDataByChunks(BaseModel):
     def _rebuild_flat_lists(self) -> None:
         self._all_chunks = []
         self._all_chunk_txt = []
+        self._all_chunks_with_id = {}
         for p in sorted(self._indexing_storage["files"]):
             for id, c in self._indexing_storage["files"][p]["chunks"].items():
                 # id, c = list(info.items())[0]
@@ -242,7 +240,6 @@ class SplitDataByChunks(BaseModel):
                 self._all_chunks_with_id.update(
                     {id: c["text"]}
                 )
-
 
     def _chunk_files(self) -> None:
         text_chunk = TextChunk(chunk_size=self.chunk_size)
