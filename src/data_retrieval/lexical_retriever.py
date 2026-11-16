@@ -11,6 +11,7 @@ from src.data_retrieval.abstract_classes import Retriever
 from src.base_patterns import (MinimalSource,
     MinimalSearchResults, StudentSearchResults)
 from src.data_retrieval.helper_classes import ValidatedStoragePath
+from ..speed_optimization.cache import AnswerCacheStructure
 
 
 class BM25Retriever(Retriever):
@@ -41,30 +42,31 @@ class BM25Retriever(Retriever):
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
     @validate_call
-    def get_matching_chunk(
+    def retrieve_from_raw_data(
         self,
+        hash: str,
         question: Annotated[str, Field(min_length=3)],
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
             ) -> MinimalSearchResults:
 
-        if not hasattr(self, '_retriever'):
-            raise AttributeError(
-                "Run 'create_corpus_index' or 'load_corpus_index' "
-                "before running the 'get_matching_chunk' function")
-
-        if question_id is None:
-            question_id = str(uuid.uuid4())
-
         query_tokens = bm25s.tokenize(question)
         indexes, scores = self._retriever.retrieve(
             query_tokens, k=k, return_as="tuple")
+        source_score = scores[0]
+        sources = self.get_all_minimal_source(indexes[0])
+        self.cache.update_answer_cache(
+            hash=hash,
+            scores=source_score,
+            resources=sources,
+            question_id=question_id
+            )
 
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
-            retrieved_sources_scores=scores[0],
-            retrieved_sources=self.get_all_minimal_source(indexes[0])
+            retrieved_sources_scores=source_score,
+            retrieved_sources=sources
         )
 
     def get_all_minimal_source(self, ids: List) -> List[MinimalSource]:
@@ -88,7 +90,6 @@ class BM25Retriever(Retriever):
 
 class BatchSourceRetriever(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
-
     retriever: Retriever
     k: int = Field(gt=0, default=1)
 

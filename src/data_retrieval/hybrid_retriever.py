@@ -44,12 +44,13 @@ class HybridRetriever(Retriever):
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
-    def get_matching_chunk(
-        self,
-        question: Annotated[str, Field(min_length=3)],
-        k: Annotated[int, Field(gt=0)],
-        question_id: str | None = None
-            ) -> MinimalSearchResults:
+    def retrieve_from_raw_data(
+    self,
+    hash: str,
+    question: Annotated[str, Field(min_length=3)],
+    k: Annotated[int, Field(gt=0)],
+    question_id: str | None = None
+        ) -> MinimalSearchResults:
 
         spatial_results = self._special_retriever.get_matching_chunk(
             question=question,
@@ -80,6 +81,13 @@ class HybridRetriever(Retriever):
             chunks=[self.data[i] for i in indexes[:k]],
             indexes=indexes[:k]
         )
+
+        self.cache.update_answer_cache(
+            hash=hash,
+            scores=source_score,
+            resources=sources,
+            question_id=question_id
+            )
 
         return MinimalSearchResults(
             question_str=question,

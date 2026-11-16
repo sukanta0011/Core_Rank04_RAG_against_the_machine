@@ -1,8 +1,7 @@
 import time
 import fire
-import Path
-# import torch
-from typing import Dict
+from pydantic import BaseModel
+from typing import Dict, List, Tuple
 from src.data_retrieval.helper_classes import (
     FilesInDir,
     DataManager)
@@ -23,10 +22,13 @@ from src.base_patterns import StudentSearchResults
 from src.data_retrieval.resource_refiner import ResourceRefiner
 from src.data_retrieval.chunk_data import (
     TextChunk, CodeChunk)
-from .data_retrieval.helper_classes import ValidatedStoragePath
+from .data_retrieval.helper_classes import ValidatedStoragePath, prepare_storage
 from .data_retrieval.lexical_retriever import BM25Retriever
 from .data_retrieval.semantic_retriever import MiniLML6Retriever
 from .data_retrieval.hybrid_retriever import HybridRetriever
+from .base_patterns import MinimalSource
+from src.data_retrieval.abstract_classes import RetrieveMethod
+from .speed_optimization.cache import AnswerCache
 
 
 RETRIEVER = BM25Retriever
@@ -34,14 +36,8 @@ DEVICE_TYPE = "cpu"
 CACHE_LOCATION = "data/cache"
 
 
-class RetrieveMethod(Enum):
-    LEXICAL = "lexical"
-    SEMANTIC = "semantic"
-    HYBRID = "hybrid"
-
-
 class AnswerCacheStructure(BaseModel):
-    sources: List[MinimalSource] | None = None
+    retrieved_sources: List[MinimalSource] | None = None
     answer: str | None = None
 
 
@@ -51,65 +47,49 @@ class CLI:
         self._all_chunks = None
         self._all_updates = None
         self._answer_generator = None
-        self._answer_from_cache: Dict[str, AnswerCacheStructure] = None
+        self._answer_cache = None
+
+
+    def load_index_cache(self):
+        pass
+
+    def _get_answer_cache(self):
+        if self._answer_cache is None:
+            self._answer_cache = AnswerCache("data/cache/answer_cache.json")
+        return self._answer_cache
 
     def _get_retriever(self, method: str) -> Retriever:
         """Helper to initialize resources once."""
         if self._retriever is None:
             if method == RetrieveMethod.HYBRID.value:
-                RETRIEVER = BM25Retriever
+                RETRIEVER = HybridRetriever
             elif method == RetrieveMethod.SEMANTIC.value:
                 RETRIEVER = MiniLML6Retriever
             else:
                 RETRIEVER = BM25Retriever
-            # 1. Load Chunks
+
             all_chunks, all_updates =\
                 SplitDataByChunks.load_from_files("data/chunks")
             self._all_chunks = all_chunks
             self._all_updates = all_updates
 
-            # 2. Initialize Retriever
+            # self._load_answer_cache()
             self._retriever = RETRIEVER(
                 data=all_chunks,
-                update=all_updates
+                update=all_updates,
+                cache=self._get_answer_cache(),
+                method=method
             )
-            # 3. Load Index
             self._retriever.load_corpus_index(storage_path="data/processed/")
 
         return self._retriever
 
-    def _get_sources_from_cache(
-            self,
-            question: str,
-            resource_numbers: int,
-            method: RetrieveMethod,
-            path_str: ValidatedStoragePath
-            ) -> Tuple[str, None | AnswerCacheStructure]:
-        # path_str = "/".join(CACHE_LOCATION, "answer.json")
-        # prepare_storage(path_str)
-        if self._answer_from_cache is None:
-            self._answer_from_cache = DataManager.load_data(path_str)
-        question_hash = DataManager.generate_hash(
-            f"{question}:{resource_numbers}:{method}")
-        resources: AnswerCacheStructure | None =\
-            self._answer_from_cache.get(question_hash)
-        return question_hash, resources
-
-    def _update_answer_cache(
-        self,
-        hash: str,
-        resources=None,
-        answer=None
-            ) -> None:
-        self._answer_from_cache[hash](
-            sources=resources,
-            answer=answer
-        )
 
     def _get_answer_generator(
             self,
             llm_model,
-            all_chunks: Dict
+            all_chunks: Dict,
+            method: str
             ) -> AnswerGenerator:
         if self._answer_generator is None:
             print("Initiating answer generator")
@@ -121,7 +101,9 @@ class CLI:
             self._answer_generator = AnswerGenerator(
                 model=llm,
                 prompt_generator=InitialPromptGenerator.get_type1_prompt,
-                chunked_texts=all_chunks
+                chunked_texts=all_chunks,
+                cache=self._get_answer_cache(),
+                method=method
                 )
         return self._answer_generator
 
@@ -137,7 +119,7 @@ class CLI:
             retriever=RETRIEVER
         )
 
-    def index(self, max_chunk_size: int = 2000) -> None:
+    def index(self, max_chunk_size: int = 2000, method: str = "lexical") -> None:
         start_time = time.time()
 
         # Extracting all valid path from the folder
@@ -167,7 +149,9 @@ class CLI:
 
         retriever = RETRIEVER(
             data=all_data_chunks,
-            update=all_updates
+            update=all_updates,
+            cache=self._get_answer_cache(),
+            method=method
             )
 
         retriever.create_and_save_corpus_index(storage_path="data/processed/")
@@ -177,13 +161,11 @@ class CLI:
 
     def search(self, query: str, k: int = 10, method: str = "lexical"):
         start_time = time.time()
-        hash, resource = self._get_sources_from_cache(
-            query, k, method, "data/cache/answer_cache.json")
-        if resource.sources:
-            pass
+ 
         retriever = self._get_retriever(method)
         search_result = retriever.get_matching_chunk(
             question=query, k=k)
+        self._answer_cache.save_to_answer_cache()
         print(f"Question: {query}")
         print("Matching Resources")
         for source in search_result.retrieved_sources:
@@ -191,16 +173,14 @@ class CLI:
         print(f"Time taken: \033[92m{(time.time() - start_time):.3f}s\033[0m")
 
     def search_dataset(
-            self,
-            dataset_path: str,
-            k: int = 10,
-            method: str = "lexical",
-            save_directory: str = "data/output/sources.json"
+        self,
+        dataset_path: str,
+        k: int = 10,
+        method: str = "lexical",
+        save_directory: str = "data/output/sources.json"
             ) -> None:
         start_time = time.time()
-
         retriever = self._get_retriever(method)
-
         batch_source_retriever = BatchSourceRetriever(
             retriever=retriever,
             k=k
@@ -227,6 +207,7 @@ class CLI:
             storage_path=save_directory,
             data=student_answers
         )
+        self._answer_cache.save_to_answer_cache()
 
         print(f"\033[92m{len(all_questions)}\033[0m questions are retrieved")
         print("Saved student_search_results to "
@@ -245,7 +226,7 @@ class CLI:
         start_time = time.time()
 
         print(f"answer generation started: {(time.time() - start_time):.3f}")
-        retriever = self._get_retriever()
+        retriever = self._get_retriever(method)
 
         print(f"retrieved the resources: {(time.time() - start_time):.3f}")
         search_result = retriever.get_matching_chunk(
@@ -260,13 +241,14 @@ class CLI:
 
         # Generate Answer
         answer_generator = self._get_answer_generator(
-            SmallLLM, self._all_chunks)
+            SmallLLM, self._all_chunks, method)
         print(f"answer generator: {(time.time() - start_time):.3f}")
 
         generated_answer = answer_generator.generate_answer(
             search_result=search_result, tokens_limit=100,
             refiner=None
             )
+        self._answer_cache.save_to_answer_cache()
 
         print(f"Question: {question}")
         print(f"Answer:\n\033[92m{generated_answer.answer}\033[0m")
@@ -288,7 +270,8 @@ class CLI:
 
         refiner = self._get_refiner(200, 50, 5)
 
-        answer_generator = self._get_answer_generator(self._all_chunks)
+        answer_generator = self._get_answer_generator(
+            SmallLLM, self._all_chunks, method)
 
         batch_answer_generator = BatchAnswerGenerator(
             generator=answer_generator,
@@ -303,6 +286,7 @@ class CLI:
             storage_path="data/answers/sources_with_answer.json",
             data=answers
         )
+        self._answer_cache.save_to_answer_cache()
 
         # print(f"\033[92m{len(all_questions)}\033[0m questions are retrieved")
         print(f"Saved student_search_results_and_answer to {save_directory}")

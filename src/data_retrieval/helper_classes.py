@@ -104,15 +104,22 @@ class DataManager:
         return hasher.hexdigest()
 
     @staticmethod
+    def generate_hash_from_text(
+            text: str) -> str:
+        hasher = hashlib.sha256()
+        hasher.update(text.encode('utf-8'))
+        return hasher.hexdigest()
+
+    @staticmethod
     @validate_call
     def save_data(
         storage_path: ValidatedStoragePath,
-            data: Any) -> None:
+            data: Any, method: str = "w") -> None:
         adapter = TypeAdapter(Any)
         data_json = adapter.dump_json(
             data, indent=4).decode('utf-8')
         try:
-            with open(storage_path, 'w', encoding="utf-8", newline="") as fl:
+            with open(storage_path, method, encoding="utf-8", newline="") as fl:
                 fl.write(data_json)
         except Exception as e:
             raise Exception(e)

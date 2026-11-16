@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List
 # import time
 from tqdm import tqdm
-from pydantic import BaseModel, validate_call, Field, ConfigDict
+from pydantic import BaseModel, validate_call, Field, ConfigDict, InstanceOf
 from src.base_patterns import (
     MinimalSource,
     MinimalSearchResults,
@@ -10,7 +10,8 @@ from src.base_patterns import (
     StudentSearchResultsAndAnswer)
 from src.answer_generation.models.abstract_model import Model
 from src.data_retrieval.resource_refiner import ResourceRefiner
-
+from ..speed_optimization.cache import (
+    AnswerCacheStructure, AnswerCache)
 
 class AnswerGenerator(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -18,6 +19,8 @@ class AnswerGenerator(BaseModel):
     model: Model
     prompt_generator: Callable
     chunked_texts: Dict
+    cache: InstanceOf[AnswerCache]
+    method: str
 
     @validate_call
     def generate_answer(
@@ -27,6 +30,31 @@ class AnswerGenerator(BaseModel):
             refiner: ResourceRefiner | None = None
             ) -> MinimalAnswer:
 
+        hash, resources = self.cache.get_sources_from_cache(
+            question=search_result.question,
+            resource_numbers=len(search_result.retrieved_sources),
+            method=self.method)
+        if resources is None:
+            self.generate_new_answer(hash, search_result, tokens_limit, refiner)
+        elif resources.answer is None:
+            self.generate_new_answer(hash, search_result, tokens_limit, refiner)
+        else:
+            return MinimalAnswer(
+                question_id=search_result.question_id,
+                question=search_result.question,
+                retrieved_sources_scores=resources.retrieved_sources_scores,
+                retrieved_sources=resources.retrieved_sources,
+                answer=resources.answer
+            )
+
+    @validate_call
+    def generate_new_answer(
+        self,
+        hash: str,
+        search_result: MinimalSearchResults,
+        tokens_limit: int = Field(gt=0, default=500),
+        refiner: ResourceRefiner | None = None
+        ) -> MinimalAnswer:
         if refiner:
             # print("token refiner is running")
             new_search_result, new_chunks = refiner.get_refined_sources(
@@ -53,6 +81,13 @@ class AnswerGenerator(BaseModel):
         # print(pre_prompt)
 
         answer = self.model.generate_answer(pre_prompt, tokens_limit)
+        self.cache.update_answer_cache(
+            hash=hash,
+            scores=search_result.retrieved_sources_scores,
+            resources=search_result.retrieved_sources,
+            question_id=search_result.question_id,
+            answer=answer
+            )
         return MinimalAnswer(
             question_id=search_result.question_id,
             question=search_result.question,
@@ -70,7 +105,6 @@ class AnswerGenerator(BaseModel):
                 chunked_texts[
                     f"{resource.file_path}:{resource.first_character_index}:{resource.last_character_index}"])
         return text
-
 
 
 class BatchAnswerGenerator(BaseModel):

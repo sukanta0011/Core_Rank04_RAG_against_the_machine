@@ -3,7 +3,7 @@ import torch
 import uuid
 from tqdm import tqdm
 from chromadb.utils import embedding_functions
-from pydantic import PrivateAttr, Field
+from pydantic import PrivateAttr, Field, validate_call
 from typing import Annotated, List
 # from sentence_transformers import SentenceTransformer
 from ..data_retrieval.abstract_classes import Retriever
@@ -62,8 +62,10 @@ class MiniLML6Retriever(Retriever):
         except Exception as e:
             raise Exception(f"Indexed corpus loading failed. Error: {e}")
 
-    def get_matching_chunk(
+    @validate_call
+    def retrieve_from_raw_data(
         self,
+        hash: str,
         question: Annotated[str, Field(min_length=3)],
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
@@ -78,12 +80,20 @@ class MiniLML6Retriever(Retriever):
             question_id = str(uuid.uuid4())
 
         keys = results['ids'][0]
+        sources = self.get_all_minimal_source(keys)
+
+        self.cache.update_answer_cache(
+            hash=hash,
+            scores=results['distances'][0],
+            resources=sources,
+            question_id=question_id
+            )
 
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
             retrieved_sources_scores=results['distances'][0],
-            retrieved_sources=self.get_all_minimal_source(keys)
+            retrieved_sources=sources
         )
 
     def get_all_minimal_source(
