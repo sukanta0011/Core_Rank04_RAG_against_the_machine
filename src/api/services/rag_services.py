@@ -1,72 +1,113 @@
-from typing import List
-from src.data_retrieval.chunk_data import SplitDataByChunks
-from src.data_retrieval.lexical_retriever import (
-    BM25Retriever)
+"""Service that owns the retriever and the answer generator for the API."""
+import threading
+from pathlib import Path
+from typing import Dict
+
+from all_paths import (
+    ANSWER_CACHE, DATA_CHUNK_FOLDER, PROCESSED_DATA_FOLDER)
+from src.answer_generation.answer import AnswerGenerator
 from src.answer_generation.models.qwen3__0_6B import SmallLLM
 from src.answer_generation.pre_prompt import InitialPromptGenerator
-from src.answer_generation.answer import (
-    AnswerGenerator)
-from src.data_retrieval.resource_refiner import ResourceRefiner
-from src.data_retrieval.chunk_data import (
-    TextChunk, CodeChunk)
+from src.data_retrieval.abstract_classes import Retriever, Update
+from src.data_retrieval.chunk_data import SplitDataByChunks
 from src.data_retrieval.hybrid_retriever import HybridRetriever
+from src.data_retrieval.lexical_retriever import BM25Retriever
+from src.data_retrieval.semantic_retriever import MiniLML6Retriever
+from src.speed_optimization.cache import AnswerCache
+
+METHODS = {
+    "lexical": BM25Retriever,
+    "semantic": MiniLML6Retriever,
+    "hybrid": HybridRetriever,
+}
+
+
+class IndexNotFoundError(Exception):
+    """Raised when `index` has not been run."""
 
 
 class RAGService:
-    def __init__(self):
-        self.retriever = None
-        self.answer_generator = None
-        self.all_chunks = None
-        self.refiner = None
+    """Load the index once, load the LLM on first use, share both.
 
-    def initialize_resources(self):
-        self.retriever = self._get_retriever()
-        self.answer_generator = self._get_answer_generator(self.all_chunks)
-        self.refiner = self._get_refiner(chunk_size=2000, overlap=50)
+    Attributes:
+        method: lexical, semantic or hybrid.
+        device: Device for the language model.
+        retriever: Ready after `initialize_resources`.
+        answer_generator: Created lazily by `get_answer_generator`.
+        cache: Retrieval cache shared by all requests.
+    """
 
-    def _get_retriever(self) -> BM25Retriever:
-        """Helper to initialize resources once."""
-        if self.retriever is None:
-            # 1. Load Chunks
-            all_sources, all_chunks =\
-                SplitDataByChunks.load_from_files("data/chunks")
-            self.all_chunks = all_chunks
+    def __init__(self, method: str = "lexical", device: str = "cpu") -> None:
+        """Create an empty service (nothing is loaded yet).
 
-            # 2. Initialize Retriever
-            self.retriever = HybridRetriever(
-                data=all_chunks,
-                all_minimal_resource=all_sources
-            )
-            # 3. Load Index
-            self.retriever.load_corpus_index(storage_path="data/processed/")
+        Args:
+            method: Retrieval method to serve.
+            device: "cpu" or "cuda" for the language model.
 
-        return self.retriever
+        Raises:
+            ValueError: If the method is unknown.
+        """
+        if method not in METHODS:
+            raise ValueError(
+                f"unknown method {method!r}, choose from {sorted(METHODS)}")
+        self.method = method
+        self.device = device
+        self.retriever: Retriever | None = None
+        self.answer_generator: AnswerGenerator | None = None
+        self.all_chunks: Dict[str, str] = {}
+        self.cache: AnswerCache | None = None
+        self._llm_lock = threading.Lock()
 
-    def _get_answer_generator(
-            self,
-            all_chunks: List[str]
-            ) -> AnswerGenerator:
-        if self.answer_generator is None:
-            print("Initiating answer generator")
-            # 1. Load llm
-            llm = SmallLLM(device_type='cuda')
+    def initialize_resources(self) -> None:
+        """Load the chunks and the saved index (the fast part).
 
-            # 2. Initialize Answer Generator
-            self.answer_generator = AnswerGenerator(
-                model=llm,
-                prompt_generator=InitialPromptGenerator.get_type1_prompt,
-                chunked_texts=all_chunks
+        Raises:
+            IndexNotFoundError: If `index` has not been run.
+        """
+        if self.retriever is not None:
+            return
+        chunks = Path(DATA_CHUNK_FOLDER)
+        if not ((chunks / "data.json").is_file()
+                and Path(PROCESSED_DATA_FOLDER).is_dir()):
+            raise IndexNotFoundError(
+                "index not found. Run `index` first.")
+
+        all_chunks, _ = SplitDataByChunks.load_from_files(
+            DATA_CHUNK_FOLDER)
+        self.all_chunks = all_chunks
+        self.cache = AnswerCache(ANSWER_CACHE)
+
+        retriever = METHODS[self.method](
+            data=all_chunks,
+            update=Update(),  # serving never modifies the index
+            cache=self.cache,
+            method=self.method,
+        )
+        retriever.load_corpus_index(storage_path=PROCESSED_DATA_FOLDER)
+        self.retriever = retriever
+
+    def get_answer_generator(self) -> AnswerGenerator:
+        """Return the generator, loading the LLM on the first call.
+
+        Returns:
+            The shared `AnswerGenerator`.
+        """
+        with self._llm_lock:
+            if self.answer_generator is None:
+                print("Initiating answer generator")
+                if self.cache is None:
+                    raise RuntimeError("call initialize_resources first")
+                self.answer_generator = AnswerGenerator(
+                    model=SmallLLM(device_type=self.device),
+                    prompt_generator=(
+                        InitialPromptGenerator.get_type1_prompt),
+                    chunked_texts=self.all_chunks,
+                    cache=self.cache,
+                    method=self.method,
                 )
         return self.answer_generator
 
-    def _get_refiner(
-        self, chunk_size: int, overlap: int, k: int = 5
-            ) -> ResourceRefiner:
-        return ResourceRefiner(
-            chunk_size=chunk_size,
-            chunk_overlap=overlap,
-            k=k,
-            text_chunk=TextChunk,
-            code_chunk=CodeChunk,
-            retriever=BM25Retriever
-        )
+    def save_cache(self) -> None:
+        """Write the retrieval cache to disk."""
+        if self.cache is not None:
+            self.cache.save_to_answer_cache()

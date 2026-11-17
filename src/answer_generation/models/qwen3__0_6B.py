@@ -1,84 +1,23 @@
-from typing import Any, List, Dict
+"""Qwen3-0.6B wrapper used for answer generation."""
+from typing import Any, Dict, List
+
 import torch
-from pydantic import (
-    BaseModel, PrivateAttr,
-    field_validator, ValidationError, Field)
+from pydantic import BaseModel, Field, PrivateAttr, field_validator
 from transformers import AutoModelForCausalLM, AutoTokenizer
-# from vllm import LLM, SamplingParams
+
 from src.answer_generation.models.abstract_model import Model
-
-
-def hugging_face_example():
-    model_name = "Qwen/Qwen3-0.6B"
-
-    # load the tokenizer and the model
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype="auto",
-        device_map="auto"
-    )
-
-    # prepare the model input
-    prompt = "Give me a short introduction to large language model."
-    messages = [
-        {"role": "user", "content": prompt}
-    ]
-    text = tokenizer.apply_chat_template(
-        messages,
-        tokenize=False,
-        add_generation_prompt=True,
-        # Switches between thinking and non-thinking modes.
-        enable_thinking=True
-    )
-    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
-
-    # conduct text completion
-    generated_ids = model.generate(
-        **model_inputs,
-        max_new_tokens=32768
-    )
-    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
-
-    # # parsing thinking content
-    # try:
-    #     # rindex finding 151668 (</think>)
-    #     index = len(output_ids) - output_ids[::-1].index(151668)
-    # except ValueError:
-    index = 0
-
-    # thinking_content = tokenizer.decode(
-    #     output_ids[:index], skip_special_tokens=True).strip("\n")
-    content = tokenizer.decode(
-        output_ids[index:], skip_special_tokens=True).strip("\n")
-
-    # print("thinking content:", thinking_content)
-    print("content:", content)
-
 
 ALLOWED_DEVICE_TYPES = ('cuda', 'cpu', None)
 
-# class SmallvLLM(BaseModel, Model):
-#     _llm: LLM = PrivateAttr()
-
-#     def model_post_init(self, __context: Any) -> None:
-#         self._llm = LLM(
-#             model="Qwen/Qwen3-0.6B",
-#             gpu_memory_utilization=0.7,
-#             trust_remote_code=True,
-#             max_model_len=2048
-#         )
-
-#     def generate_answer(
-#             self, resources: List[Dict],
-#             tokens_limit: int = Field(gt=0, default=500)
-#             ) -> str:
-#         sampling_params = SamplingParams(temperature=0.3, max_tokens=256)
-#         answers = self._llm.generate([resources], sampling_params)
-#         return answers[0].outputs[0].text
-
 
 class SmallLLM(BaseModel, Model):
+    """Qwen3-0.6B in non-thinking mode, with deterministic decoding.
+
+    Attributes:
+        model_name: Hugging Face model id.
+        device_type: "cuda", "cpu", or None to pick automatically.
+    """
+
     model_name: str = "Qwen/Qwen3-0.6B"
     device_type: str | None = None
 
@@ -88,53 +27,79 @@ class SmallLLM(BaseModel, Model):
     @field_validator("device_type", mode="before")
     @classmethod
     def validate_device_type(cls, device: str | None) -> str:
+        """Check the device name and resolve None to cuda or cpu.
+
+        Args:
+            device: "cuda", "cpu" or None.
+
+        Returns:
+            The device to use. Falls back to cpu if cuda is requested
+            but not available.
+
+        Raises:
+            ValueError: If the device name is unknown.
+        """
         if device not in ALLOWED_DEVICE_TYPES:
-            raise ValidationError(
+            raise ValueError(
                 f"'{device}' is unknown device type. "
-                f"Allowed types are {ALLOWED_DEVICE_TYPES[:-1]}"
-            )
+                f"Allowed types are {ALLOWED_DEVICE_TYPES[:-1]}")
         if device is None:
-            if torch.cuda.is_available():
-                device = "cuda"
-            else:
-                device = "cpu"
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+        elif device == "cuda" and not torch.cuda.is_available():
+            print("Warning: cuda requested but not available, using cpu")
+            device = "cpu"
         return device
 
     def model_post_init(self, __context: Any) -> None:
+        """Load the tokenizer and the model (slow: done once).
+
+        float32 is used on purpose: on CPUs without native float16
+        support it was about 10 times faster in our measurements.
+        """
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             dtype=torch.float32,
             device_map="auto" if self.device_type == "cuda" else None,
-            trust_remote_code=True
+            tie_word_embeddings=False,  # silences the tied-weights warning
         )
+        self._model.eval()
 
     def generate_answer(
             self, resources: List[Dict],
-            tokens_limit: int = Field(gt=0, default=500)
+            tokens_limit: int = 500
             ) -> str:
+        """Generate an answer for a chat prompt.
+
+        Args:
+            resources: Chat messages (system and user) built by the
+                prompt generator.
+            tokens_limit: Maximum number of new tokens.
+
+        Returns:
+            The answer text, without the prompt and without thinking.
+
+        Raises:
+            ValueError: If `tokens_limit` is not positive.
+        """
+        if tokens_limit <= 0:
+            raise ValueError("tokens_limit must be positive")
         prompt = self._tokenizer.apply_chat_template(
             resources, tokenize=False,
             add_generation_prompt=True,
             enable_thinking=False
         )
         model_inputs = self._tokenizer(
-            [prompt], return_tensors="pt").to(self.device_type)
+            [prompt], return_tensors="pt").to(self._model.device)
 
-        outputs = self._model.generate(
-            **model_inputs,
-            max_new_tokens=tokens_limit
-        )
+        with torch.inference_mode():
+            outputs = self._model.generate(
+                **model_inputs,
+                max_new_tokens=tokens_limit,
+                do_sample=False,  # repeatable, fewer invented details
+            )
 
-        output_ids = outputs[0][len(model_inputs.input_ids[0]):].tolist()
-        content = self._tokenizer.decode(
-            output_ids, skip_special_tokens=True).strip("\n")
-        return content
-
-
-# def test_small_vllm() -> None:
-#     llm = SmallvLLM()
-#     prompt = "This a test prompt"
-
-if __name__ == "__main__":
-    hugging_face_example()
+        output_ids = outputs[0][model_inputs.input_ids.shape[1]:]
+        return str(self._tokenizer.decode(
+            output_ids, skip_special_tokens=True)).strip()
+    

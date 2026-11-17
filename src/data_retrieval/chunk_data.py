@@ -1,53 +1,99 @@
+"""Chunking of the corpus and incremental bookkeeping of what changed."""
 import json
-from tqdm import tqdm
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+from langchain_core.documents import Document
+from langchain_text_splitters import (
+    RecursiveCharacterTextSplitter, Language)
 from pydantic import (
     BaseModel, Field,
     PrivateAttr, validate_call)
-from typing import List, Dict, Tuple, Any
-from langchain_text_splitters import (
-    RecursiveCharacterTextSplitter, Language)
-from langchain_core.documents import Document
+from tqdm import tqdm
+
+from src.base_patterns import MinimalSource
+from .abstract_classes import DataChunk, Update
 from .helper_classes import (
     DataManager, ExistingPath,
     FileFormats, prepare_storage_folder)
-from src.base_patterns import MinimalSource
-from .abstract_classes import DataChunk, Update
 
 
 class TextChunk(DataChunk):
+    """Chunker for plain text and Markdown."""
+
     @validate_call
     def process(self, document: str,
                 chunk_overlap: int = 0) -> List[Document]:
+        """Split text on paragraphs, lines, then words.
+
+        Args:
+            document: Full file text.
+            chunk_overlap: Characters shared by neighbouring chunks.
+
+        Returns:
+            Chunks, each with `start_index` in its metadata.
+        """
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=chunk_overlap,
             add_start_index=True)
-
-        docs = text_splitter.create_documents([document])
-        return docs
+        return text_splitter.create_documents([document])
 
 
 class CodeChunk(DataChunk):
+    """Chunker that cuts source code at language-aware boundaries.
+
+    Attributes:
+        coding_language: Language whose separators are used.
+    """
+
     coding_language: Language = Field(default=Language.PYTHON)
 
     @validate_call
     def set_language(self, language: str) -> None:
+        """Choose the language.
+
+        Args:
+            language: A value of `langchain_text_splitters.Language`.
+        """
         self.coding_language = Language(language)
 
     @validate_call
     def process(self, document: str, chunk_overlap: int = 0) -> List[Document]:
+        """Split source code on class and function boundaries first.
+
+        Args:
+            document: Full file text.
+            chunk_overlap: Characters shared by neighbouring chunks.
+
+        Returns:
+            Chunks, each with `start_index` in its metadata.
+        """
         code_splitter = RecursiveCharacterTextSplitter.from_language(
             language=self.coding_language,
             chunk_size=self.chunk_size,
             chunk_overlap=chunk_overlap,
             add_start_index=True)
-
-        docs = code_splitter.create_documents([document])
-        return docs
+        return code_splitter.create_documents([document])
 
 
 class SplitDataByChunks(BaseModel):
+    """Chunk the corpus, optionally only the files that changed.
+
+    With `use_indexing=True`, a manifest (`indexed_data.json`) stores
+    each file's hash and chunks. Only added or changed files are
+    re-chunked, and `Update` lists what the vector store must delete
+    and add.
+
+    Attributes:
+        all_paths: extension -> files, from `FilesInDir`.
+        folder: Folder for the manifest, `data.json`, `update.json`.
+        chunk_size: Maximum characters per chunk.
+        code_overlap: Overlap for code chunks.
+        txt_overlap: Overlap for text chunks.
+        use_indexing: Enable the incremental mode.
+    """
+
     all_paths: Dict[str, List[Path]]
     folder: str
     chunk_size: int = Field(gt=20, default=200)
@@ -55,62 +101,80 @@ class SplitDataByChunks(BaseModel):
     txt_overlap: int = Field(ge=0, default=0)
     use_indexing: bool = Field(default=False)
 
-    # Private attributes
-    _resaving_required: bool = True
-    _indexing_storage_path: str = PrivateAttr(default=str)
-    _exist_indexing_storage: bool = False
-    _all_chunks: List[MinimalSource] = PrivateAttr(default=list())
-    _all_chunk_txt: List[str] = PrivateAttr(default=list())
-    _indexing_storage: Dict = PrivateAttr(default=dict())
-    _all_chunks_with_id: Dict = PrivateAttr(default=dict())
-    _chunks_to_be_updated: Update = Update(reset_flag=False, add={}, remove={})
+    # Private attributes (default_factory: never shared between instances)
+    _resaving_required: bool = PrivateAttr(default=True)
+    _indexing_storage_path: str = PrivateAttr(default="")
+    _exist_indexing_storage: bool = PrivateAttr(default=False)
+    _all_chunks: List[MinimalSource] = PrivateAttr(default_factory=list)
+    _all_chunk_txt: List[str] = PrivateAttr(default_factory=list)
+    _indexing_storage: Dict = PrivateAttr(default_factory=dict)
+    _all_chunks_with_id: Dict = PrivateAttr(default_factory=dict)
+    _chunks_to_be_updated: Update = PrivateAttr(default_factory=Update)
 
-    def model_post_init(self, __context) -> Any:
+    def model_post_init(self, __context: Any) -> None:
+        """Load (or create) the manifest when indexing is enabled."""
         if self.use_indexing:
-            self._indexing_storage_path = "/".join([self.folder, 'indexed_data.json'])
+            self._indexing_storage_path = \
+                "/".join([self.folder, 'indexed_data.json'])
             self.prepare_indexing_storage()
 
-    def get_all_data(self) -> Tuple[Dict, Dict]:
+    def get_all_data(self) -> Tuple[Dict, Update]:
+        """Return (chunk id -> text, pending vector-store update)."""
         return self._all_chunks_with_id, self._chunks_to_be_updated
 
     def prepare_indexing_storage(self) -> None:
+        """Load the manifest, or start a fresh one.
+
+        A fresh start (missing or corrupt manifest, or other settings)
+        also sets `reset_flag`: the manifest describes what the vector
+        store holds, so without it the store cannot be trusted.
+        """
         try:
             with open(
                     self._indexing_storage_path, "r",
                     encoding="utf-8", newline="") as fl:
-                self._indexing_storage = json.load(fl)
-            if self.validate_settings(
-                    self._indexing_storage.get("settings")):
+                loaded = json.load(fl)
+            if (isinstance(loaded, dict)
+                    and isinstance(loaded.get("files"), dict)
+                    and isinstance(loaded.get("settings"), dict)
+                    and self.validate_settings(loaded["settings"])):
+                self._indexing_storage = loaded
                 self._exist_indexing_storage = True
-            else:
-                self._prepare_fresh_storage()
-                self._chunks_to_be_updated.reset_flag = True
-        except (OSError, json.JSONDecodeError, FileNotFoundError):
-            self._prepare_fresh_storage()
+                return
+        except (OSError, ValueError):  # missing, unreadable, bad JSON
+            pass
+        self._prepare_fresh_storage()
+        self._chunks_to_be_updated.reset_flag = True
 
-    def _prepare_fresh_storage(self) -> Dict:
-        path = Path(self._indexing_storage_path)
+    def _prepare_fresh_storage(self) -> None:
+        """Create an empty in-memory manifest with the current settings."""
         prepare_storage_folder(self.folder)
-        path.touch()
-        self._indexing_storage = {}
-        self._indexing_storage["settings"] = {
-            "chunk_size": self.chunk_size,
-            "code_overlap": self.code_overlap,
-            "txt_overlap": self.txt_overlap,
+        self._indexing_storage = {
+            "settings": {
+                "chunk_size": self.chunk_size,
+                "code_overlap": self.code_overlap,
+                "txt_overlap": self.txt_overlap,
+            },
+            "files": {},
         }
-        self._indexing_storage["files"] = {}
 
     def validate_settings(self, settings: Dict) -> bool:
-        existing_chunk_size = settings.get("chunk_size")
-        existing_text_overlap = settings.get("txt_overlap")
-        existing_code_overlap = settings.get("code_overlap")
+        """Tell whether saved settings equal the current ones.
+
+        Args:
+            settings: The `settings` block of a saved manifest.
+
+        Returns:
+            True if chunk size and both overlaps match.
+        """
         return (
-            self.chunk_size == existing_chunk_size and
-            self.code_overlap == existing_code_overlap and
-            self.txt_overlap == existing_text_overlap
+            self.chunk_size == settings.get("chunk_size")
+            and self.code_overlap == settings.get("code_overlap")
+            and self.txt_overlap == settings.get("txt_overlap")
         )
 
     def save_chunked_data(self) -> None:
+        """Write the manifest, `data.json` and `update.json`."""
         if self._resaving_required:
             if self.use_indexing:
                 DataManager.save_data(
@@ -124,13 +188,21 @@ class SplitDataByChunks(BaseModel):
     @validate_call
     def load_from_files(
         storage_folder: ExistingPath
-            ) -> Tuple[Dict, Dict, bool]:
+            ) -> Tuple[Dict, Dict]:
+        """Load the files written by `save_chunked_data`.
 
+        Args:
+            storage_folder: Folder holding `data.json`, `update.json`.
+
+        Returns:
+            (chunk id -> text, update as a dict).
+
+        Raises:
+            OSError: If a file is missing or unreadable.
+            ValueError: If a file is not valid JSON.
+        """
         all_data_source = "/".join([storage_folder, 'data.json'])
         all_update_source = "/".join([storage_folder, 'update.json'])
-
-        all_data = {}
-        all_update = {}
 
         with open(all_data_source, 'r', encoding="utf-8", newline="") as fl:
             all_data = json.load(fl)
@@ -141,12 +213,14 @@ class SplitDataByChunks(BaseModel):
         return all_data, all_update
 
     def chunk_all_files(self) -> None:
+        """Chunk everything (full mode) or only what changed."""
         if self.use_indexing:
             self._chunk_files_with_indexing()
         else:
             self._chunk_files()
 
     def _extract_allowed_file_paths(self) -> List[Dict]:
+        """List `{syntax: path}` for every file type we can chunk."""
         allowed_paths = []
         for syntax, paths in self.all_paths.items():
             if syntax in FileFormats.CODING_LANGUAGES.value or \
@@ -156,151 +230,113 @@ class SplitDataByChunks(BaseModel):
         return allowed_paths
 
     def chunk_to_be_removed(self, files: Dict) -> None:
+        """Mark chunks (id -> {"text": ...}) for deletion."""
         self._chunks_to_be_updated.remove.update(
             {k: v["text"] for k, v in files.items()}
         )
 
     def chunk_to_be_added(self, files: Dict) -> None:
+        """Mark chunks (id -> {"text": ...}) for insertion."""
         self._chunks_to_be_updated.add.update(
             {k: v["text"] for k, v in files.items()}
         )
 
+    def _chunk_one_file(self, syntax: str, path: str,
+                        text_chunk: TextChunk,
+                        code_chunk: CodeChunk) -> Dict[str, Dict]:
+        """Chunk one file into `id -> {first, last, text}`.
+
+        The text is read raw (no JSON parsing), so offsets match the
+        file on disk.
+        """
+        data = DataManager.load_text(path)
+        if syntax in FileFormats.CODING_LANGUAGES.value:
+            code_chunk.set_language(syntax)
+            docs = code_chunk.process(
+                document=data, chunk_overlap=self.code_overlap)
+        else:
+            docs = text_chunk.process(
+                document=data, chunk_overlap=self.txt_overlap)
+        chunks: Dict[str, Dict] = {}
+        for doc in docs:
+            start = doc.metadata["start_index"]
+            end = start + len(doc.page_content)
+            chunks[f"{path}:{start}:{end}"] = {
+                "first": start, "last": end, "text": doc.page_content}
+        return chunks
+
     def _chunk_files_with_indexing(self) -> None:
+        """Re-chunk added and changed files, drop removed ones.
+
+        Raises:
+            Exception: If a file cannot be chunked (names the file).
+        """
         text_chunk = TextChunk(chunk_size=self.chunk_size)
         code_chunk = CodeChunk(chunk_size=self.chunk_size)
+        files: Dict[str, Dict] = self._indexing_storage["files"]
 
         allowed_paths = self._extract_allowed_file_paths()
+        on_disk = {list(p.values())[0] for p in allowed_paths}
+
+        # Files deleted from disk: their chunks must leave the store.
+        for gone in [p for p in files if p not in on_disk]:
+            self.chunk_to_be_removed(files[gone].get("chunks", {}))
+            del files[gone]
 
         for path_info in tqdm(allowed_paths, desc="Chunking Documents"):
             syntax, path = list(path_info.items())[0]
             try:
-                existing_data = self._indexing_storage.get("files").get(str(path))
-                if existing_data:
-                    hash = DataManager.generate_hash(path)
-                    existing_hash = existing_data.get("hash")
-                    if existing_hash is not None and existing_hash == hash:
-                        continue
-                    else:
-                        self._indexing_storage[
-                            "files"][str(path)]["hash"] = hash
-                        self.chunk_to_be_removed(
-                            self._indexing_storage[
-                                "files"][str(path)]["chunks"]
-                        )
-                else:
-                    self._indexing_storage["files"][str(path)] = {}
-                    self._indexing_storage[
-                        "files"][str(path)]["hash"] = \
-                        DataManager.generate_hash(path)
-
-                data = DataManager.load_data(str(path))
-                if syntax in FileFormats.CODING_LANGUAGES.value:
-                    code_chunk.set_language(syntax)
-                    data_chunks = code_chunk.process(
-                        document=data,
-                        chunk_overlap=self.code_overlap)
-                else:
-                    data_chunks = text_chunk.process(
-                        document=str(data),
-                        chunk_overlap=self.txt_overlap)
-
-                self._indexing_storage["files"][str(path)]["chunks"] = {}
-                for doc in data_chunks:
-                    start = doc.metadata["start_index"]
-                    self._indexing_storage[
-                        "files"][str(path)]["chunks"].update(
-                        {
-                            f"{path}:{start}:{start + len(doc.page_content)}":
-                            {
-                                "first": start,
-                                "last": start + len(doc.page_content),
-                                "text": doc.page_content,
-                            }
-                        })
-                self.chunk_to_be_added(
-                    self._indexing_storage["files"][str(path)]["chunks"])
-
+                new_hash = DataManager.generate_hash(path)
+                existing = files.get(path)
+                if existing and existing.get("hash") == new_hash:
+                    continue  # unchanged
+                if existing:
+                    # Collect the old ids BEFORE overwriting the entry.
+                    self.chunk_to_be_removed(existing.get("chunks", {}))
+                chunks = self._chunk_one_file(
+                    syntax, path, text_chunk, code_chunk)
+                files[path] = {"hash": new_hash, "chunks": chunks}
+                self.chunk_to_be_added(chunks)
             except Exception as e:
-                raise Exception(f"{e}")
+                raise Exception(f"Failed to chunk '{path}': {e}") from e
 
         self._rebuild_flat_lists()
 
     def _rebuild_flat_lists(self) -> None:
+        """Derive the flat lists from the manifest (never saved)."""
         self._all_chunks = []
         self._all_chunk_txt = []
         self._all_chunks_with_id = {}
         for p in sorted(self._indexing_storage["files"]):
-            for id, c in self._indexing_storage["files"][p]["chunks"].items():
-                # id, c = list(info.items())[0]
+            for chunk_id, c in \
+                    self._indexing_storage["files"][p]["chunks"].items():
                 self._all_chunks.append(MinimalSource(
                     file_path=p,
                     first_character_index=c["first"],
                     last_character_index=c["last"]))
                 self._all_chunk_txt.append(c["text"])
-                self._all_chunks_with_id.update(
-                    {id: c["text"]}
-                )
+                self._all_chunks_with_id[chunk_id] = c["text"]
 
     def _chunk_files(self) -> None:
+        """Chunk every file from scratch (no manifest, no update)."""
         text_chunk = TextChunk(chunk_size=self.chunk_size)
         code_chunk = CodeChunk(chunk_size=self.chunk_size)
 
         for syntax, paths in self.all_paths.items():
-            try:
-                if syntax in FileFormats.CODING_LANGUAGES.value:
-                    # print(f"Coding_language: {syntax}")
-                    for path in paths:
-                        data = DataManager.load_data(str(path))
-                        code_chunk.set_language(syntax)
-                        data_chunks = code_chunk.process(
-                            document=data,
-                            chunk_overlap=self.code_overlap)
-                        self.store_data_chunks(
-                            self._all_chunks, data_chunks,
-                            str(path))
-                elif syntax in FileFormats.TXT_LANGUAGES.value:
-                    for path in paths:
-                        data = DataManager.load_data(str(path))
-                        data_chunks = text_chunk.process(
-                            document=str(data),
-                            chunk_overlap=self.txt_overlap)
-                        self.store_data_chunks(
-                            self._all_chunks, data_chunks,
-                            str(path))
-            except Exception as e:
-                raise Exception(f"{e}")
-
-    def store_data_chunks(self, storage: List[MinimalSource],
-                          data_chunks: List[Document], path: str) -> None:
-        for doc in data_chunks:
-            start = doc.metadata["start_index"]
-            end = start + len(doc.page_content)
-            minimal_source = MinimalSource(
-                file_path=path,
-                first_character_index=start,
-                last_character_index=end
-            )
-            self._all_chunk_txt.append(doc.page_content)
-            storage.append(minimal_source)
-
-
-# ------------- Tests---------------------
-
-def test_text_chunking() -> None:
-    text = (
-        "Welcome to the world of False Positives! This is a classic challenge "
-        "in RAG. Because BM25 is a 'keyword matcher' and not a "
-        "meaning understander, it can easily get distracted by a chunk"
-        " that has the same words but a completely different context."
-    )
-    text_splitter = TextChunk(chunk_size=100)
-    docs = text_splitter.process(text, 10)
-    for doc in docs:
-        print(f"start: {doc.metadata.get("start_index")}, "
-              f"stop: {doc.metadata.get("start_index", 0)
-                       + len(doc.page_content)}, "
-              f"content: {doc.page_content}")
-
-
-if __name__ == "__main__":
-    test_text_chunking()
+            if (syntax not in FileFormats.CODING_LANGUAGES.value
+                    and syntax not in FileFormats.TXT_LANGUAGES.value):
+                continue
+            for path in paths:
+                try:
+                    chunks = self._chunk_one_file(
+                        syntax, str(path), text_chunk, code_chunk)
+                except Exception as e:
+                    raise Exception(
+                        f"Failed to chunk '{path}': {e}") from e
+                for chunk_id, c in chunks.items():
+                    self._all_chunks.append(MinimalSource(
+                        file_path=str(path),
+                        first_character_index=c["first"],
+                        last_character_index=c["last"]))
+                    self._all_chunk_txt.append(c["text"])
+                    self._all_chunks_with_id[chunk_id] = c["text"]

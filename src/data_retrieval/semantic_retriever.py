@@ -1,71 +1,118 @@
-import chromadb
-import torch
+"""Semantic retrieval: MiniLM embeddings stored in a Chroma collection."""
 import uuid
-from tqdm import tqdm
-from chromadb.utils import embedding_functions
-from pydantic import PrivateAttr, Field, validate_call
-from typing import Annotated, List
-# from sentence_transformers import SentenceTransformer
-from ..data_retrieval.abstract_classes import Retriever
-from ..base_patterns import MinimalSearchResults, MinimalSource
+from functools import cache
+from typing import Annotated, Any, List
 
+import chromadb
+from pydantic import Field, PrivateAttr, validate_call
+from tqdm import tqdm
+
+from ..base_patterns import MinimalSearchResults, MinimalSource
+from ..data_retrieval.abstract_classes import Retriever
 
 CHROMADB_BATCH_SIZE = 128
+COLLECTION_NAME = "vLLM"
+MODEL_NAME = "all-MiniLM-L6-v2"
+
+
+@cache
+def get_embedding_function() -> Any:
+    """Create the embedding function once, on first use.
+
+    Lazy, so commands that never embed (index with lexical, CLI errors)
+    do not pay for importing torch or loading the model.
+    """
+    import torch  # lazy import: heavy, only needed here
+    from chromadb.utils import embedding_functions
+    return embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=MODEL_NAME,
+        device="cuda" if torch.cuda.is_available() else "cpu")
 
 
 class MiniLML6Retriever(Retriever):
-    _embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name="all-MiniLM-L6-v2",
-        device="cuda" if torch.cuda.is_available() else "cpu"
-        )
-    _client = PrivateAttr()
-    _collection = PrivateAttr()
+    """Nearest-neighbour search over chunk embeddings.
 
-    def create_and_save_corpus_index(self, storage_path):
-        if isinstance(self.data, dict):
-            self._client = chromadb.PersistentClient(path=storage_path)
+    Chunk ids (`path:first:last`) are the Chroma ids, so a result maps
+    back to a source without any list position.
+    """
 
+    _client: Any = PrivateAttr(default=None)
+    _collection: Any = PrivateAttr(default=None)
+
+    def create_and_save_corpus_index(self, storage_path: str) -> None:
+        """Apply `self.update` to the Chroma collection.
+
+        Order: reset (if flagged), delete removed ids, add new chunks.
+        Afterwards the collection size must equal the chunk count; a
+        mismatch means the store and the chunk files disagree.
+
+        Args:
+            storage_path: Folder of the persistent Chroma store.
+
+        Raises:
+            Exception: If the collection ends up with a different
+                number of chunks than `self.data`.
+        """
+        self._client = chromadb.PersistentClient(path=storage_path)
+
+        if self.update.reset_flag:
+            print("Removing old semantic tokens...")
             try:
-                if self.update.reset_flag:
-                    print("Removing old semantic tokens...")
-                    self._client.delete_collection("vLLM")
+                self._client.delete_collection(COLLECTION_NAME)
             except Exception:
-                pass
+                pass  # nothing to delete on a first run
 
-            self._collection = self._client.get_or_create_collection(
-                name="vLLM",
-                embedding_function=self._embed_fn
-            )
+        self._collection = self._client.get_or_create_collection(
+            name=COLLECTION_NAME,
+            embedding_function=get_embedding_function())
 
-            # remove_data = list(self.update.remove.values())
-            remove_data_ids = list(self.update.remove.keys())
-            add_data = list(self.update.add.values())
-            add_data_ids = list(self.update.add.keys())
+        remove_ids = list(self.update.remove.keys())
+        add_ids = list(self.update.add.keys())
+        add_texts = list(self.update.add.values())
 
-            for i in tqdm(
-                range(0, len(remove_data_ids), CHROMADB_BATCH_SIZE),
-                    desc="Removing Embeddings"):
-                self._collection.delete(
-                        ids=remove_data_ids[i: i + CHROMADB_BATCH_SIZE]
-                    )
+        for i in tqdm(range(0, len(remove_ids), CHROMADB_BATCH_SIZE),
+                      desc="Removing Embeddings"):
+            self._collection.delete(
+                ids=remove_ids[i: i + CHROMADB_BATCH_SIZE])
 
-            for i in tqdm(
-                range(0, len(add_data), CHROMADB_BATCH_SIZE),
-                    desc="Adding Embeddings"):
-                batch_data = add_data[i: i + CHROMADB_BATCH_SIZE]
-                batch_ids = add_data_ids[i: i + CHROMADB_BATCH_SIZE]
+        for i in tqdm(range(0, len(add_texts), CHROMADB_BATCH_SIZE),
+                      desc="Adding Embeddings"):
+            self._collection.upsert(
+                ids=add_ids[i: i + CHROMADB_BATCH_SIZE],
+                documents=add_texts[i: i + CHROMADB_BATCH_SIZE])
 
-                self._collection.upsert(
-                    ids=batch_ids,
-                    documents=batch_data
-                )
-            print(f"{self._collection.count()} chunks are saved in Chroma DB")
+        count = self._collection.count()
+        print(f"{count} chunks are saved in Chroma DB")
+        if count != len(self.data):
+            raise Exception(
+                f"Chroma holds {count} chunks but there are "
+                f"{len(self.data)}. Delete data/processed and "
+                "data/chunks, then run `index` again.")
 
-    def load_corpus_index(self, storage_path):
+    def load_corpus_index(self, storage_path: str) -> None:
+        """Open the saved collection WITHOUT modifying it.
+
+        Args:
+            storage_path: Folder of the persistent Chroma store.
+
+        Raises:
+            Exception: If the collection is missing or does not match
+                the chunk file.
+        """
         try:
-            self.create_and_save_corpus_index(storage_path)
+            self._client = chromadb.PersistentClient(path=storage_path)
+            self._collection = self._client.get_collection(
+                name=COLLECTION_NAME,
+                embedding_function=get_embedding_function())
         except Exception as e:
-            raise Exception(f"Indexed corpus loading failed. Error: {e}")
+            raise Exception(
+                f"Indexed corpus loading failed. Run `index` first. "
+                f"Error: {e}") from e
+        count = self._collection.count()
+        if count != len(self.data):
+            raise Exception(
+                f"Chroma holds {count} chunks but the chunk file has "
+                f"{len(self.data)}. Run `index` again.")
 
     @validate_call
     def retrieve_from_raw_data(
@@ -75,80 +122,59 @@ class MiniLML6Retriever(Retriever):
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
             ) -> MinimalSearchResults:
+        """Query the collection (no cache lookup) and store the result.
 
-        results = self._collection.query(
-            query_texts=[question],
-            n_results=k
-        )
+        Args:
+            hash: Cache key for this question.
+            question: Question text.
+            k: Number of sources (clamped to the collection size).
+            question_id: Id for the result (a new UUID if None).
 
+        Returns:
+            Sources and distances (lower is closer), best first.
+        """
         if question_id is None:
             question_id = str(uuid.uuid4())
 
-        keys = results['ids'][0]
-        sources = self.get_all_minimal_source(keys)
+        n_results = min(k, self._collection.count())
+        if n_results == 0:
+            return MinimalSearchResults(
+                question=question, question_id=question_id,
+                retrieved_sources_scores=[], retrieved_sources=[])
+
+        results = self._collection.query(
+            query_texts=[question], n_results=n_results)
+        scores = [float(d) for d in results['distances'][0]]
+        sources = self.get_all_minimal_source(results['ids'][0])
 
         self.cache.update_answer_cache(
-            hash=hash,
-            scores=results['distances'][0],
-            resources=sources,
-            question_id=question_id
-            )
+            hash=hash, scores=scores, resources=sources,
+            question_id=question_id)
 
         return MinimalSearchResults(
             question=question,
             question_id=question_id,
-            retrieved_sources_scores=results['distances'][0],
+            retrieved_sources_scores=scores,
             retrieved_sources=sources
         )
 
     def get_all_minimal_source(
             self, ids: List) -> List[MinimalSource]:
-        all_minimal_sources: List[MinimalSource] = []
-        for i in ids:
-            parts = str(i).split(":")
-            if len(parts) > 3:
-                path = ":".join(parts[:-2])
-            else:
-                path = parts[0]
-            all_minimal_sources.append(
-                MinimalSource(
-                    file_path=path,
-                    first_character_index=int(parts[-2]),
-                    last_character_index=int(parts[-1])
-                )
-            )
-        return all_minimal_sources
+        """Convert chunk ids (`path:first:last`) to sources.
 
+        The path may contain ':', so the id is split from the right.
 
-def chromadb_test():
-    chroma_client = chromadb.PersistentClient(path="data/vector_data")
-    embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name="all-MiniLM-L6-v2"
-    )
-    collection = chroma_client.get_or_create_collection(
-        name="test_collection",
-        embedding_function=embed_fn
-        )
+        Args:
+            ids: Chroma ids.
 
-    collection.upsert(
-        ids=["0", "1", "2", "3"],
-        documents=[
-            "This is a document about pineapple",
-            "This is a document about oranges",
-            "This is a document about apples",
-            "This is a document about Fish"
-        ]
-    )
-
-    results = collection.query(
-        query_texts=["i want orange"],
-        n_results=3
-    )
-
-    print(results['ids'][0], results['distances'][0])
-    print(results)
-
-
-if __name__ == "__main__":
-    print("testing ChromaDB")
-    chromadb_test()
+        Returns:
+            One `MinimalSource` per id.
+        """
+        sources: List[MinimalSource] = []
+        for chunk_id in ids:
+            path, first, last = str(chunk_id).rsplit(":", 2)
+            sources.append(MinimalSource(
+                file_path=path,
+                first_character_index=int(first),
+                last_character_index=int(last)))
+        return sources

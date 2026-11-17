@@ -37,16 +37,10 @@ uv run python3 -m src index --max_chunk_size 2000
 uv run python3 -m src search --query "what is vLLM" --k 10
 
 # Run search over the full dataset
-uv run python3 -m src search_dataset \
-  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_code_public.json" \
-  --k 10 \
-  --save_directory "data/output/sources_code.json"
+uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_docs_public.json" --k 10 --save_directory "data/output/search_results/AnsweredQuestions"
 
 # Run search over the full dataset
-uv run python3 -m src search_dataset \
-  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_docs_public.json" \
-  --k 10 \
-  --save_directory "data/output/sources_docs.json"
+uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/search_results/AnsweredQuestions"
 
 # Answer a single question
 uv run python3 -m src answer --question "what is vLLM?" --k 10
@@ -88,6 +82,10 @@ uv run uvicorn src.api.main:app --reload  # Serves on http://localhost:8000
 
 Then open [http://localhost:8501](http://localhost:8501) in your browser.
 
+
+tests
+uv run pytest tests/test_cli_errors.py -q
+uv run pytest tests/test_retrieval.py -q -s
 ---
 
 ## System Architecture

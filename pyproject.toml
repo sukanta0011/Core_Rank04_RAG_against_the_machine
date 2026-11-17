@@ -31,3 +31,6 @@ explicit = true
 dev = [
     "pytest>=9.0.3",
 ]
+
+[tool.mypy]
+exclude = ["^\\.venv/", "^data/", "^tests/"]
