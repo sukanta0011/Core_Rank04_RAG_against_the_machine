@@ -16,6 +16,7 @@ from src.data_retrieval.resource_refiner import ResourceRefiner
 from ..speed_optimization.cache import AnswerCache
 
 NO_CONTEXT_ANSWER = "I cannot find this in the provided context."
+MAX_ALLOWED_CONTEXT = 3
 
 
 class AnswerGenerator(BaseModel):
@@ -114,8 +115,8 @@ class AnswerGenerator(BaseModel):
             context = self._extract_resource(
                 search_result.retrieved_sources, self.chunked_texts)
 
-        if len(context) > 3:
-            context = context[:1]
+        if len(context) > MAX_ALLOWED_CONTEXT:
+            context = context[: MAX_ALLOWED_CONTEXT]
 
         pre_prompt = self.prompt_generator(
             question=search_result.question, context=context)

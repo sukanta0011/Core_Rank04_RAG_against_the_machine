@@ -1,241 +1,229 @@
+*This project has been created as part of the 42 curriculum by sudas.*
+
 # RAG Against the Machine
 
-*A 42 Prague curriculum project by sudas*
-
----
+![demo](screenshots/ScreencastFrom2026-04-2101-59-06-ezgif.com-speed.gif)
 
 ## Description
 
-Retrieval-Augmented Generation (RAG) is an advanced information retrieval technique that goes beyond simple keyword matching. It combines chunking, lexical search, and semantic search to locate relevant document sections, then feeds those sections to a language model to generate a precise, sourced answer.
+**Goal.** Build a Retrieval-Augmented Generation (RAG) system that answers questions about a codebase. The target is the [vLLM](https://github.com/vllm-project/vllm) 0.10.1 repository. Given a question, the system:
 
-This project targets the [vLLM](https://github.com/vllm-project/vllm) GitHub repository. Given a natural language question, the system retrieves the most relevant chunks from vLLM's documentation and source code, and generates a grounded answer based on those sources. Performance is evaluated against 100 ground-truth question-answer pairs across both documentation and code datasets.
+1. retrieves the most relevant snippets (a file path plus a character range),
+2. gives them to a small local model (`Qwen/Qwen3-0.6B`),
+3. returns an answer grounded in those snippets.
 
-![](screenshots/ScreencastFrom2026-04-2101-59-06-ezgif.com-speed.gif)
+**Overview.** Retrieval quality is measured with recall@k against ground-truth source locations, on a documentation dataset and a code dataset. A source counts as found when the file path matches exactly and the character ranges overlap with IoU >= 0.05. Required thresholds at k=5: 80% (docs) and 50% (code).
 
----
+**Features**
+- Two chunking strategies (code and Markdown/text)
+- Lexical (BM25), semantic (ChromaDB + MiniLM) and hybrid (RRF) retrieval
+- Grounded answer generation with Qwen3-0.6B
+- CLI built with Python Fire, with progress bars (tqdm)
+- Bonuses: semantic embeddings, hybrid retrieval, incremental indexing, caching, local HTTP API (FastAPI) with a Streamlit frontend
 
-## Installation & Usage
+## Instructions
 
-### Setup
-Prerequisites
-Python 3.10+
-UV: to manage dependencies.
-
-Clone the repository and install all dependencies from the project root:
-
-```bash
-uv sync
-```
-
-### CLI Commands
+**Requirements:** Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-# Index the document corpus
-uv run python3 -m src index --max_chunk_size 2000
-
-# Run a single search query
-uv run python3 -m src search --query "what is vLLM" --k 10
-
-# Run search over the full dataset
-uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_docs_public.json" --k 10 --save_directory "data/output/search_results/UnansweredQuestions"
-
-# Run search over the full dataset
-uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/search_results/UnansweredQuestions"
-
-# Answer a single question
-uv run python3 -m src answer --question "what is vLLM?" --k 10
-
-# Answer questions over the full dataset
-uv run python -m src answer_dataset --student_search_results_path data/output/search_results/UnansweredQuestions/dataset_docs_public.json --save_directory data/output/search_results_and_answer/UnansweredQuestions
-
-uv run python -m src answer_dataset --student_search_results_path data/output/search_results/UnansweredQuestions/dataset_code_public.json --save_directory data/output/search_results_and_answer/UnansweredQuestions
-
-# Evaluate retrieval performance
-uv run python3 -m src evaluate \
-  --student_answer_path "data/output/sources_docs.json" \
-  --dataset_path "datasets_public/public/AnsweredQuestions/dataset_docs_public.json" \
-  --k 10
-
-# Evaluate using moulinette
-./moulinette evaluate_student_search_results data/output/search_results/UnansweredQuestions/dataset_code_public.json data/datasets/AnsweredQuestions/dataset_code_public.json
-
-./moulinette evaluate_student_search_results data/output/search_results/UnansweredQuestions/dataset_docs_public.json data/datasets/AnsweredQuestions/dataset_docs_public.json
+uv sync          # install dependencies
+make install     # same, via the Makefile
+make lint        # flake8 + mypy
+make clean       # remove caches
 ```
 
+**Expected layout** (data is not committed):
 
-### Interactive Mode
+```
+data/raw/vllm-0.10.1/                         # corpus
+data/datasets/UnansweredQuestions/            # questions
+data/datasets/AnsweredQuestions/              # ground truth
+data/processed/                               # index (generated)
+data/output/search_results/<DatasetScope>/    # search output (generated)
+data/output/search_results_and_answer/<DatasetScope>/
+```
 
-Open two terminals from the project root and run:
+**Full pipeline**
 
 ```bash
-# Terminal 1 — Frontend
-source .venv/bin/activate
-streamlit run src/frontend/app.py        # Serves on http://localhost:8501
-
-# Terminal 2 — Backend
-uv run uvicorn src.api.main:app --reload  # Serves on http://localhost:8000
+uv run python -m src index --max_chunk_size 2000
+uv run python -m src search_dataset \
+  --dataset_path data/datasets/UnansweredQuestions/dataset_docs_public.json \
+  --k 10 \
+  --save_directory data/output/search_results/UnansweredQuestions
+./moulinette evaluate_student_search_results \
+  data/output/search_results/UnansweredQuestions/dataset_docs_public.json \
+  data/datasets/AnsweredQuestions/dataset_docs_public.json \
+  --k 10 --max_context_length 2000
+uv run python -m src answer_dataset \
+  --student_search_results_path data/output/search_results/UnansweredQuestions/dataset_docs_public.json \
+  --save_directory data/output/search_results_and_answer/UnansweredQuestions
 ```
 
-Then open [http://localhost:8501](http://localhost:8501) in your browser.
+**CLI commands**
 
+| Command | Purpose |
+|---|---|
+| `index --max_chunk_size N [--method lexical\|semantic\|hybrid]` | Chunk the corpus and build the index |
+| `search --query Q --k K` | Top-k sources for one query |
+| `search_dataset --dataset_path P --k K --save_directory D` | Search a whole dataset |
+| `answer --question Q --k K` | Retrieve and answer one question |
+| `answer_dataset --student_search_results_path P --save_directory D` | Answer a whole results file |
+| `evaluate --student_search_results_path P --dataset_path G --k K` | Own recall@k (the official score comes from the moulinette) |
 
-tests
+Invalid input (empty query, `k=0`, missing file, malformed JSON) prints `Error: ...` and exits with code 1, never a traceback.
+
+**API and frontend (bonus)**
+
+```bash
+uv run uvicorn src.api.main:app --port 8000     # terminal 1: backend
+uv run streamlit run src/frontend/app.py         # terminal 2: http://localhost:8501
+```
+
+- `POST /sources` returns the retrieved sources only (fast, no LLM).
+- `POST /ask` returns the sources and a generated answer. The first call loads the model and takes a minute or two.
+
+**Tests**
+
+```bash
 uv run pytest tests/test_cli_errors.py -q
 uv run pytest tests/test_retrieval.py -q -s
----
-
-## System Architecture
-
-```
-Documents → Chunking → Indexing (BM25 + ChromaDB) → Retrieval (Lexical + Semantic) → Augmentation → LLM Answer
 ```
 
-The pipeline has four stages:
+## Example usage
 
-1. **Chunking** — Split raw documents into manageable segments
-2. **Indexing** — Store chunks in both a lexical index (BM25) and a vector database (ChromaDB)
-3. **Retrieval** — Query both indexes and merge results
-4. **Augmentation** — Inject retrieved chunks into the LLM prompt to generate a grounded answer
+```bash
+$ uv run python -m src search --query "How to configure the OpenAI server?" --k 3
+Matching Resources
+data/raw/vllm-0.10.1/docs/serving/openai_compatible_server.md[9867:10100]
+...
 
----
+$ uv run python -m src answer --question "What HTTP endpoint loads a LoRA adapter dynamically?" --k 5
+Answer: ...
 
-## Chunking Strategy
+$ curl -X POST localhost:8000/sources -H "Content-Type: application/json" \
+    -d '{"question": "How to load a LoRA adapter?", "k": 3}'
+```
 
-Two chunking strategies are used depending on the source type:
+If the context does not contain the answer, the model is instructed to reply `I cannot find this in the provided context.`
 
-- **Text chunking** — Applied to documentation files using LangChain's `RecursiveCharacterTextSplitter`
-- **Program chunking** — Applied to source code files, respecting code structure boundaries
+## System architecture
 
-For chunks exceeding 500 characters, an overlap of 50 characters is applied between adjacent chunks. This preserves contextual continuity across chunk boundaries, which is particularly important for technical content where meaning often spans multiple sentences or code blocks.
+```
+Corpus -> Chunking -> Index (BM25 / ChromaDB) -> Retrieval -> Augmentation -> Qwen3-0.6B -> JSON answer
+                                                     |
+                                                  Evaluation (recall@k)
+```
 
----
+| Stage | Component | Role |
+|---|---|---|
+| Chunking | `chunk_data.py` | Split files, record exact character offsets |
+| Indexing | `lexical_retriever.py`, `semantic_retriever.py` | BM25 index and Chroma collection under `data/processed/` |
+| Retrieval | `abstract_classes.py`, `hybrid_retriever.py` | One interface for lexical, semantic and hybrid search |
+| Augmentation | `pre_prompt.py`, `answer.py` | Top 3 chunks, best last, numbered blocks plus a grounding rule |
+| Generation | `qwen3__0_6B.py`, `answer.py` | Greedy decoding, float32 on CPU |
+| Speed | `cache.py` | Index digest and query/answer cache |
+| Interfaces | `__main__.py`, `api/`, `frontend/` | CLI, HTTP API, Streamlit UI |
 
-## Retrieval Methods
+Data exchanged between stages uses pydantic models (`MinimalSource`, `MinimalSearchResults`, `StudentSearchResults`, ...).
 
-### Lexical Search (BM25)
+## Chunking strategy
 
-BM25 scores chunks based on keyword overlap with the query. It accounts for chunk length and down-weights common English words (e.g., "the", "in"). This method excels at finding exact terminology but degrades when the user's wording differs from the document's wording.
+- **Python/code files:** LangChain `RecursiveCharacterTextSplitter.from_language`, which cuts at class and function boundaries first.
+- **Markdown/text files:** the same splitter with paragraph, line, then word separators.
+- **Size:** `--max_chunk_size` (default 2000). No chunk may exceed 2000 characters, otherwise the whole output is invalid.
+- **Overlap:** 50 characters when `max_chunk_size >= 500`, otherwise 0.
+- **Offsets:** each chunk stores `first_character_index` and `last_character_index` (end exclusive), and its id is `path:first:last`. Files are read as raw UTF-8 without newline translation, so offsets match the file on disk.
 
-### Semantic Search (ChromaDB + `all-MiniLM-L6-v2`)
+## Retrieval method
 
-Chunks and queries are embedded into vector space using the `all-MiniLM-L6-v2` model. Retrieval is based on cosine similarity — the smaller the angle between query and chunk vectors, the better the match. Unlike BM25, semantic search handles paraphrasing and synonym variation, but its quality is bounded by the embedding model's capacity.
+- **Lexical (BM25, `bm25s`):** scores chunks by keyword overlap. Rare terms weigh more, term frequency saturates, and long chunks are discounted. English stop words are removed at indexing and query time. Strong on exact identifiers and flags.
+- **Semantic (ChromaDB + `all-MiniLM-L6-v2`):** chunks and queries are embedded and the nearest vectors are returned. It handles paraphrases, but a general English model is weak on code identifiers, and MiniLM truncates long inputs (about 256 tokens).
+- **Hybrid (Reciprocal Rank Fusion):** both rankings are merged with `score = sum 1 / (60 + rank)`. Only ranks are used, because BM25 scores and Chroma distances are on incompatible scales. A chunk found by both methods is boosted.
 
-### Hybrid Search (RRF)
+## Performance analysis
 
-Results from BM25 and ChromaDB are merged using **Reciprocal Rank Fusion (RRF)**. Because the two methods use different scoring scales, RRF normalises them by rank position rather than raw score, then selects the top-k results from the combined pool of 2×k candidates.
+Official metric: moulinette recall@k (same file and IoU >= 0.05).
 
-### Hybrid Search with Cross-Encoder Re-ranking
+**Documentation dataset (chunk size 2000, overlap 50)**
 
-An optional re-ranking stage uses a cross-encoder model to jointly score query–chunk pairs from the hybrid results. This is significantly slower (~10s vs ~1.3s) but improves Recall@1 noticeably, making it suitable for offline evaluation or high-precision use cases.
-
----
-
-## Performance Analysis
-
-Evaluation uses two metrics:
-- **Recall@N** — Does the correct source appear in the top N results?
-- **Overlap** — How much does the retrieved content overlap with the ground truth?
-
-### Documentation Dataset (100 questions, chunk size 2000, overlap 50)
-
-| Method | Recall@1 | Recall@3 | Recall@5 | Recall@10 | Latency |
+| Method | R@1 | R@3 | R@5 | R@10 | Latency/query |
 |---|---|---|---|---|---|
-| BM25 (Lexical) | 60.0% | 79.0% | 84.0% | 93.0% | ~0.25s |
-| MiniLM-L6-v2 (Semantic) | 29.0% | 42.0% | 49.0% | 55.0% | ~1.2s |
-| Hybrid RRF | 43.0% | 67.0% | 77.0% | 86.0% | ~1.35s |
-| Hybrid + Cross-Encoder | 61.0% | 75.0% | 78.0% | 87.0% | ~10s |
+| BM25 | 60.0% | 79.0% | **84.0%** | 93.0% | ~0.25 s |
+| MiniLM (semantic) | 29.0% | 42.0% | 49.0% | 55.0% | ~1.2 s |
+| Hybrid RRF | 43.0% | 67.0% | 77.0% | 86.0% | ~1.35 s |
 
-### Code Dataset (100 questions, chunk size 2000, overlap 50)
+**Code dataset (chunk size 2000, overlap 50)**
 
-| Method | Recall@1 | Recall@3 | Recall@5 | Recall@10 | Latency |
+| Method | R@1 | R@3 | R@5 | R@10 | Latency/query |
 |---|---|---|---|---|---|
-| BM25 (Lexical) | 29.0% | 48.0% | 54.0% | 57.0% | ~0.25s |
-| MiniLM-L6-v2 (Semantic) | 19.0% | 28.0% | 37.0% | 48.0% | ~1.2s |
-| Hybrid RRF | 27.0% | 44.0% | 53.0% | 67.0% | ~1.3s |
-| Hybrid + Cross-Encoder | 38.0% | 57.0% | 61.0% | 67.0% | ~10s |
+| BM25 | 29.3% | 48.5% | **54.5%** | 57.6% | ~0.25 s |
+| MiniLM (semantic) | 19.0% | 28.0% | 37.0% | 48.0% | ~1.2 s |
+| Hybrid RRF | 27.0% | 44.0% | 53.0% | 67.0% | ~1.3 s |
 
-**Key observations:**
-- BM25 dominates on documentation, where terminology is consistent and precise
-- Semantic search underperforms on code, where variable names and function signatures are not well-represented in a general English embedding model
-- Hybrid RRF improves code recall significantly over either method alone
-- Cross-encoder re-ranking yields the highest Recall@1 at the cost of a 7–8× latency increase
+<!-- TODO: replace the semantic and hybrid rows with fresh moulinette numbers. -->
 
-### Embedding Models Under Consideration
+**Observations**
+- BM25 alone passes both thresholds at k=5 (84% docs, 54.5% code), so it is the default method.
+- On docs, fusion does not beat BM25: the semantic ranking adds noise.
+- On code, hybrid gains at k=10 (67% vs 57.6%) but not at k=5.
+- Because the overlap bar is low (IoU 0.05), chunk size matters: a large chunk that only partly overlaps a short reference span fails quickly.
 
-| Model | Size | Strength | Status |
-|---|---|---|---|
-| `all-MiniLM-L6-v2` | ~80MB | General English | Current baseline |
-| `bge-small-en-v1.5` | ~130MB | Massive retrieval benchmarks, technical docs | Planned |
-| `nomic-embed-text-v1` | ~270MB | Long context (8k tokens) | Planned |
-| `Qwen3-Embedding-0.6B` | ~600MB | Multilingual, strong general retrieval | Planned |
+**System performance**
 
----
+| Item | Limit | Measured |
+|---|---|---|
+| Indexing (cold) | <= 5 min | TODO |
+| Indexing (nothing changed, incremental) | n/a | ~16 s |
+| 200 questions retrieval | <= 90 s | TODO |
+| Answer generation (CPU, float32) | none | ~16 s per question |
 
-## Design Decisions
+## Design decisions
 
-**Why chunk overlap?**
-Splitting documents at fixed boundaries risks cutting a sentence or code block mid-thought. A 50-character overlap ensures that the tail of one chunk and the head of the next share context, reducing information loss at boundaries.
+- **BM25 as the default:** the simplest method that clears both thresholds. Hybrid and semantic are opt-in.
+- **RRF over score fusion:** no weight tuning, robust to different score scales.
+- **Stable chunk ids (`path:first:last`)** instead of list positions, so changing one file does not shift every other chunk.
+- **Incremental indexing:** a manifest stores each file's SHA-256 and chunks. Only added or changed files are re-chunked and re-embedded, and deleted files are removed from Chroma. A change of settings resets everything. BM25 is rebuilt from the manifest (seconds); embeddings are the expensive part that is saved.
+- **Caching:** an index digest (file mtime and size plus settings) skips work when nothing changed, and a persistent query/answer cache avoids repeated retrieval and generation.
+- **float32 on CPU:** float16 generation was about 10x slower on the development CPU (174 s vs 16 s per question).
+- **Grounded prompt:** numbered context passages, a rule to answer only from them, a fixed refusal sentence, and greedy decoding (`do_sample=False`) to reduce invented details.
+- **Context cutoff of 3, best chunk last:** retrieval returns k sources (k=10 in the evaluation) for recall scoring, but the language model only sees the top 3, ordered from third-best to best. Reasons: a small model uses the end of the prompt best, a shorter prompt is faster on CPU (generation time grows with prompt length) and fits an 8 GB machine, and recall@3 already covers most of the answerable cases (TODO: docs and code recall@3 from your final tables). Progressive escalation (send chunk 1, then 1+2, then 1+2+3 on a refusal) was considered and rejected: it can cost more prefill on code, where recall@1 is low, and a wrong answer does not trigger a retry, only a refusal does.
+- **Validation before work:** the CLI checks arguments and paths before loading any model.
 
-**Why hybrid search over pure semantic?**
-Technical documentation and source code contain precise identifiers (function names, CLI flags, config keys) that benefit from exact keyword matching. Semantic search alone misses these. BM25 alone fails on paraphrased questions. Hybrid RRF captures both signals.
+## Challenges faced
 
-**Why RRF for merging?**
-BM25 and ChromaDB produce scores on incompatible scales. RRF avoids the need to normalise or tune weights by operating purely on rank positions, making it robust and parameter-free.
-
-**Why re-chunk retrieved results for answer generation?**
-After retrieval, the top-k chunks may still contain noise. Re-chunking them into smaller segments and re-ranking allows the LLM to receive a shorter, denser, more relevant context — improving both answer accuracy and generation speed.
-
----
-
-## Challenges & Planned Improvements
-
-**Recall@1 for semantic search on code**
-Code embeddings are a weak point for general-purpose English models. Planned fix: evaluate `bge-small-en-v1.5` and `nomic-embed-text-v1`, which are trained on more technical retrieval benchmarks.
-
-**Answer generation latency**
-LLM generation time scales with context length. Planned fix: after retrieval, re-chunk and re-rank results to pass only the most relevant, compact context to the model — reducing tokens while preserving accuracy.
-
----
+- **Offsets that did not match the file.** JSON files were chunked from their Python `repr` and CRLF files shifted offsets. Fix: read raw UTF-8 with `newline=''` and chunk the real text, and check by slicing each file with the stored offsets.
+- **Evaluator mismatch.** My own recall was higher than the moulinette's because it only compared file paths. Fix: apply the same rule (same file, IoU >= 0.05, per source). The numbers now match exactly.
+- **Stale vector store.** Re-indexing with a different chunk size left old chunks in Chroma, and "remove" used `upsert`. Fix: a reset flag that drops the collection, `delete` for removed ids, and a count check after indexing.
+- **Slow generation.** 4 minutes per answer on CPU. Fix: float32 instead of float16, no thinking mode, capped output.
+- **Weak semantic recall on code.** A general English model embeds identifiers poorly. Hybrid fusion helps only at larger k.
+- **Over-refusal with a long context.** With 10 retrieved chunks (about 20,000 characters) in the prompt, Qwen3-0.6B answered "I cannot find this in the provided context" even when the answer was present. I tested this by adding a short sun/moon text to the corpus: with k=10 the model refused, with k=2 it answered correctly. The relevant passage was diluted by the other chunks, and the small model also tends to lose information in a long context. Fix: only the top 3 chunks go into the prompt, in reverse order so the best chunk is last, right before the question. All k sources are still returned for retrieval scoring. TODO: result on N answerable questions (correct / wrong refusal / invented details), before and after.
 
 ## Resources
 
-### Core Libraries & Tools
+**Documentation and tools**
+- [LangChain text splitters](https://python.langchain.com/docs/concepts/text_splitters/)
+- [ChromaDB documentation](https://docs.trychroma.com/)
+- [bm25s](https://github.com/xhluca/bm25s)
+- [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+- [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B)
+- [FastAPI](https://fastapi.tiangolo.com/), [Streamlit](https://docs.streamlit.io/), [Pydantic](https://docs.pydantic.dev/), [Python Fire](https://github.com/google/python-fire)
 
-- [LangChain — Text Splitters](https://python.langchain.com/docs/concepts/text_splitters/) — `RecursiveCharacterTextSplitter` used for document chunking
-- [ChromaDB Documentation](https://docs.trychroma.com/) — Vector database for semantic indexing and retrieval
-- [Hugging Face — `all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) — Embedding model used for semantic search
-- [Hugging Face — `cross-encoder/ms-marco-MiniLM-L-6-v2`](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2) — Cross-encoder model used for re-ranking
-- [rank-bm25](https://github.com/dorianbrown/rank_bm25) — BM25 implementation used for lexical retrieval
-- [FastAPI](https://fastapi.tiangolo.com/) — Backend API framework
-- [Streamlit](https://docs.streamlit.io/) — Frontend interface
+**RAG references**
+- [Microsoft Azure: Design and develop a RAG solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide)
+- [Applied AI: Enterprise RAG architecture](https://www.applied-ai.com/briefings/enterprise-rag-architecture/)
+- [Building production-ready RAG systems](https://medium.com/@meeran03/building-production-ready-rag-systems-best-practices-and-latest-tools-581cae9518e7)
+- Cormack et al., *Reciprocal Rank Fusion outperforms Condorcet and individual rank learning methods* (2009)
 
-### RAG Architecture References
+**How AI was used**
 
-- [Microsoft Azure — Design and Develop a RAG Solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide) — Comprehensive guide to RAG pipeline design, chunking strategies, and evaluation methodology
-- [Applied AI — Enterprise RAG Architecture: A Practitioner's Guide](https://www.applied-ai.com/briefings/enterprise-rag-architecture/) — In-depth coverage of hybrid search, RRF, cross-encoder re-ranking, and production RAG patterns
-- [Medium — Building Production-Ready RAG Systems](https://medium.com/@meeran03/building-production-ready-rag-systems-best-practices-and-latest-tools-581cae9518e7) — Best practices for RAG systems using LangChain, LlamaIndex, vector databases, and evaluation strategies (2024–2025)
+| Task | Part of the project |
+|---|---|
+| Explaining concepts (RAG, BM25, IoU, RRF, caching, hashing) | Design phase |
+| Code review and debugging help | Chunking, indexing, retrieval, cache, CLI |
+| Docstrings | All Python modules |
+| Drafting tests | `tests/test_cli_errors.py`, `tests/test_retrieval.py` |
+| Drafting the Streamlit frontend and API endpoints | `src/frontend/`, `src/api/` |
+| Polishing this README | `README.md` |
 
----
-
-## Future Plans
- 
-**Query Expansion**: 
-Currently, the system searches using the user's question exactly as typed. The planned improvement is to generate 2–3 reformulated variants of the question — either by injecting synonyms or by prompting an LLM to rephrase it — before running retrieval. Each variant is searched independently and the results are merged. This directly targets BM25's weakness: if the user's wording differs from the document's wording, lexical search misses the match. Query expansion increases the surface area of the search without changing the underlying retrieval infrastructure.
- 
-**Question Caching**:
-Repeated or semantically similar questions should not trigger a full retrieval and LLM generation cycle every time. The plan is to store previously answered questions in the vector database alongside their answers and a unique ID. When a new question arrives, it is first compared against cached questions using semantic similarity. If a sufficiently close match is found, the cached answer is returned directly — bypassing both retrieval and LLM inference. This solves two problems simultaneously: it eliminates redundant LLM calls (reducing cost and latency), and it ensures that similar questions always receive consistent answers rather than slightly different generations.
- 
-**vLLM Inference Backend**:
-vLLM's PagedAttention mechanism optimises GPU memory management for inference, enabling higher throughput and lower latency when serving multiple concurrent requests. This would make the system fully self-contained and significantly faster for batch answer generation.
- 
----
-
-## AI Usage Disclosure
-
-In accordance with 42 Prague guidelines, AI assistance was used for the following:
-- Understanding RAG concepts and retrieval design patterns
-- Generating doc strings for Python modules
-- Polishing this README file
-- Generating the Streamlit frontend interface
-
-All core pipeline logic — chunking, indexing, retrieval, evaluation, and API design — was implemented by the student.
+All AI output was reviewed, tested and understood before use.

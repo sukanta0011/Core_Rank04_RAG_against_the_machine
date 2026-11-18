@@ -2,7 +2,8 @@
 from typing import Dict, List
 
 NO_ANSWER_TEXT = "I cannot find this in the provided context."
-MAX_CHARS_PER_CHUNK = 1500  # keeps the prompt short on a CPU
+# MAX_CHARS_PER_CHUNK = 1500  # keeps the prompt short on a CPU
+# MAX_ALLOWED_RESOURCES = 3
 
 SYSTEM_PROMPT = (
     "You are a vLLM expert. Answer the question using ONLY the numbered "
@@ -26,9 +27,10 @@ def format_context(context: str | List[str]) -> str:
     blocks = []
     for number, text in enumerate(chunks, start=1):
         text = str(text).strip()
-        if len(text) > MAX_CHARS_PER_CHUNK:
-            text = text[:MAX_CHARS_PER_CHUNK] + " ..."
+        # if len(text) > MAX_CHARS_PER_CHUNK:
+        #     text = text[:MAX_CHARS_PER_CHUNK] + " ..."
         blocks.append(f"[{number}]\n{text}")
+    blocks.reverse()
     return "\n\n".join(blocks)
 
 
@@ -56,7 +58,6 @@ class InitialPromptGenerator:
             f"Context:\n{format_context(context)}\n\n"
             f"Question: {question}\n"
             "Answer using only the context above. If it is not there, "
-            f"say: {NO_ANSWER_TEXT}"
         )
         return [
             {"role": "system", "content": SYSTEM_PROMPT},
