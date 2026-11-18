@@ -90,6 +90,7 @@ class SplitDataByChunks(BaseModel):
     Attributes:
         all_paths: extension -> files, from `FilesInDir`.
         folder: Folder for the manifest, `data.json`, `update.json`.
+        method: Method used for indexing
         chunk_size: Maximum characters per chunk.
         code_overlap: Overlap for code chunks.
         txt_overlap: Overlap for text chunks.
@@ -98,12 +99,14 @@ class SplitDataByChunks(BaseModel):
 
     all_paths: Dict[str, List[Path]]
     folder: str
+    method: str
     chunk_size: int = Field(gt=20, default=200)
     code_overlap: int = Field(ge=0, default=0)
     txt_overlap: int = Field(ge=0, default=0)
     use_indexing: bool = Field(default=False)
 
     # Private attributes (default_factory: never shared between instances)
+    _method_used: List = PrivateAttr(default_factory=list)
     _resaving_required: bool = PrivateAttr(default=True)
     _indexing_storage_path: str = PrivateAttr(default="")
     _exist_indexing_storage: bool = PrivateAttr(default=False)
@@ -139,12 +142,16 @@ class SplitDataByChunks(BaseModel):
             if (isinstance(loaded, dict)
                     and isinstance(loaded.get("files"), dict)
                     and isinstance(loaded.get("settings"), dict)
-                    and self.validate_settings(loaded["settings"])):
+                    and isinstance(loaded.get("indexed_methods"), list)
+                    and self.validate_settings(
+                        loaded["settings"], loaded["indexed_methods"])):
                 self._indexing_storage = loaded
                 self._exist_indexing_storage = True
                 return
+            self._method_used.extend(loaded["indexed_methods"])
         except (OSError, ValueError):  # missing, unreadable, bad JSON
             pass
+        self._method_used.append(self.method)
         self._prepare_fresh_storage()
         self._chunks_to_be_updated.reset_flag = True
 
@@ -157,10 +164,12 @@ class SplitDataByChunks(BaseModel):
                 "code_overlap": self.code_overlap,
                 "txt_overlap": self.txt_overlap,
             },
+            "indexed_methods": self._method_used,
             "files": {},
         }
 
-    def validate_settings(self, settings: Dict) -> bool:
+    def validate_settings(
+            self, settings: Dict, indexed_methods: List) -> bool:
         """Tell whether saved settings equal the current ones.
 
         Args:
@@ -169,11 +178,12 @@ class SplitDataByChunks(BaseModel):
         Returns:
             True if chunk size and both overlaps match.
         """
-        return (
-            self.chunk_size == settings.get("chunk_size")
+        settings_check = False
+        if (self.chunk_size == settings.get("chunk_size")
             and self.code_overlap == settings.get("code_overlap")
-            and self.txt_overlap == settings.get("txt_overlap")
-        )
+                and self.txt_overlap == settings.get("txt_overlap")):
+            settings_check = True
+        return (settings_check and self.method in indexed_methods)
 
     def save_chunked_data(self) -> None:
         """Write the manifest, `data.json` and `update.json`."""

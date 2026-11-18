@@ -321,7 +321,8 @@ class CLI:
                 txt_overlap=overlap,
                 code_overlap=overlap,
                 use_indexing=True,
-                folder=DATA_CHUNK_FOLDER)
+                folder=DATA_CHUNK_FOLDER,
+                method=method)
             splitter.chunk_all_files()
             splitter.save_chunked_data()
 

@@ -97,7 +97,7 @@ class Retriever(BaseModel, ABC):
 
     def get_matching_chunk(
         self,
-        question: Annotated[str, Field(min_length=3)],
+        question: Annotated[str, Field(min_length=5)],
         k: Annotated[int, Field(gt=0)],
         question_id: str | None = None
             ) -> MinimalSearchResults:

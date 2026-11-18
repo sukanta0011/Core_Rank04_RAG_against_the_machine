@@ -213,7 +213,6 @@ Official metric: moulinette recall@k (same file and IoU >= 0.05).
 - [Microsoft Azure: Design and develop a RAG solution](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/rag/rag-solution-design-and-evaluation-guide)
 - [Applied AI: Enterprise RAG architecture](https://www.applied-ai.com/briefings/enterprise-rag-architecture/)
 - [Building production-ready RAG systems](https://medium.com/@meeran03/building-production-ready-rag-systems-best-practices-and-latest-tools-581cae9518e7)
-- Cormack et al., *Reciprocal Rank Fusion outperforms Condorcet and individual rank learning methods* (2009)
 
 **How AI was used**
 
