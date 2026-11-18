@@ -84,7 +84,7 @@ def _check_k(k: Any) -> int:
     """
     if isinstance(k, bool) or not isinstance(k, int) or k <= 0:
         raise CLIError(f"k must be a positive integer, got {k!r}")
-    return k
+    return int(k)
 
 
 def _check_text(value: Any, name: str) -> str:

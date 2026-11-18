@@ -1,19 +1,24 @@
 """Caches: skip re-indexing when nothing changed, reuse past answers."""
-import hashlib
-import json
 import os
+import json
+import hashlib
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple
-
 from pydantic import BaseModel, ValidationError
-
-from src.base_patterns import MinimalSource
+from typing import Any, List, Tuple, Dict
 from src.data_retrieval.helper_classes import (
     DataManager, prepare_storage)
+from src.base_patterns import MinimalSource
 
 
 class AnswerCacheStructure(BaseModel):
-    """One cached entry: retrieval results and/or a generated answer."""
+    """One cached entry: retrieval results and/or a generated answer.
+
+    Attributes:
+        question_id: Id of the question that created the entry.
+        retrieved_sources_scores: Scores of the retrieved sources.
+        retrieved_sources: The retrieved sources.
+        answer: The generated answer, if any.
+    """
 
     question_id: str | None = None
     retrieved_sources_scores: List[float] | None = None
@@ -24,20 +29,20 @@ class AnswerCacheStructure(BaseModel):
 class IndexCache:
     """Detect whether the corpus or the settings changed since last index.
 
-    The digest covers every file's (mtime, size) and the settings.
-    Save it LAST, after the index is fully built.
+    A digest of every file's (mtime, size) plus the settings is stored.
+    If the current digest equals the stored one, indexing can be skipped.
     """
 
     def __init__(
             self, path: str, chunk_size: int,
             overlap: int, method: str) -> None:
-        """Create the cache.
+        """Create the cache and make sure its file exists.
 
         Args:
             path: File that stores the digest.
             chunk_size: Maximum chunk size used for indexing.
             overlap: Chunk overlap used for indexing.
-            method: Retrieval method name (lexical, semantic, hybrid).
+            method: Retrieval method name.
         """
         self.path = path
         self.settings = {
@@ -47,7 +52,7 @@ class IndexCache:
         }
         prepare_storage(self.path)
 
-    def get_file_stats(self, paths: List[Path]) -> Dict[str, Dict]:
+    def get_file_stats(self, paths: List[Path]) -> Dict:
         """Collect modification time and size of every file.
 
         Args:
@@ -56,21 +61,21 @@ class IndexCache:
         Returns:
             Mapping path -> {"time": mtime, "size": bytes}.
         """
-        stats: Dict[str, Dict] = {}
+        stats = {}
         for path in paths:
             st = os.stat(path)
             stats[str(path)] = {"time": st.st_mtime, "size": st.st_size}
         return stats
 
     def save_stats_digest(self, digest: str) -> None:
-        """Store the digest atomically (no half-written file).
+        """Store the digest in the cache file.
+
+        Call it last, after the index has been built successfully.
 
         Args:
             digest: Value returned by `has_file_stats_changed`.
         """
-        tmp = self.path + ".tmp"
-        DataManager.save_data(tmp, {"hash": digest})
-        os.replace(tmp, self.path)
+        DataManager.save_data(self.path, {"hash": digest})
 
     def get_stat_digest(self, stats: Dict) -> str:
         """Hash the file stats together with the settings.
@@ -87,47 +92,60 @@ class IndexCache:
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
     def load_digest(self) -> str | None:
-        """Return the saved digest, or None if missing or unreadable."""
+        """Return the stored digest.
+
+        Returns:
+            The digest, or None if the file is missing, unreadable or
+            not in the expected shape.
+        """
         try:
-            data = DataManager.load_data(self.path)
+            old_digest = DataManager.load_data(self.path)
+            if isinstance(old_digest, dict):
+                old_hash = old_digest.get("hash")
+            return old_hash if isinstance(old_hash, str) else None
         except Exception:
             return None
-        if not isinstance(data, dict):
-            return None
-        value = data.get("hash")
-        return value if isinstance(value, str) else None
 
     def has_file_stats_changed(
             self, paths: List[Path]) -> Tuple[str, bool]:
-        """Compare the current corpus and settings with the saved digest.
+        """Compare the current corpus and settings with the stored digest.
 
         Args:
             paths: Every corpus file.
 
         Returns:
-            (current_digest, changed). A missing or corrupt saved digest
-            counts as changed.
+            (current_digest, changed). A missing digest counts as
+            changed.
         """
-        current_digest = self.get_stat_digest(self.get_file_stats(paths))
-        return current_digest, current_digest != self.load_digest()
+        current_stats = self.get_file_stats(paths)
+        current_digest = self.get_stat_digest(current_stats)
+        old_hash = self.load_digest()
+        return current_digest, current_digest != old_hash
 
     @staticmethod
     def get_only_paths(paths: Dict[str, List[Path]]) -> List[Path]:
-        """Flatten an extension -> files mapping into one list."""
-        flat_path: List[Path] = []
-        for group in paths.values():
-            flat_path.extend(group)
+        """Flatten an extension -> files mapping into one list.
+
+        Args:
+            paths: Output of `FilesInDir.extract_all_file_paths`.
+
+        Returns:
+            All files in one list.
+        """
+        flat_path = []
+        for _, path in paths.items():
+            flat_path.extend(path)
         return flat_path
 
 
 class AnswerCache:
-    """Persistent cache of retrieval results and answers.
+    """Persistent cache of retrieval results and generated answers.
 
-    The key is built from question, k, method and (optionally) the
-    corpus digest, so a re-index makes old entries stop matching.
+    Entries are keyed by a hash of question, number of sources and
+    retrieval method (and optionally the corpus digest).
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str):
         """Load the cache file. A missing or corrupt file means empty.
 
         Args:
@@ -144,30 +162,8 @@ class AnswerCache:
             pass
 
     @staticmethod
-    def make_key(
-            question: str, resource_numbers: int, method: str,
-            corpus_digest: str = "") -> str:
-        """Build the cache key.
-
-        Args:
-            question: Question text.
-            resource_numbers: k, the number of requested sources.
-            method: Retrieval method name.
-            corpus_digest: Digest of the indexed corpus. Pass
-                `IndexCache.load_digest()` so entries from an older
-                index never match.
-
-        Returns:
-            SHA-256 hex digest of all inputs.
-        """
-        payload = json.dumps(
-            [question, resource_numbers, method, corpus_digest],
-            ensure_ascii=False)
-        return DataManager.generate_hash_from_text(payload)
-
-    @staticmethod
     def _as_structure(value: Any) -> AnswerCacheStructure | None:
-        """Convert a stored value to a structure, or None if unusable."""
+        """Convert a stored value to an entry, or None if unusable."""
         if isinstance(value, AnswerCacheStructure):
             return value
         if isinstance(value, dict):
@@ -183,48 +179,56 @@ class AnswerCache:
         resource_numbers: int,
         method: str,
         corpus_digest: str = "",
-            ) -> Tuple[str, AnswerCacheStructure | None]:
-        """Look a question up.
+            ) -> Tuple[str, None | AnswerCacheStructure]:
+        """Look a question up in the cache.
 
         Args:
             question: Question text.
-            resource_numbers: k.
+            resource_numbers: k, the number of requested sources.
             method: Retrieval method name.
-            corpus_digest: See `make_key`.
+            corpus_digest: Optional digest of the indexed corpus. When
+                given, entries from an older index never match. When
+                empty, the key is the same as before.
 
         Returns:
             (key, entry). The entry is None on a miss or a corrupt
-            entry. On a hit, use the CURRENT question_id, not the
-            cached one, since ids differ between datasets.
+            entry. The key is always returned, to be used by
+            `update_answer_cache`.
         """
-        key = self.make_key(
-            question, resource_numbers, method, corpus_digest)
-        return key, self._as_structure(self._answer_from_cache.get(key))
+        text = f"{question}:{resource_numbers}:{method}"
+        if corpus_digest:
+            text += f":{corpus_digest}"
+        question_hash = DataManager.generate_hash_from_text(text)
+        return question_hash, self._as_structure(
+            self._answer_from_cache.get(question_hash))
 
     def update_answer_cache(
         self,
         hash: str,
-        scores: Optional[Sequence[float]] = None,
-        resources: Optional[List[MinimalSource]] = None,
-        answer: Optional[str] = None,
-        question_id: Optional[str] = None,
+        scores: List | None = None,
+        resources: List | None = None,
+        answer: str | None = None,
+        question_id: str | None = None
             ) -> None:
-        """Add or complete an entry.
+        """Store an entry in memory (call `save_to_answer_cache` to persist).
 
-        Fields passed as None keep their previous value, so storing an
-        answer does not erase the sources saved by the search step.
+        Fields passed as None keep the value of an existing entry with
+        the same key, so storing an answer does not erase the saved
+        sources (and the reverse).
 
         Args:
-            hash: Key from `get_sources_from_cache` or `make_key`.
+            hash: Key returned by `get_sources_from_cache`.
             scores: Scores of the retrieved sources.
-            resources: Retrieved sources.
-            answer: Generated answer.
+            resources: The retrieved sources.
+            answer: The generated answer.
             question_id: Id of the question.
         """
-        old = self._as_structure(self._answer_from_cache.get(hash))
-        old = old or AnswerCacheStructure()
+        old = self._as_structure(
+            self._answer_from_cache.get(hash)) or AnswerCacheStructure()
         self._answer_from_cache[hash] = AnswerCacheStructure(
-            question_id=question_id or old.question_id,
+            question_id=(
+                question_id if question_id is not None
+                else old.question_id),
             retrieved_sources_scores=(
                 [float(s) for s in scores] if scores is not None
                 else old.retrieved_sources_scores),
@@ -235,7 +239,7 @@ class AnswerCache:
         )
 
     def save_to_answer_cache(self) -> None:
-        """Write the cache to disk atomically."""
+        """Write the whole cache to its JSON file (atomically)."""
         tmp = self.path + ".tmp"
         DataManager.save_data(tmp, self._answer_from_cache)
         os.replace(tmp, self.path)

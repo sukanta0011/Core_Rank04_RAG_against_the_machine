@@ -27,7 +27,6 @@ class AnswerGenerator(BaseModel):
         chunked_texts: chunk id (`path:first:last`) -> chunk text.
         cache: Cache of earlier results and answers.
         method: Retrieval method name, part of the cache key.
-        corpus_digest: Digest of the indexed corpus, part of the cache
             key. Must equal the one used by the retriever.
     """
 
@@ -38,7 +37,6 @@ class AnswerGenerator(BaseModel):
     chunked_texts: Dict
     cache: InstanceOf[AnswerCache]
     method: str
-    corpus_digest: str = ""
 
     @validate_call
     def generate_answer(
@@ -62,10 +60,11 @@ class AnswerGenerator(BaseModel):
             question=search_result.question,
             resource_numbers=len(search_result.retrieved_sources),
             method=self.method,
-            corpus_digest=self.corpus_digest)
+            )
         if cached is None or cached.answer is None:
-            return self.generate_new_answer(
+            answers: MinimalAnswer = self.generate_new_answer(
                 key, search_result, tokens_limit, refiner)
+            return answers
         return MinimalAnswer(
             question_id=search_result.question_id,
             question=search_result.question,
@@ -95,6 +94,7 @@ class AnswerGenerator(BaseModel):
             the fixed "cannot find" answer is returned and not cached.
         """
         if not search_result.retrieved_sources:
+            print("Unable to retrieve any sources...")
             return MinimalAnswer(
                 question_id=search_result.question_id,
                 question=search_result.question,
@@ -113,6 +113,9 @@ class AnswerGenerator(BaseModel):
         else:
             context = self._extract_resource(
                 search_result.retrieved_sources, self.chunked_texts)
+
+        if len(context) > 3:
+            context = context[:1]
 
         pre_prompt = self.prompt_generator(
             question=search_result.question, context=context)

@@ -37,7 +37,8 @@ class TextChunk(DataChunk):
             chunk_size=self.chunk_size,
             chunk_overlap=chunk_overlap,
             add_start_index=True)
-        return text_splitter.create_documents([document])
+        docs: List[Document] = text_splitter.create_documents([document])
+        return docs
 
 
 class CodeChunk(DataChunk):
@@ -74,7 +75,8 @@ class CodeChunk(DataChunk):
             chunk_size=self.chunk_size,
             chunk_overlap=chunk_overlap,
             add_start_index=True)
-        return code_splitter.create_documents([document])
+        docs: List[Document] = code_splitter.create_documents([document])
+        return docs
 
 
 class SplitDataByChunks(BaseModel):

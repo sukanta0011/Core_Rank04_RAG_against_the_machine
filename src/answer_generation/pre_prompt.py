@@ -16,9 +16,6 @@ SYSTEM_PROMPT = (
 def format_context(context: str | List[str]) -> str:
     """Turn the retrieved chunks into numbered blocks.
 
-    A Python list printed with f-string gives quotes and escaped
-    newlines (`['a\\nb']`), which is noisy for a small model.
-
     Args:
         context: One text, or the list of chunk texts (best first).
 

@@ -3,7 +3,7 @@ import threading
 from pathlib import Path
 from typing import Dict
 
-from all_paths import (
+from src.all_paths import (
     ANSWER_CACHE, DATA_CHUNK_FOLDER, PROCESSED_DATA_FOLDER)
 from src.answer_generation.answer import AnswerGenerator
 from src.answer_generation.models.qwen3__0_6B import SmallLLM

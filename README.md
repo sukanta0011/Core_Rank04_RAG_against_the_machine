@@ -37,22 +37,18 @@ uv run python3 -m src index --max_chunk_size 2000
 uv run python3 -m src search --query "what is vLLM" --k 10
 
 # Run search over the full dataset
-uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_docs_public.json" --k 10 --save_directory "data/output/search_results/AnsweredQuestions"
+uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_docs_public.json" --k 10 --save_directory "data/output/search_results/UnansweredQuestions"
 
 # Run search over the full dataset
-uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/search_results/AnsweredQuestions"
+uv run python -m src search_dataset --dataset_path "data/datasets/AnsweredQuestions/dataset_code_public.json" --k 10 --save_directory "data/output/search_results/UnansweredQuestions"
 
 # Answer a single question
 uv run python3 -m src answer --question "what is vLLM?" --k 10
 
 # Answer questions over the full dataset
-uv run python3 -m src answer_dataset \
-  --student_search_results_path "data/output/sources_docs.json" \
-  --save_directory "data/output/source_docs_answers.json"
+uv run python -m src answer_dataset --student_search_results_path data/output/search_results/UnansweredQuestions/dataset_docs_public.json --save_directory data/output/search_results_and_answer/UnansweredQuestions
 
-uv run python3 -m src answer_dataset \
-  --student_search_results_path "data/output/sources_code.json" \
-  --save_directory "data/output/source_code_answers.json"
+uv run python -m src answer_dataset --student_search_results_path data/output/search_results/UnansweredQuestions/dataset_code_public.json --save_directory data/output/search_results_and_answer/UnansweredQuestions
 
 # Evaluate retrieval performance
 uv run python3 -m src evaluate \
@@ -61,9 +57,9 @@ uv run python3 -m src evaluate \
   --k 10
 
 # Evaluate using moulinette
-./moulinette evaluate_student_search_results data/output/sources_docs.json datasets_public/public/AnsweredQuestions/dataset_docs_public.json --k 10 --max_context_length 2000
+./moulinette evaluate_student_search_results data/output/search_results/UnansweredQuestions/dataset_code_public.json data/datasets/AnsweredQuestions/dataset_code_public.json
 
-./moulinette evaluate_student_search_results data/output/sources_code.json datasets_public/public/AnsweredQuestions/dataset_code_public.json --k 10 --max_context_length 2000
+./moulinette evaluate_student_search_results data/output/search_results/UnansweredQuestions/dataset_docs_public.json data/datasets/AnsweredQuestions/dataset_docs_public.json
 ```
 
 

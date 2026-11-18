@@ -21,7 +21,11 @@ DATASETS = {
     "docs": "dataset_docs_public.json",
     "code": "dataset_code_public.json",
 }
-GT_DIR = ROOT / "datasets_public" / "public" / "AnsweredQuestions"
+CANDIDATES = [
+    ROOT / "data" / "datasets" / "AnsweredQuestions",
+    ROOT / "datasets_public" / "public" / "AnsweredQuestions",
+]
+GT_DIR = next((p for p in CANDIDATES if p.is_dir()), CANDIDATES[0])
 
 pytestmark = pytest.mark.skipif(
     not (ROOT / "data" / "processed").exists(),
@@ -76,7 +80,7 @@ def truth(kind: str) -> Dict[str, Dict]:
     """Ground truth for the first SAMPLE questions: id -> question dict."""
     gt_file = GT_DIR / DATASETS[kind]
     if not gt_file.is_file():
-        pytest.skip(f"missing {gt_file}")
+        pytest.fail(f"ground truth not found: {gt_file}")
     questions = json.loads(gt_file.read_text(encoding="utf-8"))[
         "rag_questions"][:SAMPLE]
     return {q["question_id"]: q for q in questions}

@@ -9,6 +9,9 @@ from tqdm import tqdm
 
 from ..base_patterns import MinimalSearchResults, MinimalSource
 from ..data_retrieval.abstract_classes import Retriever
+from src.all_paths import DATA_CHUNK_FOLDER
+from .helper_classes import DataManager
+
 
 CHROMADB_BATCH_SIZE = 128
 COLLECTION_NAME = "vLLM"
@@ -88,6 +91,14 @@ class MiniLML6Retriever(Retriever):
                 f"Chroma holds {count} chunks but there are "
                 f"{len(self.data)}. Delete data/processed and "
                 "data/chunks, then run `index` again.")
+        self._reset_updates_and_save()
+
+    def _reset_updates_and_save(self) -> None:
+        all_update_source = "/".join([DATA_CHUNK_FOLDER, 'update.json'])
+        self.update.reset_flag = False
+        self.update.add = {}
+        self.update.remove = {}
+        DataManager.save_data(all_update_source, self.update)
 
     def load_corpus_index(self, storage_path: str) -> None:
         """Open the saved collection WITHOUT modifying it.

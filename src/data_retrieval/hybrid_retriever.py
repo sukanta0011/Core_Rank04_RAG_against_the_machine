@@ -34,14 +34,12 @@ class HybridRetriever(Retriever):
             update=self.update,
             cache=self.cache,
             method="semantic",
-            corpus_digest=self.corpus_digest,
         )
         self._lexical_retriever = BM25Retriever(
             data=self.data,
             update=self.update,
             cache=self.cache,
             method="lexical",
-            corpus_digest=self.corpus_digest,
         )
         return self
 

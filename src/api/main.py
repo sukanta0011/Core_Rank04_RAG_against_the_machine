@@ -6,7 +6,7 @@ from typing import AsyncGenerator, List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from src.api.services.rag_services import IndexNotFoundError, RAGService
+from src.api.services.rag_services import RAGService
 from src.base_patterns import MinimalSearchResults, MinimalSource
 
 rag_service = RAGService()
@@ -15,7 +15,7 @@ ANSWER_TOKENS = 100  # same limit as the CLI
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Load the index at start-up, save the cache at shutdown."""
     rag_service.initialize_resources()
     yield

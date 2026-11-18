@@ -2,7 +2,7 @@
 from typing import Any, Dict, List
 
 import torch
-from pydantic import BaseModel, Field, PrivateAttr, field_validator
+from pydantic import BaseModel, PrivateAttr, field_validator
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from src.answer_generation.models.abstract_model import Model
@@ -92,14 +92,13 @@ class SmallLLM(BaseModel, Model):
         model_inputs = self._tokenizer(
             [prompt], return_tensors="pt").to(self._model.device)
 
-        with torch.inference_mode():
-            outputs = self._model.generate(
-                **model_inputs,
-                max_new_tokens=tokens_limit,
-                do_sample=False,  # repeatable, fewer invented details
-            )
+        # with torch.inference_mode():
+        outputs = self._model.generate(
+            **model_inputs,
+            max_new_tokens=tokens_limit,
+            do_sample=False,  # repeatable, fewer invented details
+        )
 
         output_ids = outputs[0][model_inputs.input_ids.shape[1]:]
         return str(self._tokenizer.decode(
             output_ids, skip_special_tokens=True)).strip()
-    

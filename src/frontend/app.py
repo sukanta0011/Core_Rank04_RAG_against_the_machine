@@ -106,6 +106,9 @@ if st.button("Ask"):
                     detail = e.response.json().get("detail", "")
                 except ValueError:
                     detail = e.response.text[:300]
-            st.error(f"API error {e.response.status_code if e.response is not None else ''}: {detail}")
+            st.error(
+                f"API error {
+                    e.response.status_code
+                    if e.response is not None else ''}: {detail}")
         except requests.RequestException as e:
             st.error(f"Request failed: {e}")

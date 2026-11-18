@@ -119,7 +119,8 @@ class Retriever(BaseModel, ABC):
             question=question,
             resource_numbers=k,
             method=self.method,
-            corpus_digest=self.corpus_digest)
+            # corpus_digest=self.corpus_digest
+            )
         if resources is None or resources.retrieved_sources is None:
             return self.retrieve_from_raw_data(
                 question=question,
@@ -127,6 +128,7 @@ class Retriever(BaseModel, ABC):
                 question_id=question_id,
                 hash=hash
             )
+        # print("Retrieved data from the answer cache")
         return MinimalSearchResults(
             question=question,
             question_id=question_id,

@@ -143,11 +143,11 @@ class DataManager:
             main_path = Path(path)
             if main_path.suffix == '.json':
                 with open(path, 'r', encoding="utf-8", newline="") as fl:
-                    data = json.load(fl)
-                return data
+                    dict_data: Dict[Any, Any] = json.load(fl)
+                return dict_data
             with open(path, 'r', encoding="utf-8", newline="") as fl:
-                data = fl.read()
-            return data
+                txt_data: str = fl.read()
+            return txt_data
         except FileNotFoundError as e:
             raise FileNotFoundError(
                 f"Unable to read the document. Path: '{path}' "

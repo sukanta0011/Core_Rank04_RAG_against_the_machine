@@ -30,7 +30,10 @@ explicit = true
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "types-requests>=2.33.0.20261030",
 ]
 
 [tool.mypy]
 exclude = ["^\\.venv/", "^data/", "^tests/"]
+disable_error_code = ["import-untyped"]
+
