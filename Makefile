@@ -1,54 +1,44 @@
 PYTHON = python3
 PIP = pip
 ENV = uv
-MAIN = main.py
+MAIN = src
 ENV_NAME = venv
-# CONFIG = config.txt
-WORK_DIR = srcs
 DEBUGGER = pdb
-ALL_CACHE = $(shell find . -path "./.venv" -prune -o -name "__pycache__" -print -o -name ".mypy_cache" -print)
+ARGS = 
+GENERATED = data/cache data/chunks data/processed data/output data/temp
+PY_CACHE = $(shell find . \( -path "./.venv" -o -path "./data" \) -prune -o \
+	\( -name "__pycache__" -o -name ".mypy_cache" -o -name ".pytest_cache" -o -name ".vscode" \) -print)
 VENV_PATH = $(shell find . -type d -name ".$(ENV_NAME)" -print)
 
 install:
-	@if [ -d ".$(ENV_NAME)" ]; then \
-		echo "venv already exists"; \
-	else \
-		echo "Creating virtual environment..."; \
-		$(ENV) $(ENV_NAME); \
-		if [ -f "$(pyproject.toml)"]; then \
-			echo "Installing dependencies..."; \
-			$(ENV) $(PIP) install -r pyproject.toml; \
-		else \
-			echo "pyproject.toml file missing"; \
-			echo "skipping package installation"; \
-		fi; \
-	fi
-	
+	uv sync
 
 run:
 	@if [ ! -d ".$(ENV_NAME)" ]; then \
 		make install;\
 	fi
-	$(ENV) run $(PYTHON) $(MAIN)
+	$(ENV) run $(PYTHON) -m $(MAIN) $(ARGS)
 
 debug:
 	@if [ ! -d ".$(ENV_NAME)" ]; then \
 		make install;\
 	fi
 #	pdb debugger controls: n(ext), c(ont(inue)), exit
-	$(ENV) run $(PYTHON) -m $(DEBUGGER) $(MAIN)
+	$(ENV) run $(PYTHON) -m $(DEBUGGER) -m $(MAIN) $(ARGS)
 
 clean:
-	@if [ -n "$(ALL_CACHE)" ]; then \
-		echo "Cleaning workspace..."; \
-		for cache in $(ALL_CACHE); do \
-			echo "Removing $$cache"; \
-			rm -rf "$$cache"; \
-		done; \
-		echo "Workspace cleaned"; \
-	else \
-		echo "Nothing to clean."; \
-	fi
+	@echo "Cleaning workspace..."
+	@for cache in $(PY_CACHE); do \
+		echo "Removing $$cache"; \
+		rm -rf "$$cache"; \
+	done
+	@for dir in $(GENERATED); do \
+		if [ -e "$$dir" ]; then \
+			echo "Removing $$dir"; \
+			rm -rf "$$dir"; \
+		fi; \
+	done
+	@echo "Workspace cleaned"
 
 fclean: clean
 	@if [ -n "$(VENV_PATH)" ]; then \

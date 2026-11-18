@@ -26,10 +26,11 @@
 **Requirements:** Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv sync          # install dependencies
-make install     # same, via the Makefile
-make lint        # flake8 + mypy
-make clean       # remove caches
+uv sync                                     # install dependencies
+make install                                # same, via the Makefile
+make lint                                   # flake8 + mypy
+make clean                                  # remove caches
+make run ARGS="index --max_chunk_size 2000" # run pipeline using Makefile
 ```
 
 **Expected layout** (data is not committed):
@@ -76,8 +77,8 @@ Invalid input (empty query, `k=0`, missing file, malformed JSON) prints `Error: 
 **API and frontend (bonus)**
 
 ```bash
-uv run uvicorn src.api.main:app --port 8000     # terminal 1: backend
-uv run streamlit run src/frontend/app.py         # terminal 2: http://localhost:8501
+uv run uvicorn src.api.main:app --port 8000  # terminal 1: backend
+uv run streamlit run src/frontend/app.py  # terminal 2: http://localhost:8501
 ```
 
 - `POST /sources` returns the retrieved sources only (fast, no LLM).
@@ -87,7 +88,7 @@ uv run streamlit run src/frontend/app.py         # terminal 2: http://localhost:
 
 ```bash
 uv run pytest tests/test_cli_errors.py -q
-uv run pytest tests/test_retrieval.py -q -s
+uv run pytest tests/test_retrieval.py -q
 ```
 
 ## Example usage
@@ -147,19 +148,19 @@ Official metric: moulinette recall@k (same file and IoU >= 0.05).
 
 **Documentation dataset (chunk size 2000, overlap 50)**
 
-| Method | R@1 | R@3 | R@5 | R@10 | Latency/query |
-|---|---|---|---|---|---|
-| BM25 | 60.0% | 79.0% | **84.0%** | 93.0% | ~0.25 s |
-| MiniLM (semantic) | 29.0% | 42.0% | 49.0% | 55.0% | ~1.2 s |
-| Hybrid RRF | 43.0% | 67.0% | 77.0% | 86.0% | ~1.35 s |
+| Method | R@1 | R@3 | R@5 | R@10 |
+|---|---|---|---|---|
+| BM25 | 60.0% | 79.0% | **84.0%** | 93.0% |
+| MiniLM (semantic) | 29.0% | 42.0% | 49.0% | 55.0% |
+| Hybrid RRF | 47.0% | 74.0% | 82.0% | 88.0% |
 
 **Code dataset (chunk size 2000, overlap 50)**
 
-| Method | R@1 | R@3 | R@5 | R@10 | Latency/query |
-|---|---|---|---|---|---|
-| BM25 | 29.3% | 48.5% | **54.5%** | 57.6% | ~0.25 s |
-| MiniLM (semantic) | 19.0% | 28.0% | 37.0% | 48.0% | ~1.2 s |
-| Hybrid RRF | 27.0% | 44.0% | 53.0% | 67.0% | ~1.3 s |
+| Method | R@1 | R@3 | R@5 | R@10 |
+|---|---|---|---|---|
+| BM25 | 29.3% | 48.5% | **54.5%** | 57.6% |
+| MiniLM (semantic) | 18.2% | 29.3% | 37.4% | 49.5% |
+| Hybrid RRF | 29.3% | 46.5% | 56.6% | 68.7% |
 
 <!-- TODO: replace the semantic and hybrid rows with fresh moulinette numbers. -->
 
