@@ -91,6 +91,28 @@ uv run pytest tests/test_cli_errors.py -q
 uv run pytest tests/test_retrieval.py -q
 ```
 
+### Running on a 42 School Computer
+
+The model weights require approximately 2GB of storage. The default home directory
+on 42 machines does not have enough space, so you must redirect the cache to
+`goinfre` or `sgoinfre` before running.
+
+```bash
+# Create cache directories
+mkdir -p /sgoinfre/$USER/uv_cache
+mkdir -p /sgoinfre/$USER/hf_cache
+
+# Set environment variables
+export UV_CACHE_DIR="/sgoinfre/$USER/uv_cache"
+export HF_HOME="/sgoinfre/$USER/hf_cache"
+
+```
+
+> **Important:** Also copy your project into `goinfre` or `sgoinfre`. Running from
+> your home directory while the cache is in `goinfre` may cause issues.
+
+---
+
 ## Example usage
 
 ```bash

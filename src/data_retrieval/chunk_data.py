@@ -200,7 +200,7 @@ class SplitDataByChunks(BaseModel):
     @validate_call
     def load_from_files(
         storage_folder: ExistingPath
-            ) -> Tuple[Dict, Dict]:
+            ) -> Tuple[Dict, Update]:
         """Load the files written by `save_chunked_data`.
 
         Args:

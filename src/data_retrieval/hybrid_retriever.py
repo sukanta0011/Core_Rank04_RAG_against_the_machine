@@ -1,4 +1,5 @@
 """Hybrid retrieval: fuse lexical (BM25) and semantic (Chroma) rankings."""
+import uuid
 from collections import defaultdict
 from typing import Annotated, Dict, List, Tuple
 
@@ -88,6 +89,9 @@ class HybridRetriever(Retriever):
         Returns:
             Fused result. Scores are RRF scores, not BM25 or distances.
         """
+        if question_id is None:
+            question_id = str(uuid.uuid4())
+
         pool = k * self.pool_factor
         semantic = self._semantic_retriever.get_matching_chunk(
             question=question, question_id=question_id, k=pool)

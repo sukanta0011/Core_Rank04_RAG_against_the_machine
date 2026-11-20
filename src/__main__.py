@@ -15,6 +15,7 @@ import fire
 from src.data_retrieval.helper_classes import (
     FilesInDir,
     DataManager)
+from src.data_retrieval.abstract_classes import Update
 from src.data_retrieval.chunk_data import SplitDataByChunks
 from src.data_retrieval.abstract_classes import Retriever, RetrieveMethod
 from src.data_retrieval.lexical_retriever import (
@@ -175,7 +176,7 @@ class CLI:
         """Create the CLI with every heavy resource unloaded."""
         self._retriever: Retriever | None = None
         self._all_chunks: Dict | None = None
-        self._all_updates: Dict | None = None
+        self._all_updates: Update | None = None
         self._answer_generator: AnswerGenerator | None = None
         self._answer_cache: AnswerCache | None = None
         self._index_cache: IndexCache | None = None

@@ -95,7 +95,7 @@ class StudentSearchResults(BaseModel):
         k: Number of sources requested per question.
     """
 
-    search_results: List[MinimalSearchResults]
+    search_results: Sequence[MinimalSearchResults]
     k: int
 
 
@@ -107,5 +107,5 @@ class StudentSearchResultsAndAnswer(StudentSearchResults):
         k: Number of sources requested per question.
     """
 
-    search_results: List[MinimalAnswer]
+    search_results: Sequence[MinimalAnswer]
     k: int

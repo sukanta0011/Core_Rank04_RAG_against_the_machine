@@ -60,6 +60,7 @@ class SmallLLM(BaseModel, Model):
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             dtype=torch.float32,
+            # dtype="auto",
             device_map="auto" if self.device_type == "cuda" else None,
             tie_word_embeddings=False,  # silences the tied-weights warning
         )
